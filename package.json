@@ -1,0 +1,30 @@
+{
+  "name": "stars-of-eternity-beta",
+  "version": "0.0.1",
+  "description": "Discord js bot for stars of eternity server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js",
+    "nodemon": "nodemon src/index.js"
+  },
+  "keywords": [],
+  "author": "WarNote",
+  "license": "Mit",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "cachegoose": "^8.0.0",
+    "discord.js": "github:discordjs/discord.js",
+    "dotenv": "^8.2.0",
+    "klasa": "^0.5.0",
+    "lodash": "^4.17.15",
+    "mongodb": "^3.5.8",
+    "mongoose": "^5.9.18"
+  },
+  "devDependencies": {
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.21.2",
+    "nodemon": "^2.0.4"
+  }
+}
