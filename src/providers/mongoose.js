@@ -54,6 +54,7 @@ module.exports = class extends Provider {
     const trackersSchema = new Schema({
       tracker: String,
       type: String,
+      subscription: { type: Map, of: Array },
       data: {},
     });
     const connection = mergeDefault({
@@ -75,9 +76,7 @@ module.exports = class extends Provider {
       Trackers: mongoose.model('trackers', trackersSchema),
     };
     const [query, update, options] = [{ tracker: 'invasion', type: 'warframe' }, {}, { upsert: true, useFindAndModify: false }];
-    this.models.Trackers.findOneAndUpdate(query, update, options, (err, result) => {
-      if (!result) new this.models.Trackers({ ...query, data: {} }).save();
-    });
+    await this.models.Trackers.findOneAndUpdate(query, update, options);
   }
 
   /* Custom table methods */
@@ -103,16 +102,6 @@ module.exports = class extends Provider {
   }
 
   /* Warframe trackers */
-  get trackers() {
-    return {
-      invasions: this.cache.warframe.trackers.invasionsIds,
-      updateInvasion: async (idsArr) => {
-        this.update('warframe', { name: 'trackers' }, {
-          invasionsIds: idsArr,
-        });
-      },
-    };
-  }
   /* Default table methods */
 
   get exec() {
