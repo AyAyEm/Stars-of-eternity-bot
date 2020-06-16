@@ -13,22 +13,27 @@ module.exports = class extends Task {
 
   async init() {
     const runner = async () => {
-      const provider = await this.client.providers.get('mongoose');
-      const invasionDocument = await provider.warframe.invasion;
-      const { data: invasionsData } = await axios.get(invasionUrl);
-      let invasionsIds = await invasionDocument.get('data.cacheIds') || [];
-      const needUpdate = invasionsData.reduce((boolean, invasion) => {
-        if (!invasionsIds.includes(invasion.id) && !invasion.completed) {
-          this.client.emit('warframeNewInvasion', invasion);
-          return true;
+      axios.get(invasionUrl).then(async ({ data: invasionsData }) => {
+        const provider = await this.client.providers.get('mongoose');
+        const invasionDocument = await provider.warframe.invasion;
+        const invasionsIds = await invasionDocument.get('data.cacheIds') || [];
+        const needUpdate = invasionsData.reduce((boolean, invasion) => {
+          if (!invasionsIds.includes(invasion.id) && !invasion.completed) {
+            this.client.emit('warframeNewInvasion', invasion);
+            return true;
+          }
+          return boolean;
+        }, false);
+        if (needUpdate) {
+          const updatedArr = invasionsData.map((invasion) => invasion.id);
+          if (!invasionDocument.data) {
+            invasionDocument.data = { cacheIds: updatedArr };
+          } else {
+            invasionDocument.data.cacheIds = updatedArr;
+          }
+          await invasionDocument.save();
         }
-        return boolean;
-      }, false);
-      if (needUpdate) {
-        const updatedArr = invasionsData.map((invasion) => invasion.id);
-        invasionDocument.data.cacheIds = updatedArr;
-        await invasionDocument.save();
-      }
+      });
     };
     setInterval(runner, 5000);
   }
