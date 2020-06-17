@@ -30,12 +30,17 @@ module.exports = class extends Provider {
   }
 
   async init() {
+    const invasions = new Schema({
+      enabled: Boolean,
+      items: [String],
+    });
     const guildsSchema = new Schema({
       id: String,
       name: String,
       channels: {
         type: Map,
         of: {
+          invasionItems: invasions,
           messages: {
             type: Map,
             of: {
@@ -54,8 +59,7 @@ module.exports = class extends Provider {
     const trackersSchema = new Schema({
       tracker: String,
       type: String,
-      subscription: { type: Map, of: Array },
-      data: {},
+      data: mongoose.Mixed,
     });
     const connection = mergeDefault({
       host: 'localhost',
@@ -86,6 +90,12 @@ module.exports = class extends Provider {
 
   get Trackers() {
     return this.models.Trackers;
+  }
+
+  get trackers() {
+    return {
+      invasions: this.models.Trackers.findOne({ tracker: 'invasion' }),
+    };
   }
 
   get warframe() {
