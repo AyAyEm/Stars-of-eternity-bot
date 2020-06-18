@@ -104,6 +104,10 @@ module.exports = class extends Provider {
     };
   }
 
+  async guildDocument(guildId) {
+    return this.models.Guilds.findOne({ id: guildId });
+  }
+
   async getMessages(msg) {
     const { Guilds } = this;
     const guildDocument = await Guilds.findOne({ id: msg.guild.id });
