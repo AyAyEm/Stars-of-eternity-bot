@@ -2,7 +2,6 @@ const { Command } = require('klasa');
 const invasionItemsEmbed = require('../../embeds/warframe/invasionItems');
 
 const possibleItems = new Set([
-  'all',
   'vauban', 'vandal', 'wraith', 'skin', 'helmet',
   'nitain', 'mutalist', 'weapon', 'fieldron', 'detonite',
   'mutagen', 'aura', 'neuralSensors', 'orokinCell', 'alloyPlate',
@@ -21,7 +20,8 @@ module.exports = class extends Command {
       autoaliases: true,
       permissionLevel: 0,
       subcommands: true,
-      usage: '<listItems|add|disable|enable|delete|set:default> (...items:invasionItem) [...]',
+      usage: '<items|listItems|add|disable|enable|delete|forceDelete|set> '
+      + '(...items:invasionItem) [...]',
       usageDelim: ' ',
       description: '',
       extendedHelp: 'No extended help available.',
@@ -38,64 +38,106 @@ module.exports = class extends Command {
       });
   }
 
+  async getDocument(guild) {
+    const provider = await this.client.providers.get('mongoose');
+    return provider.Guilds.findOne({ id: guild.id });
+  }
+
   async updateItems(guildDocument, channel, items) {
-    return guildDocument.updateOne(`channels.${channel.id}.invasionItems.items`, items);
+    const path = `channels.${channel.id}.invasionItems.items`;
+    return guildDocument.updateOne({ [path]: items });
   }
 
   async updateStatus(guildDocument, channel, status) {
-    return guildDocument.updateOne(`channels.${channel.id}.invasionItems.enabled`, status);
+    const path = `channels.${channel.id}.invasionItems.enabled`;
+    return guildDocument.updateOne({ [path]: status });
   }
 
-  async set(msg, [items = 'all']) {
-    await msg.channel.setNewData({ items: items.split(','), enabled: true });
-    msg.replyAndDelete('Todos os items de invasão foram assinados neste canal!');
+  async set(msg, [items = [...possibleItems.values()]]) {
+    const { channel, guild } = msg;
+    const { updateItems, updateStatus } = this;
+    const guildDocument = await this.getDocument(guild);
+    if (guildDocument.get(`channels.${channel.id}.invasionItems`)) {
+      throw 'Canal já está registrado!';
+    }
+    await Promise.all([
+      updateItems(guildDocument, channel, items),
+      updateStatus(guildDocument, channel, true),
+    ])
+      .then(() => {
+        msg.replyAndDelete('Canal inscrito nas invasões com sucesso! Items:'
+        + `\`\`\`${items.join(' | ')}\`\`\``);
+      });
   }
 
   async add(msg, [...items]) {
-    if (items.length === 0) throw 'Items precisam ser específicados!';
-    const provider = await this.client.providers.get('mongoose');
-    const guildDocument = await provider.Guilds.findOne({ id: msg.guild.id });
-    const invasionItems = guildDocument.get(`channels.${msg.channel.id}.invasionItems`);
+    const { channel, guild } = msg;
+    const { updateItems } = this;
+    const guildDocument = await this.getDocument(guild);
+    const invasionItems = guildDocument.get(`channels.${channel.id}.invasionItems`);
     if (!invasionItems) throw 'Este canal não está configurado para invasões!';
-    const itemsData = new Set([...invasionItems.items, ...items]);
-    const data = { items: [...itemsData.values()], enabled: invasionItems.enabled };
-    await msg.channel.setNewData(data);
+    if (items.length === 0) throw 'Items precisam ser específicados!';
+    const updatedItems = items[0] === 'all' ? possibleItems : items;
+    const itemsData = new Set([...invasionItems.items, ...updatedItems]);
+    await updateItems(guildDocument, channel, [...itemsData.values()]);
+    msg.replyAndDelete(`Items inscritos com sucesso! Items: \`${items}\``);
   }
 
   async disable(msg) {
-    const provider = await this.client.providers.get('mongoose');
-    const guildDocument = await provider.Guilds.findOne({ id: msg.guild.id });
+    const { channel, guild } = msg;
+    const { updateStatus } = this;
+    const guildDocument = await this.getDocument(guild);
     const invasionItems = guildDocument.get(`channels.${msg.channel.id}.invasionItems`) || {};
     if (invasionItems.enabled === false) {
       throw 'Invasões já estão desabilitadas para este canal!';
     }
-    const { items } = invasionItems;
-    msg.channel.setNewData({ items, enabled: false });
+    await updateStatus(guildDocument, channel, false);
     msg.replyAndDelete('Invasões desabilitadas com sucesso!');
   }
 
   async enable(msg) {
-    const provider = await this.client.providers.get('mongoose');
-    const guildDocument = await provider.Guilds.findOne({ id: msg.guild.id });
+    const { channel, guild } = msg;
+    const { updateStatus } = this;
+    const guildDocument = await this.getDocument(guild);
     const invasionItems = guildDocument.get(`channels.${msg.channel.id}.invasionItems`) || {};
     if (invasionItems.enabled === true) {
       throw 'Invasões já estão habilitadas para este canal!';
     }
-    const { items } = invasionItems;
-    msg.channel.setNewData({ items, enabled: true });
+    await updateStatus(guildDocument, channel, false);
     msg.replyAndDelete('Invasões habilitadas com sucesso!');
   }
 
-  async delete(msg) {
-    const provider = await this.client.providers.get('mongoose');
-    const guildDocument = await provider.Guilds.findOne({ id: msg.guild.id });
-    const invasionItems = guildDocument.get(`channels.${msg.channel.id}.invasionItems`) || {};
-    if (!invasionItems.items || invasionItems.items.length === 0) {
+  async delete(msg, [...items]) {
+    const { guild, channel } = msg;
+    const guildDocument = await this.getDocument(guild);
+    const itemsPath = `channels.${channel.id}.invasionItems.items`;
+    const invasionItems = guildDocument.get(itemsPath) || [];
+    if (invasionItems.length === 0) {
       throw 'Os items de invasão ainda não foram definidos para este canal!';
     }
-    const enabled = invasionItems.enabled === undefined ? true : invasionItems.enabled;
-    await msg.channel.setNewData({ items: [], enabled });
-    msg.replyAndDelete('Items de invasão excluídos com sucesso!');
+    const updatedItems = items.length > 0
+      ? invasionItems.filter((invasionItem) => !items.includes(invasionItem))
+      : [];
+    await guildDocument.updateOne({ [itemsPath]: updatedItems });
+    msg.replyAndDelete('Items de invasão excluídos com sucesso!'
+    + `\`\`\`${invasionItems.filter((invasionItem) => !updatedItems.includes(invasionItem)).join(' | ')}\`\`\``);
+  }
+
+  async forceDelete(msg) {
+    const { channel, guild } = msg;
+    const guildDocument = await this.getDocument(guild);
+    const channelPath = `channels.${channel.id}`;
+    const channelDocument = guildDocument.get(channelPath).toObject();
+    delete channelDocument.invasionItems;
+    await guildDocument.updateOne({ [channelPath]: channelDocument });
+    msg.replyAndDelete('Items de invasão removidos do database com sucesso!');
+  }
+
+  async items(msg) {
+    const guildDocument = await this.getDocument(msg.guild);
+    const items = guildDocument.get(`channels.${msg.channel.id}.invasionItems.items`);
+    if (!items || items.length === 0) throw 'Nenhum item de invasão encontrado para este canal!';
+    msg.channel.send(`\`\`\`Items encontrados: \n${items.join(' | ')}\`\`\``);
   }
 
   async listItems(msg) {
