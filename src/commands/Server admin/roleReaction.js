@@ -30,13 +30,14 @@ module.exports = class extends Command {
       enabled: true,
       runIn: ['text'],
       autoAliases: true,
+      permissionLevel: 6,
       description: '',
       extendedHelp: 'No extended help available.',
       usage: '<create|delete|add|renew> '
-      + '(roleOrMessageOrOption:firstParam) '
-      + '(emoji:secondParam) '
-      + '(descOrMessage:thirdParam) '
-      + '[...]',
+        + '(roleOrMessageOrOption:firstParam) '
+        + '(emoji:secondParam) '
+        + '(descOrMessage:thirdParam) '
+        + '[...]',
       usageDelim: ' ',
       quotedStringSupport: false,
       subcommands: true,
@@ -186,26 +187,27 @@ module.exports = class extends Command {
   }
 
   async init() {
-    const reactionComparision = async (messageReaction, user) => {
+    const reactionComparision = async (messageReaction, user, action) => {
       if (user.bot) return;
       const msg = messageReaction.message;
       const [channelID, guildID] = [msg.channel.id, msg.guild.id];
-      const { guilds } = await this.client.providers.get('mongodb');
-      const guild = guilds.db.get(guildID);
-      if (guild.roleReaction && guild.roleReaction.has(channelID)) {
-        const { rolesEmojiMap } = await guild.roleReaction.get(channelID);
-        const emoji = messageReaction.emoji.id || messageReaction.emoji.name;
-        const role = rolesEmojiMap.get(emoji);
-        const { message: msgOfReaction } = messageReaction;
-        const member = await msgOfReaction.guild.members.fetch(user.id);
-        if (member.roles.cache.has(role)) {
-          member.roles.remove(role);
-        } else {
-          member.roles.add(role);
-        }
+      const provider = await this.client.providers.get('mongoose');
+      const guildDocument = await provider.guildDocument(guildID);
+      const messageDocument = guildDocument.get(`channels.${channelID}.messages.${msg.id}`);
+      if (!messageDocument || messageDocument.msgType !== 'roleReaction') return;
+      const { rolesEmoji } = messageDocument;
+      const emoji = messageReaction.emoji.id || messageReaction.emoji.name;
+      if (!rolesEmoji || rolesEmoji.length === 0) return;
+      const role = rolesEmoji.get(emoji).roleID;
+      const member = await msg.guild.members.fetch(user.id);
+      if (action === 'add' && !member.roles.cache.has(role)) {
+        member.roles.add(role);
+      }
+      if (action === 'remove' && member.roles.cache.has(role)) {
+        member.roles.remove(role);
       }
     };
-    this.client.on('messageReactionRemove', reactionComparision);
-    this.client.on('messageReactionAdd', reactionComparision);
+    this.client.on('messageReactionRemove', async (...params) => reactionComparision(...params, 'remove'));
+    this.client.on('messageReactionAdd', async (...params) => reactionComparision(...params, 'add'));
   }
 };
