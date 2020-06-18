@@ -9,13 +9,25 @@ module.exports = class extends Event {
       enabled: true,
       once: false,
     });
-  }
-
-  get provider() {
-    return this.client.providers.get('mongodb');
+    this.provider = this.client.providers.get('mongoose');
   }
 
   async run(invasion) {
-    const provider = await this.provider;
+    this.provider.Guilds.find({}).stream()
+      .on('data', async (data) => {
+        if (!data.channels) return;
+        const channels = new Map([...Object.entries(data.channels)]);
+        channels.forEach(async ({ invasionItems }, channelId) => {
+          if (!invasionItems || !invasionItems.enabled) return;
+          const { items: storedItems } = invasionItems;
+          if (!storedItems || storedItems.length === 0) return;
+          const matchedItems = invasion.rewardTypes
+            .filter((rewardItem) => storedItems.includes(rewardItem));
+          if (matchedItems.length === 0) return;
+          const embeds = invasionEmbed(invasion, matchedItems);
+          const discordChannel = await this.client.channels.fetch(channelId);
+          embeds.forEach(async (embed) => discordChannel.send(embed));
+        });
+      });
   }
 };
