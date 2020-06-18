@@ -9,10 +9,8 @@ module.exports = class extends Command {
     super(...args, {
       enabled: true,
       runIn: ['text'],
-      requiredPermissions: [],
-      aliases: [],
+      permissionLevel: 6,
       autoAliases: true,
-      permissionLevel: 0,
       description: '',
       extendedHelp: 'No extended help available.',
       usage: '<ammount:string>',

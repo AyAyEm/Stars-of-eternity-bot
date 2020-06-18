@@ -18,7 +18,7 @@ module.exports = class extends Command {
       enabled: true,
       runIn: ['text'],
       autoaliases: true,
-      permissionLevel: 0,
+      permissionLevel: 6,
       subcommands: true,
       usage: '<items|listItems|add|disable|enable|delete|forceDelete|set> '
       + '(...items:invasionItem) [...]',
