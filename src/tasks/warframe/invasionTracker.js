@@ -26,17 +26,13 @@ module.exports = class extends Task {
         }, false);
         if (needUpdate) {
           const updatedArr = invasionsData.map((invasion) => invasion.id);
-          if (!invasionDocument.data) {
-            invasionDocument.data = { cacheIds: updatedArr };
-          } else {
-            invasionDocument.data.cacheIds = updatedArr;
-          }
-          await invasionDocument.updateOne({ 'data.cacheIds': updatedArr });
+          invasionDocument.set('data.cacheIds', updatedArr);
+          await invasionDocument.save();
         }
       })
         // eslint-disable-next-line no-console
-        .catch((err) => console.log(err.response));
+        .catch((err) => err);
     };
-    setInterval(runner, 5000);
+    setInterval(runner, 10000);
   }
 };
