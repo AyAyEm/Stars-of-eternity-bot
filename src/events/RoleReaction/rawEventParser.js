@@ -25,7 +25,7 @@ module.exports = class extends Event {
     // Since we have confirmed the message is not cached, let's fetch it
     channel.messages.fetch(packet.d.message_id).then((message) => {
       // Emojis can have identifiers of name:id format, so we have to account for that case as well
-      const emoji = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
+      const emoji = packet.d.emoji.id ? packet.d.emoji.id : packet.d.emoji.name;
       // This gives us the reaction we need to emit the event properly, in top of the message object
       const reaction = new MessageReaction(this.client, {
         emoji: {
