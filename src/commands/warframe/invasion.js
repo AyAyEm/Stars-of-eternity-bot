@@ -103,7 +103,7 @@ module.exports = class extends Command {
     if (invasionItems.enabled === true) {
       throw 'Invasões já estão habilitadas para este canal!';
     }
-    await updateStatus(guildDocument, channel, false);
+    await updateStatus(guildDocument, channel, true);
     msg.replyAndDelete('Invasões habilitadas com sucesso!');
   }
 
