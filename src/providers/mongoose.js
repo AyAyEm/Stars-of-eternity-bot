@@ -79,8 +79,9 @@ module.exports = class extends Provider {
       Guilds: mongoose.model('Guilds', guildsSchema),
       Trackers: mongoose.model('trackers', trackersSchema),
     };
-    const [query, update, options] = [{ tracker: 'invasion', type: 'warframe' }, {}, { upsert: true, useFindAndModify: false }];
-    await this.models.Trackers.findOneAndUpdate(query, update, options);
+    const invasionTrackerDoc = { tracker: 'invasion', type: 'warframe' };
+    const invasionTrackerExists = await this.models.Trackers.exists(invasionTrackerDoc);
+    if (!invasionTrackerExists) this.models.Trackers.create({ ...invasionTrackerDoc, data: {} });
   }
 
   /* Custom table methods */
@@ -90,12 +91,6 @@ module.exports = class extends Provider {
 
   get Trackers() {
     return this.models.Trackers;
-  }
-
-  get trackers() {
-    return {
-      invasions: this.models.Trackers.findOne({ tracker: 'invasion' }),
-    };
   }
 
   get warframe() {
