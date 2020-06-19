@@ -60,18 +60,6 @@ module.exports = class extends Provider {
 
       this.cache.guilds = guildsMap;
     });
-
-    /* Warframe cache */
-    const warframeDbCheck = await this.has('warframe', { name: 'trackers' });
-    if (!warframeDbCheck) {
-      this.create('warframe', { name: 'trackers' },
-        {
-          name: 'trackers',
-          invasionsIds: [],
-        });
-    }
-    const trackers = await this.get('warframe', { name: 'trackers' });
-    this.cache.warframe = { trackers };
   }
 
   /* Custom table methods */
@@ -81,18 +69,6 @@ module.exports = class extends Provider {
       update: async (guildId) => {
         const data = this.guilds.db.get(guildId);
         this.update('guilds', guildId, data);
-      },
-    };
-  }
-
-  /* Warframe trackers */
-  get trackers() {
-    return {
-      invasions: this.cache.warframe.trackers.invasionsIds,
-      updateInvasion: async (idsArr) => {
-        this.update('warframe', { name: 'trackers' }, {
-          invasionsIds: idsArr,
-        });
       },
     };
   }
