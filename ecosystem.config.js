@@ -1,25 +1,16 @@
 module.exports = {
   apps: [{
-    script: 'src/index.js',
-    watch: ['src'],
+    name: 'stars-of-eternity-bot',
+    script: './src/index.js',
+    watch: ['./src'],
     ignore_watch: ['node_modules'],
     watch_delay: 1000,
     max_memory_restart: '1G',
-  }, {
-    script: './src/index.js',
-    watch: ['./src/index.js'],
   }],
-
-  deploy: {
-    production: {
-      user: 'SSH_USERNAME',
-      host: 'SSH_HOSTMACHINE',
-      ref: 'origin/master',
-      repo: 'GIT_REPOSITORY',
-      path: 'DESTINATION_PATH',
-      'pre-deploy-local': '',
-      'post-deploy': 'npm install && pm2 reload ecosystem.config.js --env production',
-      'pre-setup': '',
-    },
+  env: {
+    NODE_ENV: 'development',
+  },
+  env_production: {
+    NODE_ENV: 'production',
   },
 };
