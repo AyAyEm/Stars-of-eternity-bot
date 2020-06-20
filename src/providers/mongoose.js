@@ -34,9 +34,13 @@ module.exports = class extends Provider {
       enabled: Boolean,
       items: [String],
     });
+    const memberData = new Schema({
+      toFollow: { type: Boolean, default: false },
+    });
     const guildsSchema = new Schema({
       id: String,
       name: String,
+      members: { type: Map, of: memberData },
       channels: {
         type: Map,
         of: {
