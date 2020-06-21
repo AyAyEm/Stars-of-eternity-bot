@@ -2,11 +2,8 @@
 /* eslint-disable no-unused-vars */
 const { Provider, util: { mergeDefault, mergeObjects, isObject } } = require('klasa');
 const mongoose = require('mongoose');
-const cachegoose = require('cachegoose');
 
 const { Schema } = mongoose;
-
-cachegoose(mongoose);
 
 const resolveQuery = (query) => (isObject(query) ? query : { id: query });
 
@@ -99,17 +96,17 @@ module.exports = class extends Provider {
 
   get warframe() {
     return {
-      invasion: this.models.Trackers.findOne({ tracker: 'invasion', type: 'warframe' }).cache(),
+      invasion: this.models.Trackers.findOne({ tracker: 'invasion', type: 'warframe' }),
     };
   }
 
   async guildDocument(guildId) {
-    return this.models.Guilds.findOne({ id: guildId }).cache();
+    return this.models.Guilds.findOne({ id: guildId });
   }
 
   async getMessages(msg) {
     const { Guilds } = this;
-    const guildDocument = await Guilds.findOne({ id: msg.guild.id }).cache();
+    const guildDocument = await Guilds.findOne({ id: msg.guild.id });
     const messages = guildDocument.get(`channels.${msg.channel.id}.messages`, Map);
     return { messages, guildDocument, Guilds };
   }
