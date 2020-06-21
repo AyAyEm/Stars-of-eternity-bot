@@ -13,7 +13,7 @@ module.exports = class extends Event {
   }
 
   async run(invasion) {
-    this.provider.Guilds.find({}).stream()
+    this.provider.Guilds.find({}).cache().stream()
       .on('data', async (data) => {
         if (!data.channels) return;
         const channels = new Map([...Object.entries(data.channels)]);

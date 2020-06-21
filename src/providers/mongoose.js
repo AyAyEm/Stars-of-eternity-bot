@@ -99,17 +99,17 @@ module.exports = class extends Provider {
 
   get warframe() {
     return {
-      invasion: this.models.Trackers.findOne({ tracker: 'invasion', type: 'warframe' }),
+      invasion: this.models.Trackers.findOne({ tracker: 'invasion', type: 'warframe' }).cache(),
     };
   }
 
   async guildDocument(guildId) {
-    return this.models.Guilds.findOne({ id: guildId });
+    return this.models.Guilds.findOne({ id: guildId }).cache();
   }
 
   async getMessages(msg) {
     const { Guilds } = this;
-    const guildDocument = await Guilds.findOne({ id: msg.guild.id });
+    const guildDocument = await Guilds.findOne({ id: msg.guild.id }).cache();
     const messages = guildDocument.get(`channels.${msg.channel.id}.messages`, Map);
     return { messages, guildDocument, Guilds };
   }
