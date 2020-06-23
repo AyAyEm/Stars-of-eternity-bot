@@ -1,8 +1,27 @@
 const { Readable } = require('stream');
 const { Lame } = require('node-lame');
-const fs = require('fs');
+// eslint-disable-next-line no-unused-vars
+const ffmpeg = require('ffmpeg-static');
+const { config } = require('../config');
 
-const idGenerator = () => `opus_${Math.random().toString(36).substr(2, 9)}`;
+const audioName = () => {
+  const startDate = new Date();
+  const { language, timezone } = config;
+  const options = {
+    dateStyle: 'short',
+    timeStyle: 'medium',
+    fractionalSecondDigits: '2',
+    timeZone: timezone,
+  };
+  const dateFormater = new Intl.DateTimeFormat(language, options);
+  return () => {
+    const endingDate = new Date();
+    return dateFormater.formatRange(startDate, endingDate)
+      .replace(' ', 'T')
+      .replace(/:/g, '_')
+      .replace(/ /g, '');
+  };
+};
 const silenceFrame = Buffer.from([0xF8, 0xFF, 0xFE]);
 class Silence extends Readable {
   // eslint-disable-next-line no-underscore-dangle
@@ -14,23 +33,23 @@ class Silence extends Readable {
 module.exports = async (voiceConnection, member) => {
   voiceConnection.play(new Silence(), { type: 'opus' });
   const audio = voiceConnection.receiver.createStream(member.user, { mode: 'pcm', end: 'manual' });
-  const fileId = idGenerator();
-  const opusFile = `./audios/${fileId}`;
-  audio.pipe(fs.createWriteStream(opusFile));
+  const chunks = [];
+  audio.on('data', (chunk) => {
+    chunks.push(chunk);
+  });
+  const fileName = audioName();
   voiceConnection.on('disconnect', async () => {
     audio.end();
+    const buffer = Buffer.concat(chunks);
     const encoder = new Lame({
-      output: './audios/teste2.mp3',
-      bitrate: 192,
+      output: `./audios/${fileName()}.mp3`,
+      bitrate: 64,
       raw: true,
       signed: true,
       bitwidth: 16,
       sfreq: 48,
       'little-endian': true,
-    }).setFile(opusFile);
+    }).setBuffer(buffer);
     await encoder.encode();
-    fs.unlink(opusFile, (err) => {
-      if (err) throw new Error(err);
-    });
   });
 };
