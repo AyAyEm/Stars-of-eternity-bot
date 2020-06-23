@@ -14,6 +14,7 @@ exports.config = {
   production: false,
   // The default language that comes with klasa. More base languages can be found on Klasa-Pieces
   language: 'pt-BR',
+  timezone: 'America/Sao_Paulo',
   // The default configurable prefix for each guild
   prefix: '/',
   // If custom settings should be preserved when a guild removes your bot
