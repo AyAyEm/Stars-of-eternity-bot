@@ -1,8 +1,12 @@
 const { Readable } = require('stream');
 const { Lame } = require('node-lame');
 // eslint-disable-next-line no-unused-vars
-const ffmpeg = require('ffmpeg-static');
+const ffmpeg = require('fluent-ffmpeg');
 const { config } = require('../config');
+
+ffmpeg
+  .setFfmpegPath(require('ffmpeg-static'))
+  .setFfprobePath(require('ffprobe-static').path);
 
 const audioName = () => {
   const startDate = new Date();
