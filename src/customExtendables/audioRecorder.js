@@ -1,12 +1,12 @@
 const { Readable } = require('stream');
-const { Lame } = require('node-lame');
-// eslint-disable-next-line no-unused-vars
+const AudioMixer = require('@rophil/audio-mixer');
 const ffmpeg = require('fluent-ffmpeg');
+const fs = require('fs');
+const _ = require('lodash');
 const { config } = require('../config');
 
-ffmpeg
-  .setFfmpegPath(require('ffmpeg-static'))
-  .setFfprobePath(require('ffprobe-static').path);
+ffmpeg.setFfmpegPath(require('ffmpeg-static'));
+ffmpeg.setFfprobePath(require('ffprobe-static').path);
 
 const audioName = () => {
   const startDate = new Date();
@@ -34,26 +34,41 @@ class Silence extends Readable {
   }
 }
 
-module.exports = async (voiceConnection, member) => {
+module.exports = async (voiceConnection, client) => {
   voiceConnection.play(new Silence(), { type: 'opus' });
-  const audio = voiceConnection.receiver.createStream(member.user, { mode: 'pcm', end: 'manual' });
-  const chunks = [];
-  audio.on('data', (chunk) => {
-    chunks.push(chunk);
+  const { channel } = voiceConnection;
+  const pcmMixer = new AudioMixer({
+    channels: 2,
+    bitDepth: 16,
+    sampleRate: 48000,
+    clearInterval: 250,
   });
+  const mixerInput = pcmMixer.input({
+    channels: 2,
+    bitDepth: 16,
+    sampleRate: 48000,
+  });
+  channel.members.each((member) => {
+    const voiceStream = voiceConnection.receiver.createStream(member.user, { mode: 'pcm', end: 'manual' });
+    voiceStream.pipe(mixerInput);
+  });
+  const idPath = `.\\audios\\${_.uniqueId('audio_')}.ogg`;
+  const outputStream = fs.createWriteStream(idPath);
+  const encoder = ffmpeg(pcmMixer)
+    .inputOptions(['-f s16le', '-acodec pcm_s16le', '-ac 2', '-ar 48000'])
+    .audioCodec('opus')
+    .format('opus')
+    .on('error', console.error)
+    .pipe(outputStream);
   const fileName = audioName();
   voiceConnection.on('disconnect', async () => {
-    audio.end();
-    const buffer = Buffer.concat(chunks);
-    const encoder = new Lame({
-      output: `./audios/${fileName()}.mp3`,
-      bitrate: 64,
-      raw: true,
-      signed: true,
-      bitwidth: 16,
-      sfreq: 48,
-      'little-endian': true,
-    }).setBuffer(buffer);
-    await encoder.encode();
+    pcmMixer.emit('end');
+    await encoder;
+    await fs.promises.rename(idPath, `.\\audios\\${fileName()}.ogg`);
+  });
+  client.on(`${voiceConnection.channel.id}memberJoined`, async (member) => {
+    if (member.guild.id !== voiceConnection.channel.guild.id) return;
+    const voiceStream = voiceConnection.receiver.createStream(member.user, { mode: 'pcm', end: 'manual' });
+    voiceStream.pipe(mixerInput);
   });
 };
