@@ -1,12 +1,12 @@
 const { Readable } = require('stream');
-const AudioMixer = require('@rophil/audio-mixer');
+const AudioMixer = require('audio-mixer');
 const ffmpeg = require('fluent-ffmpeg');
 const fs = require('fs');
 const _ = require('lodash');
 const { config } = require('../config');
 
-ffmpeg.setFfmpegPath(require('ffmpeg-static'));
-ffmpeg.setFfprobePath(require('ffprobe-static').path);
+ffmpeg.setFfmpegPath(require('@ffmpeg-installer/ffmpeg').path);
+ffmpeg.setFfprobePath(require('@ffprobe-installer/ffprobe').path);
 
 const audioName = () => {
   const startDate = new Date();
@@ -33,42 +33,55 @@ class Silence extends Readable {
     this.push(silenceFrame);
   }
 }
+const voiceInputOptions = {
+  channels: 2,
+  bitDepth: 16,
+  sampleRate: 48000,
+};
+const assignVoiceConnection = (voiceConnection, member, pcmMixer) => {
+  const voiceStream = voiceConnection.receiver.createStream(member.user, { mode: 'pcm', end: 'manual' });
+  const standaloneInput = new AudioMixer.Input({ ...voiceInputOptions, volume: 100 });
+  pcmMixer.addInput(standaloneInput);
+  voiceStream.pipe(standaloneInput);
+};
 
 module.exports = async (voiceConnection, client) => {
-  voiceConnection.play(new Silence(), { type: 'opus' });
   const { channel } = voiceConnection;
-  const pcmMixer = new AudioMixer({
-    channels: 2,
-    bitDepth: 16,
-    sampleRate: 48000,
-    clearInterval: 250,
-  });
-  const mixerInput = pcmMixer.input({
-    channels: 2,
-    bitDepth: 16,
-    sampleRate: 48000,
-  });
-  channel.members.each((member) => {
-    const voiceStream = voiceConnection.receiver.createStream(member.user, { mode: 'pcm', end: 'manual' });
-    voiceStream.pipe(mixerInput);
-  });
   const idPath = `.\\audios\\${_.uniqueId('audio_')}.ogg`;
   const outputStream = fs.createWriteStream(idPath);
-  const encoder = ffmpeg(pcmMixer)
-    .inputOptions(['-f s16le', '-acodec pcm_s16le', '-ac 2', '-ar 48000'])
-    .audioCodec('opus')
-    .format('opus')
-    .on('error', console.error)
-    .pipe(outputStream);
-  const fileName = audioName();
-  voiceConnection.on('disconnect', async () => {
-    pcmMixer.emit('end');
-    await encoder;
-    await fs.promises.rename(idPath, `.\\audios\\${fileName()}.ogg`);
+  const fileRename = (() => {
+    const fileName = audioName();
+    return async () => {
+      await fs.promises.rename(idPath, `.\\audios\\${fileName()}.ogg`);
+    };
+  })();
+  const pcmMixer = new AudioMixer.Mixer({
+    ...voiceInputOptions,
+    clearInterval: 250,
+  });
+  voiceConnection.play(new Silence(), { type: 'opus' });
+  channel.members.array().forEach((member, i) => {
+    const voiceStream = voiceConnection.receiver.createStream(member.user, { mode: 'pcm', end: 'manual' });
+    if (i === 0) {
+      const mixerInput = pcmMixer.input({ ...voiceInputOptions, volume: 100 });
+      return voiceStream.pipe(mixerInput);
+    }
+    return assignVoiceConnection(voiceConnection, member, pcmMixer);
   });
   client.on(`${voiceConnection.channel.id}memberJoined`, async (member) => {
     if (member.guild.id !== voiceConnection.channel.guild.id) return;
-    const voiceStream = voiceConnection.receiver.createStream(member.user, { mode: 'pcm', end: 'manual' });
-    voiceStream.pipe(mixerInput);
+    assignVoiceConnection(voiceConnection, member, pcmMixer);
+  });
+  ffmpeg(pcmMixer)
+    .inputOptions(['-f s16le', '-acodec pcm_s16le', '-ac 2', '-ar 48000'])
+    .audioQuality(24)
+    .audioChannels(1)
+    .audioCodec('opus')
+    .format('opus')
+    .on('error', client.console.error)
+    .on('end', fileRename)
+    .pipe(outputStream);
+  voiceConnection.on('disconnect', async () => {
+    pcmMixer.emit('end');
   });
 };
