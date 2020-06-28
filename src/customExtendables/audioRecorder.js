@@ -68,7 +68,8 @@ module.exports = async (voiceConnection, client) => {
     }
     return assignVoiceConnection(voiceConnection, member, pcmMixer);
   });
-  client.on(`${voiceConnection.channel.id}memberJoined`, async (member) => {
+  const memberJoinEventPath = `${voiceConnection.channel.id}memberJoined`;
+  client.on(memberJoinEventPath, async (member) => {
     if (member.guild.id !== voiceConnection.channel.guild.id) return;
     assignVoiceConnection(voiceConnection, member, pcmMixer);
   });
@@ -81,7 +82,7 @@ module.exports = async (voiceConnection, client) => {
     .on('error', client.console.error)
     .on('end', fileRename)
     .pipe(outputStream);
-  voiceConnection.on('disconnect', async () => {
+  voiceConnection.on('endRecording', async () => {
     pcmMixer.emit('end');
   });
 };
