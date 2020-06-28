@@ -27,11 +27,12 @@ module.exports = class extends Event {
       if (executing) return;
       executing = true;
       const clientConnections = this.client.voice.connections;
-      const botChannel = clientConnections.array().length === 0
+      const botVoiceConnection = clientConnections.array().length === 0
         ? null
         : clientConnections
           .filter((voiceConnection) => voiceConnection.channel.guild.id === guild.id)
-          .first().channel;
+          .first();
+      const botChannel = botVoiceConnection ? botVoiceConnection.channel : null;
       const channelWithMostUsers = await getChannelWithMostUsers(guild);
       if (!channelWithMostUsers) {
         if (botChannel) await botChannel.leave();
@@ -47,11 +48,14 @@ module.exports = class extends Event {
         executing = false;
         return;
       }
+      botVoiceConnection.emit('endRecording');
       await channelWithMostUsers.join();
       executing = false;
     };
-    this.client.guilds.cache.each(async (guild) => toJoinChannel(guild));
-    this.client.on('memberJoinedChannel', (member) => toJoinChannel(member.guild));
-    this.client.on('memberLeftChannel', (member) => toJoinChannel(member.guild));
+    this.client.once('initialTasksCompleted', async () => {
+      this.client.guilds.cache.each((guild) => toJoinChannel(guild));
+    });
+    this.client.on('memberJoinedChannel', async ({ member }) => toJoinChannel(member.guild));
+    this.client.on('memberLeftChannel', async ({ member }) => toJoinChannel(member.guild));
   }
 };
