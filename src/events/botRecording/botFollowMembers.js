@@ -54,8 +54,8 @@ module.exports = class extends Event {
     };
     this.client.once('initialTasksCompleted', async () => {
       this.client.guilds.cache.each((guild) => toJoinChannel(guild));
+      this.client.on('memberJoinedChannel', async ({ member }) => toJoinChannel(member.guild));
+      this.client.on('memberLeftChannel', async ({ member }) => toJoinChannel(member.guild));
     });
-    this.client.on('memberJoinedChannel', async ({ member }) => toJoinChannel(member.guild));
-    this.client.on('memberLeftChannel', async ({ member }) => toJoinChannel(member.guild));
   }
 };
