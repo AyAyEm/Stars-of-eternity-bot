@@ -19,6 +19,7 @@ const audioDate = () => {
   };
   const invalidCaractersReplace = (stringDate) => stringDate
     .replace(' ', 'T')
+    .replace(/\//g, '_')
     .replace(/:/g, '_')
     .replace(/ /g, '');
   const dateFormater = new Intl.DateTimeFormat(language, options);
@@ -56,14 +57,14 @@ module.exports = class AudioRecorder {
     this.voiceConnection = voiceConnection;
     this.client = client;
     this.channel = voiceConnection.channel;
-    const audioPath = `.\\audios\\${this.audioDateObject.startDate}.ogg`;
-    const logPath = `.\\audios\\${this.audioDateObject.startDate}.txt`;
+    const audioPath = `./audios/${this.audioDateObject.startDate}.ogg`;
+    const logPath = `./audios/${this.audioDateObject.startDate}.txt`;
     this.outputAudioStream = fs.createWriteStream(audioPath);
     this.outputLogStream = fs.createWriteStream(logPath);
     const { startToEndDate } = this.audioDateObject;
     const fileRename = async (actualPath, newPath) => fs.promises.rename(actualPath, newPath);
-    this.audioRename = async () => fileRename(audioPath, `.\\audios\\${startToEndDate()}.ogg`);
-    this.logRename = async () => fileRename(logPath, `.\\audios\\${startToEndDate()}.txt`);
+    this.audioRename = async () => fileRename(audioPath, `./audios/${startToEndDate()}.ogg`);
+    this.logRename = async () => fileRename(logPath, `./audios/${startToEndDate()}.txt`);
     this.pcmMixer = new AudioMixer.Mixer({
       ...voiceInputOptions,
       clearInterval: 100,
