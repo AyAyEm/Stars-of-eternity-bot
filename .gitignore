@@ -1,5 +1,6 @@
 node_modules
-src/config.js
 .env
 .vscode
 npm-debug.log
+audios
+package-lock.json
