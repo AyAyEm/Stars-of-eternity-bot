@@ -1,6 +1,6 @@
 const { Task } = require('klasa');
 // eslint-disable-next-line import/no-extraneous-dependencies
-const Snowflake = require('discord.js\\src\\util\\Snowflake');
+const Snowflake = require('discord.js').SnowflakeUtil;
 
 module.exports = class extends Task {
   constructor(...args) {
