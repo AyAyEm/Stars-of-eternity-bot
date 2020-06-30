@@ -56,10 +56,16 @@ module.exports = class AudioRecorder {
     this.voiceConnection = voiceConnection;
     this.client = client;
     this.channel = voiceConnection.channel;
-    const audioPath = `.\\audios\\${this.audioDateObject.startDate}.ogg`;
-    const logPath = `.\\audios\\${this.audioDateObject.startDate}.txt`;
-    this.outputAudioStream = fs.createWriteStream(audioPath);
-    this.outputLogStream = fs.createWriteStream(logPath);
+    this.basePath = '.\\audios\\';
+    this.audioPath = `${this.basePath}${this.audioDateObject.startDate}.ogg`;
+    this.logPath = `${this.basePath}${this.audioDateObject.startDate}.txt`;
+    const { basePath, audioPath, logPath } = this;
+    const createFolder = async () => fs.promises.mkdir(basePath, { recursive: true });
+    this.checkFolder = async () => {
+      try { await fs.promises.access(basePath); } catch {
+        await createFolder();
+      }
+    };
     const { startToEndDate } = this.audioDateObject;
     const fileRename = async (actualPath, newPath) => fs.promises.rename(actualPath, newPath);
     this.audioRename = async () => fileRename(audioPath, `.\\audios\\${startToEndDate()}.ogg`);
@@ -72,14 +78,17 @@ module.exports = class AudioRecorder {
   }
 
   async startRecording() {
-    await this.channelLogger();
     if (this.isRecording) {
       await this.stopRecording();
     }
+    await this.checkFolder();
+    await this.channelLogger();
     this.isRecording = true;
     const {
-      voiceConnection, client, channel, outputAudioStream, audioRename, pcmMixer,
+      audioPath, voiceConnection, client, channel, audioRename, pcmMixer,
     } = this;
+    this.outputAudioStream = fs.createWriteStream(audioPath);
+    const { outputAudioStream } = this;
     voiceConnection.play(new Silence(), { type: 'opus' });
     channel.members.array().forEach((member, i) => {
       const voiceStream = voiceConnection.receiver.createStream(member.user, { mode: 'pcm', end: 'manual' });
@@ -122,8 +131,10 @@ module.exports = class AudioRecorder {
 
   async channelLogger() {
     const {
-      outputLogStream, client, channel, audioDateObject: { newDate },
+      logPath, client, channel, audioDateObject: { newDate },
     } = this;
+    this.outputLogStream = fs.createWriteStream(logPath);
+    const { outputLogStream } = this;
     const startString = `Recording started at: ${newDate()} `
       + `with ${channel.members.keyArray().length - 1} member, `
       + `in the channel: [${channel.name}]:[${channel.id}], `
