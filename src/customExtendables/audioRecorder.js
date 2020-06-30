@@ -8,6 +8,11 @@ const { config } = require('../config');
 ffmpeg.setFfmpegPath(require('@ffmpeg-installer/ffmpeg').path);
 ffmpeg.setFfprobePath(require('@ffprobe-installer/ffprobe').path);
 
+const invalidCaractersReplace = (stringDate) => stringDate
+  .replace(' ', 'T')
+  .replace(/\//g, '_')
+  .replace(/:/g, '_')
+  .replace(/ /g, '');
 const audioDate = () => {
   const startDate = new Date();
   const { language, timezone } = config;
@@ -17,11 +22,6 @@ const audioDate = () => {
     fractionalSecondDigits: '2',
     timeZone: timezone,
   };
-  const invalidCaractersReplace = (stringDate) => stringDate
-    .replace(' ', 'T')
-    .replace(/\//g, '_')
-    .replace(/:/g, '_')
-    .replace(/ /g, '');
   const dateFormater = new Intl.DateTimeFormat(language, options);
   return {
     startToEndDate: () => {
@@ -43,12 +43,6 @@ const voiceInputOptions = {
   channels: 2,
   bitDepth: 16,
   sampleRate: 48000,
-};
-const assignVoiceConnection = (voiceConnection, member, pcmMixer) => {
-  const voiceStream = voiceConnection.receiver.createStream(member.user, { mode: 'pcm', end: 'manual' });
-  const standaloneInput = new AudioMixer.Input({ ...voiceInputOptions, volume: 100 });
-  pcmMixer.addInput(standaloneInput);
-  voiceStream.pipe(standaloneInput);
 };
 
 module.exports = class AudioRecorder {
@@ -86,23 +80,23 @@ module.exports = class AudioRecorder {
     await this.channelLogger();
     this.isRecording = true;
     const {
-      audioPath, voiceConnection, client, channel, audioRename, pcmMixer,
+      audioPath, voiceConnection, client, channel, audioRename, pcmMixer, assignVoiceConnection,
     } = this;
     this.outputAudioStream = fs.createWriteStream(audioPath);
     const { outputAudioStream } = this;
     voiceConnection.play(new Silence(), { type: 'opus' });
-    channel.members.array().forEach((member, i) => {
+    channel.members.array().forEach(async (member, i) => {
       const voiceStream = voiceConnection.receiver.createStream(member.user, { mode: 'pcm', end: 'manual' });
       if (i === 0) {
         const mixerInput = pcmMixer.input({ ...voiceInputOptions, volume: 100 });
         return voiceStream.pipe(mixerInput);
       }
-      return assignVoiceConnection(voiceConnection, member, pcmMixer);
+      return assignVoiceConnection.call(this, member);
     });
     const memberJoinEventPath = `${channel.id}memberJoined`;
     client.on(memberJoinEventPath, async (member) => {
       if (member.guild.id !== voiceConnection.channel.guild.id) return;
-      assignVoiceConnection(voiceConnection, member, pcmMixer);
+      await assignVoiceConnection.call(this, member);
     });
     ffmpeg(pcmMixer)
       .inputOptions(['-f s16le', '-acodec pcm_s16le', '-ac 2', '-ar 48000'])
@@ -163,5 +157,13 @@ module.exports = class AudioRecorder {
     outputLogStream.on('end', () => {
       this.logRename();
     });
+  }
+
+  async assignVoiceConnection(member) {
+    const { voiceConnection, pcmMixer } = this;
+    const voiceStream = voiceConnection.receiver.createStream(member.user, { mode: 'pcm', end: 'manual' });
+    const standaloneInput = new AudioMixer.Input({ ...voiceInputOptions, volume: 100 });
+    pcmMixer.addInput(standaloneInput);
+    voiceStream.pipe(standaloneInput);
   }
 };
