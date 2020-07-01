@@ -1,6 +1,6 @@
 {
   "name": "stars-of-eternity-beta",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Discord js bot for stars of eternity server",
   "main": "src/index.js",
   "scripts": {
