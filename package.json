@@ -2,7 +2,7 @@
   "name": "stars-of-eternity-beta",
   "version": "0.0.1",
   "description": "Discord js bot for stars of eternity server",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "pm2-runtime start ecosystem.config.js --env production",
@@ -15,7 +15,7 @@
     "@discordjs/opus": "^0.3.2",
     "@ffmpeg-installer/ffmpeg": "^1.0.20",
     "@ffprobe-installer/ffprobe": "^1.0.12",
-    "audio-mixer": "^2.1.4",
+    "audio-mixer": "github:WarNote/Audio-Mixer",
     "axios": "^0.19.2",
     "cachegoose": "^8.0.0",
     "discord.js": "github:discordjs/discord.js",
