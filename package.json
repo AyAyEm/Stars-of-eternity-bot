@@ -6,7 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "pm2-runtime start ecosystem.config.js --env production",
-    "nodemon": "nodemon src/index.js"
+    "nodemon": "nodemon src/index.js",
+    "nodeshift": "nodeshift --build.strategy docker"
+  },
+  "engines": {
+    "node": "12.x"
   },
   "keywords": [],
   "author": "WarNote",
@@ -35,6 +39,7 @@
     "eslint": "^7.3.1",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.0",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "nodeshift": "^6.2.0"
   }
 }

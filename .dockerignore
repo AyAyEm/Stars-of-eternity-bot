@@ -3,3 +3,5 @@ node_modules
 npm-debug.log
 audios
 package-lock.json
+.nodeshift
+tmp
