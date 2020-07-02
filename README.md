@@ -1,5 +1,11 @@
 # StarsOfEternityBot
 
+## Introduction
+
+This is a bot built for the Stars of eternity discord server. The main dependencies are:
+- [klasa](https://github.com/dirigeants/klasa/tree/master)
+- [discord.js](https://github.com/discordjs/discord.js)
+
 ## Requirements
 - node.js: 12.x,
 - mongo database
