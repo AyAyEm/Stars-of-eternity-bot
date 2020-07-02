@@ -7,8 +7,8 @@ This is a bot built for the Stars of eternity discord server. The main dependenc
 - [discord.js](https://github.com/discordjs/discord.js)
 
 ## Requirements
-- node.js: 12.x,
-- mongo database
+- [node.js: 12.x](https://nodejs.org/),
+- [mongo database](https://www.mongodb.com/)
 
 ## Installation
 - Edit .env with your bot token and mongo access string.
