@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 const { Provider, util: { mergeDefault, mergeObjects, isObject } } = require('klasa');
 const mongoose = require('mongoose');
+const chachegoose = require('cachegoose');
 
 const { Schema } = mongoose;
 
@@ -111,11 +112,52 @@ module.exports = class extends Provider {
     return { messages, guildDocument, Guilds };
   }
 
-  /* Warframe trackers */
-  /* Default table methods */
-
   get exec() {
     return this.db;
+  }
+
+  get Guild() {
+    return async function Guild(guildID) {
+      Guild.id = { id: guildID };
+      Guild.model = this.models.Guilds;
+      Guild.get = async function get(key, type = null) {
+        if (!key) throw new Error('Missing key');
+        return this.trackerDocument.get(key, type);
+      };
+      Guild.set = async function set(key, value) {
+        if (!key) throw new Error('Missing key');
+        await this.trackerDocument.set(key, value).save();
+        return this;
+      };
+      Guild.reload = async function reload() {
+        this.trackerDocument = await this.model.findOne(this.id);
+        return this;
+      };
+      await Guild.reload();
+      return Guild;
+    };
+  }
+
+  get Tracker() {
+    return async function Tracker(tracker) {
+      Tracker.id = { tracker };
+      Tracker.model = this.models.Trackers;
+      Tracker.get = async function get(key, type = null) {
+        if (!key) throw new Error('Missing key');
+        return this.trackerDocument.get(key, type);
+      };
+      Tracker.set = async function set(key, value) {
+        if (!key) throw new Error('Missing key');
+        await this.trackerDocument.set(key, value).save();
+        return this;
+      };
+      Tracker.reload = async function reload() {
+        this.trackerDocument = await this.model.findOne(this.id);
+        return this;
+      };
+      await Tracker.reload();
+      return Tracker;
+    };
   }
 
   hasTable(table) {
