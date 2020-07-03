@@ -5,7 +5,7 @@ module.exports = {
     watch: ['./src'],
     ignore_watch: ['node_modules'],
     watch_delay: 1000,
-    max_memory_restart: '1G',
+    max_memory_restart: '512M',
   }],
   env: {
     NODE_ENV: 'development',
