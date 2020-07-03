@@ -1,26 +1,19 @@
 const { MessageEmbed } = require('discord.js');
 
-const authorThumb = (attackingFaction) => {
-  const tumbs = new Map([
-    ['Grineer', 'https://i.imgur.com/Z2cwAPz.png'],
-    ['Corpus', 'https://i.imgur.com/4NWRkzT.png'],
-    ['Infested', 'https://i.imgur.com/z5DRsUp.png'],
-  ]);
-  return tumbs.get(attackingFaction);
-};
+const factionsStyle = new Map([
+  ['Grineer', { tumb: 'https://i.imgur.com/Z2cwAPz.png', color: '#a66d11' }],
+  ['Corpus', { tumb: 'https://i.imgur.com/4NWRkzT.png', color: '#256a9c' }],
+  ['Infested', { tumb: 'https://i.imgur.com/z5DRsUp.png', color: '#259c35'}],
+]);
+
 const embedMaker = (reward, invasion, defendingFaction, attackingFaction) => {
-  // Seconds minutes and hours: 17h 54m 53s = [ '53', ' 54', ' 17' ]
-  // const etaHMS = invasion.eta.match(/[^hms\s]\d/gi).reverse()
   const embed = new MessageEmbed()
     .setTitle(`${reward.itemString}`)
     .setThumbnail(reward.thumbnail)
-    // .setFooter(`${finishedInDate(etaHMS)})`)
     .setTimestamp()
-    .setAuthor(`${invasion.node} ${invasion.desc}`, authorThumb(attackingFaction))
-    .setDescription(
-      `Facção: ${defendingFaction}
-            Previsão de conclusão em: ${invasion.eta}`,
-    );
+    .setColor(factionsStyle.get(defendingFaction).color)
+    .setAuthor(`${invasion.node} ${invasion.desc}`, factionsStyle.get(defendingFaction).tumb)
+    .setFooter(`${defendingFaction} x ${attackingFaction}`, factionsStyle.get(attackingFaction).tumb);
   return embed;
 };
 
@@ -31,7 +24,7 @@ const embed = (invasion, matchedItems) => {
     attackingFaction, defendingFaction, attackerReward, defenderReward, rewardTypes,
   } = invasion;
   if (attackingFaction === 'Infested') {
-    embeds.push(embedMaker(defenderReward, invasion, defendingFaction, attackingFaction));
+    embeds.push(embedMaker(defenderReward, invasion, attackingFaction, defendingFaction));
     if (numbOfItems === 1) return embeds;
   }
   if (matchedItems.includes(rewardTypes[0])) {
