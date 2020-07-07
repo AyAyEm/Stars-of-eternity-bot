@@ -3,6 +3,7 @@
 const { Provider, util: { mergeDefault, mergeObjects, isObject } } = require('klasa');
 const mongoose = require('mongoose');
 const chachegoose = require('cachegoose');
+const emojis = require('../../static/guildEmojis');
 
 const { Schema } = mongoose;
 
@@ -63,6 +64,16 @@ module.exports = class extends Provider {
       type: String,
       data: mongoose.Mixed,
     });
+    const utilsSchema = new Schema({
+      type: String,
+      emojis: {
+        type: Map,
+        of: {
+          id: String,
+          guild: String,
+        },
+      },
+    });
     const connection = mergeDefault({
       host: 'localhost',
       port: 27017,
@@ -80,6 +91,7 @@ module.exports = class extends Provider {
     this.models = {
       Guilds: mongoose.model('Guilds', guildsSchema),
       Trackers: mongoose.model('trackers', trackersSchema),
+      Utils: mongoose.model('Utils', utilsSchema),
     };
     const invasionTrackerDoc = { tracker: 'invasion', type: 'warframe' };
     const invasionTrackerExists = await this.models.Trackers.exists(invasionTrackerDoc);
@@ -157,6 +169,33 @@ module.exports = class extends Provider {
       };
       await Tracker.reload();
       return Tracker;
+    };
+  }
+
+  get Util() {
+    return async function Util(utilName) {
+      Util.id = { type: utilName };
+      Util.model = this.models.Utils;
+      Util.get = async function get(key, type = null) {
+        if (!key) throw new Error('Missing key');
+        return this.document.get(key, type);
+      };
+      Util.set = async function set(key, value = null) {
+        if (!key) throw new Error('Missing key');
+        await this.document.set(key, value).save();
+        return this;
+      };
+      Util.reload = async function reload() {
+        this.document = await this.model.findOne(this.id);
+        return this;
+      };
+      async function init() {
+        const { model, id } = Util;
+        if (!await model.exists(id)) await Util.model.create(id);
+        return Util.reload();
+      }
+      await init();
+      return Util;
     };
   }
 
