@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-const masteryRankImgs = require('./static/masteryRankImgs');
+const masteryRankImgs = require('../../../../static/masteryRankImgs');
 
 const baseWeapon = (weapon) => {
   const {
