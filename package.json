@@ -29,6 +29,7 @@
     "dropbox-v2-api": "^2.4.19",
     "erlpack": "github:discordapp/erlpack",
     "fluent-ffmpeg": "^2.1.2",
+    "fuse.js": "^6.4.0",
     "klasa": "^0.5.0",
     "lavacord": "^1.1.9",
     "libsodium-wrappers": "^0.7.6",
@@ -38,6 +39,7 @@
     "node-fetch": "^2.6.0",
     "pm2": "^4.4.0",
     "utf-8-validate": "^5.0.2",
+    "warframe-items": "^1.973.0",
     "zlib-sync": "^0.1.7"
   },
   "devDependencies": {
