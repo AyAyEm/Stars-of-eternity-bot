@@ -1,4 +1,4 @@
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 // // Fissures: Lith, Meso, Neo, Axi and Requiem
 const fissureIcons = [
@@ -14,7 +14,7 @@ const fissuresEmbed = (fissures) => {
   const missionsTypes = fissures.reduce((types, { missionType }, index) => `${types} ${missionType}${index === fissures.length - 1 ? '' : ','}`, '');
   const { tierNum, tier } = fissures[0];
   const fields = fissures.map(({ missionType, node }) => ({ name: missionType, value: node }));
-  const embed = new RichEmbed()
+  const embed = new MessageEmbed()
     .setTitle(`${tier} fendas ativas: ${fissures.length}`)
     .setAuthor(missionsTypes)
     .setDescription('')
@@ -24,6 +24,4 @@ const fissuresEmbed = (fissures) => {
   return embed;
 };
 
-module.exports = {
-  fissuresEmbed,
-};
+module.exports = fissuresEmbed;
