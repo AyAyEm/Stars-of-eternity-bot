@@ -14,7 +14,7 @@ const baseWeapon = (weapon) => {
       { name: 'Categoria', value: category, inline: true },
     ])
     .setThumbnail(`https://cdn.warframestat.us/img/${imageName}`)
-    .setFooter(`Maestria necessária: ${masteryReq}`, masteryRankImgs[masteryReq]);
+    .setFooter(`Maestria ${masteryReq}`, masteryRankImgs[masteryReq]);
   return embed;
 };
 
