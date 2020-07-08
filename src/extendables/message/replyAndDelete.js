@@ -1,6 +1,6 @@
 const { Extendable } = require('klasa');
 const { Message } = require('discord.js');
-const { extandablesConfig: { replyAndDeleteTimeout: defaultTimeout } } = require('../config');
+const { extandablesConfig: { replyAndDeleteTimeout: defaultTimeout } } = require('../../config');
 
 module.exports = class extends Extendable {
   constructor(...args) {
