@@ -39,13 +39,32 @@ module.exports = class extends Command {
   }
 
   async run(msg, [itemName]) {
-    const { channel } = msg;
+    const { channel, author } = msg;
     const matchedItems = fuse.search(itemName).slice(0, 3);
     if (matchedItems[0].score > 0.17) {
       channel.send('Item não encontrado');
       return;
     }
     const { item } = matchedItems[0];
-    msg.channel.send(weapon(item));
+    const embedsMap = weapon(item);
+    const sentMessage = await msg.channel.send([...embedsMap.values()][0]);
+    const isAuthorFilter = (...{ 1: user }) => author.id === user.id;
+    const collectorOptions = { time: 120000, idle: 30000, dispose: true };
+    const collector = sentMessage.createReactionCollector(isAuthorFilter, collectorOptions);
+    collector.on('collect', (reaction) => {
+      if (reaction.emoji.name === '❌') {
+        collector.stop('User decided to end it');
+        return;
+      }
+      sentMessage.edit(undefined, embedsMap.get(reaction.emoji.name));
+      collector.resetTimer();
+      reaction.users.remove(author);
+    });
+    collector.on('end', () => {
+      const reason = 'Command ended';
+      collector.message.delete({ reason });
+      msg.delete({ reason });
+    });
+    await sentMessage.multiReact([...embedsMap.keys(), '❌']);
   }
 };
