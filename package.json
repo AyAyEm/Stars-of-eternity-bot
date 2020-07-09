@@ -20,6 +20,7 @@
     "@discordjs/opus": "^0.3.2",
     "@ffmpeg-installer/ffmpeg": "^1.0.20",
     "@ffprobe-installer/ffprobe": "^1.0.12",
+    "app-root-path": "^3.0.0",
     "audio-mixer": "github:WarNote/Audio-Mixer",
     "axios": "^0.19.2",
     "bufferutil": "^4.0.1",
