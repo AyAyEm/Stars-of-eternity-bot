@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const baseWeapon = require('./baseWeapon');
-const { parseSource } = require('./utils/blueprintsSource');
-const parseEnemyInfo = require('./utils/parseEnemyInfo');
+const { parseSource } = require('../utils/blueprintsSource');
+const parseEnemyInfo = require('../utils/parseEnemyInfo');
 
 class WeaponEmbed {
   constructor(weapon) {

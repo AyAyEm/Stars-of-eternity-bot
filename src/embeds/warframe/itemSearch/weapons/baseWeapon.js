@@ -1,6 +1,8 @@
 const { MessageEmbed } = require('discord.js');
-const masteryRankImgs = require('../../../../static/masteryRankImgs');
-const rivenDisposition = require('../../../../static/rivenDisposition');
+const reqLib = require('app-root-path').require;
+
+const masteryRankImgs = reqLib('/static/masteryRankImgs');
+const rivenDisposition = reqLib('/static/rivenDisposition');
 
 const baseWeapon = (weapon) => {
   const {
@@ -8,8 +10,7 @@ const baseWeapon = (weapon) => {
   } = weapon;
   const embed = new MessageEmbed();
   embed
-    .setTitle(name)
-    .setDescription(rivenDisposition[disposition - 1])
+    .setTitle(`${name} ${rivenDisposition[disposition - 1]}`)
     .addFields([
       { name: 'Categoria', value: category, inline: true },
       { name: 'Tipo', value: type, inline: true },
