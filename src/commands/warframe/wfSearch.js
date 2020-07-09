@@ -2,7 +2,7 @@ const { Command } = require('klasa');
 const { MessageEmbed } = require('discord.js');
 const Fuse = require('fuse.js');
 const Items = require('warframe-items');
-const weapon = require('../../embeds/warframe/itemSearch/weapon');
+const itemToEmbed = require('../../embeds/warframe/itemSearch/index');
 const numberEmojis = require('../../../static/numberEmojis');
 
 const warframeItems = [
@@ -19,7 +19,7 @@ const fuse = new Fuse(new Items({ category: warframeItems }), {
 const isAuthorFilter = (author) => (...{ 1: user }) => author.id === user.id;
 const sendItemMessage = async (item, msg, previousSentMessage) => {
   const { author } = msg;
-  const embedsMap = weapon(item);
+  const embedsMap = itemToEmbed(item);
   const sentMessage = previousSentMessage
     ? await previousSentMessage.edit(undefined, [...embedsMap.values()][0])
     : await msg.channel.send([...embedsMap.values()][0]);
@@ -69,7 +69,7 @@ module.exports = class extends Command {
   async run(msg, [itemName]) {
     const { channel, author } = msg;
     const matchedItems = fuse.search(itemName).slice(0, 3);
-    if (matchedItems[0].score > 0.17) {
+    if (matchedItems[0].score > 0.15) {
       const matchesString = ({ item }, index) => `${numberEmojis[index + 1]} ${item.name} ${item.category}`;
       const noMatchEmbed = new MessageEmbed()
         .setTitle('Item não encontrado')
@@ -78,16 +78,19 @@ module.exports = class extends Command {
       const collector = noMatchMessage
         .createReactionCollector(isAuthorFilter(author), { time: 15000 });
       collector.on('collect', (reaction) => {
+        if (reaction.emoji.name === '❌') {
+          collector.stop('User decided to stop');
+          return;
+        }
         const index = numberEmojis.indexOf(reaction.emoji.name);
         reaction.message.reactions.removeAll();
         collector.stop('Reaction defined');
         sendItemMessage(matchedItems[index - 1].item, msg, noMatchMessage);
       });
       collector.on('end', (...{ 1: endingReason }) => {
-        if (endingReason === 'time') {
-          const reason = 'Command timeout';
-          msg.delete({ reason });
-          collector.message.delete({ reason });
+        if (endingReason === 'time' || endingReason === 'User decided to stop') {
+          msg.delete({ endingReason });
+          collector.message.delete({ endingReason });
         }
       });
       noMatchMessage.multiReact([...numberEmojis.slice(1, 4), '❌']);
