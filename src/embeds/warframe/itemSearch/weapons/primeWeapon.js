@@ -1,13 +1,10 @@
-const baseWeapon = require('./baseWeapon');
+const BaseWeapon = require('./baseWeapon');
 const { parseSource } = require('../utils/blueprintsSource');
 
-class WeaponEmbed {
+class WeaponEmbed extends BaseWeapon {
   constructor(weapon) {
+    super(weapon);
     this.weapon = weapon;
-  }
-
-  get baseEmbed() {
-    return baseWeapon(this.weapon);
   }
 
   get bpSource() {

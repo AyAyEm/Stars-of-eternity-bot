@@ -1,15 +1,12 @@
 const _ = require('lodash');
-const baseWeapon = require('./baseWeapon');
+const BaseWeapon = require('./baseWeapon');
 const { parseSource } = require('../utils/blueprintsSource');
 const parseEnemyInfo = require('../utils/parseEnemyInfo');
 
-class WeaponEmbed {
+class WeaponEmbed extends BaseWeapon {
   constructor(weapon) {
+    super(weapon);
     this.weapon = weapon;
-  }
-
-  get baseEmbed() {
-    return baseWeapon(this.weapon);
   }
 
   get bpSource() {
@@ -75,9 +72,10 @@ class WeaponEmbed {
 
 module.exports = (weapon) => {
   const weaponEmbed = new WeaponEmbed(weapon);
-  const { mainInfoPage, componentsPage } = weaponEmbed;
+  const { mainInfoPage, componentsPage, baseStatusEmbed } = weaponEmbed;
   const embedMap = new Map();
   embedMap.set('📋', mainInfoPage);
   if (componentsPage) embedMap.set('♻', componentsPage);
+  embedMap.set('🃏', baseStatusEmbed);
   return embedMap;
 };
