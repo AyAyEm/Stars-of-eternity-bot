@@ -28,11 +28,28 @@ class BaseWeapon {
   get baseStatusEmbed() {
     const { baseEmbed, weapon } = this;
     const {
+      // eslint-disable-next-line no-unused-vars
       criticalChance, criticalMultiplier, procChance, fireRate, accuracy,
+      // eslint-disable-next-line no-unused-vars
       noise, trigger, magazineSize, reloadTime, multishot, ammo, damage,
-      damageTypes, flight, projectile, secondary, areaAttack
+      // eslint-disable-next-line no-unused-vars
+      damageTypes, flight, projectile, secondary, areaAttack,
     } = weapon;
-    baseEmbed.addField('teste', 'teste');
+    const embedStrings = {
+      chance: `Chance: ${Math.round(criticalChance * 100)}%\n`
+        + `Multiplicador: ${criticalMultiplier}x`,
+      status: `Chance: ${Math.round(procChance * 100)}%`,
+      dano: `Base: ${damage}`,
+      munition: `Pente: ${magazineSize}\n`
+        + `Total: ${ammo}`,
+    };
+    const fields = [
+      { name: 'Dano', value: embedStrings.dano, inline: false },
+      { name: 'Crítico', value: embedStrings.chance, inline: false },
+      { name: 'Status', value: embedStrings.status, inline: false },
+      { name: 'Munição', value: embedStrings.munition, inline: true },
+    ];
+    baseEmbed.addFields(fields);
     return baseEmbed;
   }
 }
