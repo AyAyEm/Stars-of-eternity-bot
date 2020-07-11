@@ -1,3 +1,4 @@
+const { bestDrops, dropsString } = require('../utils/relicDrop');
 const BaseWeapon = require('./baseWeapon');
 const { parseSource } = require('../utils/blueprintsSource');
 
@@ -34,15 +35,27 @@ class WeaponEmbed extends BaseWeapon {
   }
 
   get componentsPage() {
-    return null;
+    const { weapon, baseEmbed } = this;
+    const { components } = weapon;
+    const componentsFields = components
+      .filter(({ drops }) => drops[0].type === 'Relics')
+      .sort(({ name }) => (name === 'Blueprint' ? -1 : 1))
+      .map((component) => {
+        const { name, drops } = component;
+        const bestDropsString = dropsString(bestDrops(drops));
+        return { name, value: bestDropsString, inline: false };
+      });
+    baseEmbed.addFields(...componentsFields);
+    return baseEmbed;
   }
 }
 
 module.exports = (weapon) => {
   const weaponEmbed = new WeaponEmbed(weapon);
-  const { mainInfoPage, componentsPage } = weaponEmbed;
+  const { mainInfoPage, componentsPage, baseStatusEmbed } = weaponEmbed;
   const embedMap = new Map();
   embedMap.set('📋', mainInfoPage);
   if (componentsPage) embedMap.set('♻', componentsPage);
+  embedMap.set('🃏', baseStatusEmbed);
   return embedMap;
 };
