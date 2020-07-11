@@ -9,7 +9,11 @@ module.exports = class extends Extendable {
     });
   }
 
-  addBlankField() {
-    return this.addField('\u200b', '\u200b');
+  static get blankField() {
+    return { name: '\u200b', value: '\u200b' };
+  }
+
+  addBlankField(inline = false) {
+    return this.addField('\u200b', '\u200b', inline);
   }
 };
