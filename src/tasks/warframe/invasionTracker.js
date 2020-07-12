@@ -1,4 +1,4 @@
-const { Task } = require('klasa');
+const { Task, KlasaConsole } = require('klasa');
 
 const invasionUrl = 'https://api.warframestat.us/pc/invasions';
 const axios = require('axios').default;
@@ -30,8 +30,7 @@ module.exports = class extends Task {
           await invasionDocument.save();
         }
       })
-        // eslint-disable-next-line no-console
-        .catch((err) => err);
+        .catch((err) => KlasaConsole.error(err));
     };
     setInterval(runner, 10000);
   }
