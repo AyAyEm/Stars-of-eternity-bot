@@ -1,5 +1,5 @@
 const { Extendable, KlasaMessage } = require('klasa');
-const { eachSeries } = require('async');
+const { until } = require('async');
 
 module.exports = class extends Extendable {
   constructor(...args) {
@@ -10,11 +10,12 @@ module.exports = class extends Extendable {
   }
 
   async multiReact(emojis) {
-    let stop = false;
+    let [stop, iteration] = [false, 0];
     const stopReactions = () => { stop = true; };
-    const reactionLoop = eachSeries(emojis, async (emoji) => {
-      if (!stop) return (await this.react(emoji)).fetch();
-      return undefined;
+    const emojisIterator = emojis.values();
+    const reactionLoop = until(async () => stop || iteration >= emojis.length, async () => {
+      iteration += 1;
+      return (await this.react(emojisIterator.next().value)).fetch();
     });
     return { reactionLoop, stopReactions };
   }
