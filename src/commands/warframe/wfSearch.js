@@ -50,7 +50,7 @@ module.exports = class extends Command {
       runIn: ['text'],
       requiredPermissions: [],
       requiredSettings: [],
-      aliases: [],
+      aliases: ['wfs', 's'],
       autoAliases: true,
       bucket: 1,
       cooldown: 0,
@@ -77,11 +77,14 @@ module.exports = class extends Command {
       const noMatchMessage = await channel.send(noMatchEmbed);
       const collector = noMatchMessage
         .createReactionCollector(isAuthorFilter(author), { time: 15000 });
-      collector.on('collect', (reaction) => {
+      const { reactionLoop, stopReactions } = await noMatchMessage.multiReact([...numberEmojis.slice(1, 4), '❌']);
+      collector.on('collect', async (reaction) => {
         if (reaction.emoji.name === '❌') {
           collector.stop('User decided to stop');
           return;
         }
+        stopReactions();
+        await reactionLoop;
         const index = numberEmojis.indexOf(reaction.emoji.name);
         reaction.message.reactions.removeAll();
         collector.stop('Reaction defined');
@@ -93,7 +96,6 @@ module.exports = class extends Command {
           collector.message.delete({ endingReason });
         }
       });
-      noMatchMessage.multiReact([...numberEmojis.slice(1, 4), '❌']);
     } else {
       sendItemMessage(matchedItems[0].item, msg);
     }
