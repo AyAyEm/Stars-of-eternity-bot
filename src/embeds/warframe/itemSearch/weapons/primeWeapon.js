@@ -1,6 +1,5 @@
 const { bestDrops, dropsString } = require('../utils/relicDrop');
 const BaseWeapon = require('./baseWeapon');
-const { parseSource } = require('../utils/blueprintsSource');
 
 class WeaponEmbed extends BaseWeapon {
   constructor(weapon) {
@@ -8,34 +7,23 @@ class WeaponEmbed extends BaseWeapon {
     this.weapon = weapon;
   }
 
-  get bpSource() {
-    return parseSource(this.weapon);
-  }
-
   get mainInfoPage() {
-    const { weapon, bpSource } = this;
+    const { weapon, baseEmbed: embed } = this;
     const { components } = weapon;
-    const embed = this.baseEmbed;
-    const resources = components
-      ? components.filter((item) => item.name !== 'Blueprint')
-      : null;
-    const blueprintString = bpSource.id === 1
-      ? `${bpSource.location} Lab: ${bpSource.lab}`
-      : `${bpSource.location}`;
-    embed.addField('Blueprint', blueprintString, false);
-    if (resources) {
-      const resourcesNames = resources.map(({ name: resourceName, itemCount }) => (
-        `${resourceName} **${itemCount}**`));
-      const resourcesString = resourcesNames.reduce((resourceStr, resource) => (
-        `${resourceStr}${resource}\n`
-      ), '');
-      embed.addField('Recursos', resourcesString, false);
-    }
+    const primeComponentsString = components
+      .filter(({ drops }) => drops[0].type === 'Relics')
+      .sort(({ name }) => (name === 'Blueprint' ? -1 : 0))
+      .reduce((strings, component) => `${strings}${component.name} **${component.itemCount}**\n`, '');
+    embed.addField('Componentes', primeComponentsString, false);
+    const resourcesString = components
+      .filter(({ uniqueName }) => uniqueName.split('/')[3] === 'Items')
+      .reduce((string, resource) => `${string}${resource.name} **${resource.itemCount}**\n`, '');
+    embed.addField('Recursos', resourcesString, false);
     return embed;
   }
 
   get componentsPage() {
-    const { weapon, baseEmbed } = this;
+    const { weapon, baseEmbed: embed } = this;
     const { components } = weapon;
     const componentsFields = components
       .filter(({ drops }) => drops[0].type === 'Relics')
@@ -45,8 +33,8 @@ class WeaponEmbed extends BaseWeapon {
         const bestDropsString = dropsString(bestDrops(drops));
         return { name, value: bestDropsString, inline: false };
       });
-    baseEmbed.addFields(...componentsFields);
-    return baseEmbed;
+    embed.addFields(...componentsFields);
+    return embed;
   }
 }
 
