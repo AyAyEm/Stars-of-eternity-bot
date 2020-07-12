@@ -22,19 +22,19 @@ function parseEngineInput(updated) {
   return Object.assign({}, ...updated.map((entry) => ({ [entry.data[0]]: entry.data[1] })));
 }
 
-function Document(modelsObject, docID) {
-  const model = modelsObject.Guilds;
+function Document(Model, docID, defaultDocumentInfo = {}) {
   this.get = (key, type = null) => {
     if (!key) throw new Error('Missing key');
-    return this.trackerDocument.get(key, type);
+    return this.document.get(key, type);
   };
   this.set = async (key, value) => {
     if (!key) throw new Error('Missing key');
-    await this.trackerDocument.updateOne({ [key]: value }, { upsert: true });
+    await this.document.updateOne({ [key]: value }, { upsert: true });
     return this.reload();
   };
   this.reload = async () => {
-    this.trackerDocument = await model.findOne(docID);
+    this.document = await Model.findOne(docID)
+      || await new Model({ ...docID, ...defaultDocumentInfo }).save();
     return this;
   };
   return this.reload();
@@ -152,18 +152,18 @@ module.exports = class extends Provider {
   }
 
   get Guild() {
-    const { models } = this;
-    return (guildID) => new Document(models, { id: guildID });
+    const { models: { Guilds } } = this;
+    return (guildID) => new Document(Guilds, { id: guildID });
   }
 
   get Tracker() {
-    const { models } = this;
-    return (tracker) => new Document(models, { tracker });
+    const { models: { Trackers } } = this;
+    return (tracker, type) => new Document(Trackers, { tracker }, { type });
   }
 
   get Util() {
-    const { models } = this;
-    return (utilName) => new Document(models, { type: utilName });
+    const { models: { Utils } } = this;
+    return (utilName) => new Document(Utils, { type: utilName });
   }
 
   hasTable(table) {
