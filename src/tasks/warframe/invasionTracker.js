@@ -1,7 +1,8 @@
-const { Task, KlasaConsole } = require('klasa');
+const { Task } = require('klasa');
+const axios = require('axios').default;
+const { reduce, filter } = require('async');
 
 const invasionUrl = 'https://api.warframestat.us/pc/invasions';
-const axios = require('axios').default;
 
 module.exports = class extends Task {
   constructor(...args) {
@@ -14,23 +15,22 @@ module.exports = class extends Task {
   async init() {
     const runner = async () => {
       axios.get(invasionUrl).then(async ({ data: invasionsData }) => {
-        const provider = await this.client.providers.get('mongoose');
-        const invasionDocument = await provider.warframe.invasion;
-        const invasionsIds = await invasionDocument.get('data.cacheIds') || [];
-        const needUpdate = invasionsData.reduce((boolean, invasion) => {
-          if (!invasionsIds.includes(invasion.id) && !invasion.completed) {
+        const activeInvasions = await filter(invasionsData, async ({ completed }) => !completed);
+        const invasionTracker = await this.client.provider.Tracker('invasion', 'warframe');
+        const invasionsIDs = invasionTracker.get('data.cacheIDs', []);
+        const needUpdate = await reduce(activeInvasions, false, async (needToUpdate, invasion) => {
+          if (!invasion.completed && !invasionsIDs.includes(invasion.id)) {
             this.client.emit('warframeNewInvasion', invasion);
             return true;
           }
-          return boolean;
-        }, false);
+          return needToUpdate;
+        });
         if (needUpdate) {
-          const updatedArr = invasionsData.map((invasion) => invasion.id);
-          invasionDocument.set('data.cacheIds', updatedArr);
-          await invasionDocument.save();
+          const updatedArr = invasionsData.map(({ id }) => id);
+          await invasionTracker.set('data.cacheIDs', updatedArr);
         }
       })
-        .catch((err) => KlasaConsole.error(err));
+        .catch((err) => this.client.console.error(err));
     };
     setInterval(runner, 10000);
   }
