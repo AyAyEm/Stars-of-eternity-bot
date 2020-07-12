@@ -14,7 +14,7 @@ module.exports = class extends Extendable {
     const stopReactions = () => { stop = true; };
     const reactionLoop = eachSeries(emojis, async (emoji) => {
       if (!stop) return (await this.react(emoji)).fetch();
-      return this;
+      return undefined;
     });
     return { reactionLoop, stopReactions };
   }
