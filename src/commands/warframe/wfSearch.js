@@ -47,7 +47,7 @@ module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
       enabled: true,
-      runIn: ['text', 'dm', 'group'],
+      runIn: ['text'],
       requiredPermissions: [],
       requiredSettings: [],
       aliases: [],
