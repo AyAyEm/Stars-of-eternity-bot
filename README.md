@@ -1,4 +1,4 @@
-# StarsOfEternityBot
+# Stars-of-eternity-bot
 
 ## Introduction
 
@@ -14,7 +14,7 @@ This is a bot built for the Stars of eternity discord server. The main dependenc
 - Edit .env with your bot token and mongo access string.
 - Install all the dependencies:
 ```bash
-npm install
+sudo npm install --production
 ```
 - Have fun:
 ```bash
