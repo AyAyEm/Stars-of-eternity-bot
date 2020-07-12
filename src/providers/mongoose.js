@@ -22,6 +22,24 @@ function parseEngineInput(updated) {
   return Object.assign({}, ...updated.map((entry) => ({ [entry.data[0]]: entry.data[1] })));
 }
 
+function Document(modelsObject, docID) {
+  const model = modelsObject.Guilds;
+  this.get = (key, type = null) => {
+    if (!key) throw new Error('Missing key');
+    return this.trackerDocument.get(key, type);
+  };
+  this.set = async (key, value) => {
+    if (!key) throw new Error('Missing key');
+    await this.trackerDocument.updateOne({ [key]: value }, { upsert: true });
+    return this.reload();
+  };
+  this.reload = async () => {
+    this.trackerDocument = await model.findOne(docID);
+    return this;
+  };
+  return this.reload();
+}
+
 module.exports = class extends Provider {
   constructor(...args) {
     super(...args, { enabled: true });
@@ -33,6 +51,10 @@ module.exports = class extends Provider {
       enabled: Boolean,
       items: [String],
     });
+    const relics = new Schema({
+      enabled: Boolean,
+      lastUpdate: Date,
+    });
     const memberData = new Schema({
       toFollow: { type: Boolean, default: false },
     });
@@ -43,6 +65,7 @@ module.exports = class extends Provider {
       channels: {
         type: Map,
         of: {
+          relicTracker: relics,
           invasionItems: invasions,
           messages: {
             type: Map,
@@ -129,74 +152,18 @@ module.exports = class extends Provider {
   }
 
   get Guild() {
-    return async function Guild(guildID) {
-      Guild.id = { id: guildID };
-      Guild.model = this.models.Guilds;
-      Guild.get = async function get(key, type = null) {
-        if (!key) throw new Error('Missing key');
-        return this.trackerDocument.get(key, type);
-      };
-      Guild.set = async function set(key, value) {
-        if (!key) throw new Error('Missing key');
-        await this.trackerDocument.set(key, value).save();
-        return this;
-      };
-      Guild.reload = async function reload() {
-        this.trackerDocument = await this.model.findOne(this.id);
-        return this;
-      };
-      await Guild.reload();
-      return Guild;
-    };
+    const { models } = this;
+    return (guildID) => new Document(models, { id: guildID });
   }
 
   get Tracker() {
-    return async function Tracker(tracker) {
-      Tracker.id = { tracker };
-      Tracker.model = this.models.Trackers;
-      Tracker.get = async function get(key, type = null) {
-        if (!key) throw new Error('Missing key');
-        return this.trackerDocument.get(key, type);
-      };
-      Tracker.set = async function set(key, value) {
-        if (!key) throw new Error('Missing key');
-        await this.trackerDocument.set(key, value).save();
-        return this;
-      };
-      Tracker.reload = async function reload() {
-        this.trackerDocument = await this.model.findOne(this.id);
-        return this;
-      };
-      await Tracker.reload();
-      return Tracker;
-    };
+    const { models } = this;
+    return (tracker) => new Document(models, { tracker });
   }
 
   get Util() {
-    return async function Util(utilName) {
-      Util.id = { type: utilName };
-      Util.model = this.models.Utils;
-      Util.get = async function get(key, type = null) {
-        if (!key) throw new Error('Missing key');
-        return this.document.get(key, type);
-      };
-      Util.set = async function set(key, value = null) {
-        if (!key) throw new Error('Missing key');
-        await this.document.set(key, value).save();
-        return this;
-      };
-      Util.reload = async function reload() {
-        this.document = await this.model.findOne(this.id);
-        return this;
-      };
-      async function init() {
-        const { model, id } = Util;
-        if (!await model.exists(id)) await Util.model.create(id);
-        return Util.reload();
-      }
-      await init();
-      return Util;
-    };
+    const { models } = this;
+    return (utilName) => new Document(models, { type: utilName });
   }
 
   hasTable(table) {
