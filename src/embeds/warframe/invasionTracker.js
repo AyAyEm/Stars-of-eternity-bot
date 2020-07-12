@@ -1,9 +1,9 @@
 const { MessageEmbed } = require('discord.js');
 
 const factionsStyle = new Map([
-  ['Grineer', { tumb: 'https://i.imgur.com/Z2cwAPz.png', color: '#a66d11' }],
-  ['Corpus', { tumb: 'https://i.imgur.com/4NWRkzT.png', color: '#256a9c' }],
-  ['Infested', { tumb: 'https://i.imgur.com/z5DRsUp.png', color: '#259c35'}],
+  ['Grineer', { tumb: 'https://i.imgur.com/Yh9Ncdv.png', color: '#6c0607' }],
+  ['Corpus', { tumb: 'https://i.imgur.com/Aa4BfIH.png', color: '#0000de' }],
+  ['Infested', { tumb: 'https://i.imgur.com/n9THxDE.png', color: '#1a931e' }],
 ]);
 
 const embedMaker = (reward, invasion, defendingFaction, attackingFaction) => {
