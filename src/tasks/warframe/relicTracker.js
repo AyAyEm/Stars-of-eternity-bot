@@ -29,6 +29,6 @@ module.exports = class extends Task {
           this.client.console.error(err);
         });
     };
-    runner();
+    setInterval(runner, 10000);
   }
 };
