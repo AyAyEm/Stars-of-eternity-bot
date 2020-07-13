@@ -53,7 +53,7 @@ module.exports = class extends Provider {
     });
     const relics = new Schema({
       enabled: Boolean,
-      lastUpdate: Date,
+      messages: { type: Map, of: String },
     });
     const memberData = new Schema({
       toFollow: { type: Boolean, default: false },
