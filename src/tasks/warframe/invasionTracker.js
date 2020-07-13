@@ -30,7 +30,10 @@ module.exports = class extends Task {
           await invasionTracker.set('data.cacheIDs', updatedArr);
         }
       })
-        .catch((err) => this.client.console.error(err));
+        .catch((err) => {
+          if (err.includes('Request failed')) return;
+          this.client.console.error(err);
+        });
     };
     setInterval(runner, 10000);
   }

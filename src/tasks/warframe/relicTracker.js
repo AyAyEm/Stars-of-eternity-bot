@@ -24,7 +24,10 @@ module.exports = class extends Task {
           await fissureTracker.set('data.cacheIDs', updatedArr);
         }
       })
-        .catch((err) => this.client.console.error(err));
+        .catch((err) => {
+          if (err.includes('Request failed')) return;
+          this.client.console.error(err);
+        });
     };
     runner();
   }
