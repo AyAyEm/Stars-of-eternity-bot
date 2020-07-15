@@ -23,7 +23,7 @@ const sendItemMessage = async (item, msg, previousSentMessage) => {
   const sentMessage = previousSentMessage
     ? await previousSentMessage.edit(undefined, [...embedsMap.values()][0])
     : await msg.channel.send([...embedsMap.values()][0]);
-  const timerOptions = { time: 120000, idle: 30000 };
+  const timerOptions = { time: 0, idle: 240000 };
   const collector = sentMessage
     .createReactionCollector(isAuthorFilter(author), { ...timerOptions, dispose: true });
   collector.on('collect', (reaction) => {
