@@ -18,7 +18,7 @@ class WeaponEmbed extends BaseWeapon {
     const resourcesString = components
       .filter(({ uniqueName }) => uniqueName.split('/')[3] === 'Items')
       .reduce((string, resource) => `${string}${resource.name} **${resource.itemCount}**\n`, '');
-    embed.addField('Recursos', resourcesString, false);
+    if (resourcesString) embed.addField('Recursos', resourcesString, false);
     return embed;
   }
 
