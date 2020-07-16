@@ -31,7 +31,7 @@ module.exports = class extends Task {
         }
       })
         .catch((err) => {
-          if (err.includes('Request failed')) return;
+          if (err.message.includes('Request failed')) return;
           this.client.console.error(err);
         });
     };
