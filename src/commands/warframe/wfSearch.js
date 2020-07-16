@@ -37,10 +37,10 @@ const sendItemMessage = async (item, msg, previousSentMessage) => {
   });
   collector.on('end', () => {
     const reason = 'Command ended';
-    msg.delete({ reason });
+    // msg.delete({ reason });
     collector.message.delete({ reason });
   });
-  await sentMessage.multiReact([...embedsMap.keys(), '❌']);
+  sentMessage.multiReact([...embedsMap.keys(), '❌']);
 };
 
 module.exports = class extends Command {
@@ -92,7 +92,7 @@ module.exports = class extends Command {
       });
       collector.on('end', (...{ 1: endingReason }) => {
         if (endingReason === 'time' || endingReason === 'User decided to stop') {
-          msg.delete({ endingReason });
+          // msg.delete({ endingReason });
           collector.message.delete({ endingReason });
         }
       });
