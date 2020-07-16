@@ -1,35 +1,32 @@
 /* eslint-disable max-classes-per-file */
 const { Readable } = require('stream');
+const moment = require('moment-timezone');
 const AudioMixer = require('audio-mixer');
 const ffmpeg = require('fluent-ffmpeg');
 const fs = require('fs');
+require('twix');
+
 const { config } = require('../config');
 
 ffmpeg.setFfmpegPath(require('@ffmpeg-installer/ffmpeg').path);
 ffmpeg.setFfprobePath(require('@ffprobe-installer/ffprobe').path);
 
-const invalidCaractersReplace = (stringDate) => stringDate
-  .replace(' ', 'T')
-  .replace(/\//g, '_')
-  .replace(/:/g, '_')
-  .replace(/ /g, '');
 const audioDate = () => {
-  const startDate = new Date();
-  const { language, timezone } = config;
-  const options = {
-    dateStyle: 'short',
-    timeStyle: 'medium',
-    fractionalSecondDigits: '2',
-    timeZone: timezone,
-  };
-  const dateFormater = new Intl.DateTimeFormat(language, options);
+  const startDate = moment.tz(config.timezone);
+  const formatOptions = 'DD-MM-YYTHH_mm';
   return {
     startToEndDate: () => {
-      const endingDate = new Date();
-      return invalidCaractersReplace(dateFormater.formatRange(startDate, endingDate));
+      const endingDate = moment.tz(config.timezone);
+      return startDate.twix(endingDate).format({
+        dayFormat: '-MM',
+        monthFormat: 'DD',
+        yearFormat: '-YY',
+        hourFormat: 'THH_',
+        minuteFormat: 'mm_ss',
+      }).replace(/[ ,:]/g, '');
     },
-    startDate: invalidCaractersReplace(dateFormater.format(startDate)),
-    newDate: () => dateFormater.format(new Date()),
+    startDate: startDate.format(formatOptions),
+    newDate: () => moment.tz(config.timezone).format('DD/MM/YYYY HH:mm:ss'),
   };
 };
 const silenceFrame = Buffer.from([0xF8, 0xFF, 0xFE]);
