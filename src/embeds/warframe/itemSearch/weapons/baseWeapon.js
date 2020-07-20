@@ -14,12 +14,11 @@ class BaseWeapon {
       name, type, imageName, category, masteryReq, disposition,
     } = this.weapon;
     const embed = new MessageEmbed();
+    const fields = [{ name: 'Categoria', value: category, inline: true }];
+    if (type) fields.push({ name: 'Tipo', value: type, inline: true });
     embed
       .setTitle(`${name} ${rivenDisposition[disposition - 1]}`)
-      .addFields([
-        { name: 'Categoria', value: category, inline: true },
-        { name: 'Tipo', value: type, inline: true },
-      ])
+      .addFields(fields)
       .setThumbnail(`https://cdn.warframestat.us/img/${imageName}`)
       .setFooter(`Maestria ${masteryReq}`, masteryRankImgs[masteryReq]);
     return embed;
