@@ -36,9 +36,10 @@ const sendItemMessage = async (item, msg, previousSentMessage) => {
     reaction.users.remove(author);
   });
   collector.on('end', () => {
-    const reason = 'Command ended';
+    // const reason = 'Command ended';
     // msg.delete({ reason });
-    collector.message.delete({ reason });
+    // collector.message.delete({ reason });
+    collector.message.reactions.removeAll();
   });
   sentMessage.multiReact([...embedsMap.keys(), '❌']);
 };
