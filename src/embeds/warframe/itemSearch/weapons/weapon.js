@@ -1,7 +1,8 @@
 const _ = require('lodash');
 const BaseWeapon = require('./baseWeapon');
 const { parseSource } = require('../utils/blueprintsSource');
-const parseEnemyInfo = require('../utils/parseEnemyInfo');
+const dropToNameAndChance = require('../utils/dropToNameAndChance');
+const { biFilter } = require('../../../../utils');
 
 class WeaponEmbed extends BaseWeapon {
   constructor(weapon) {
@@ -17,19 +18,23 @@ class WeaponEmbed extends BaseWeapon {
     const { weapon, bpSource } = this;
     const { components } = weapon;
     const embed = this.baseEmbed;
-    const resources = components
-      ? components.filter((item) => item.name !== 'Blueprint')
-      : null;
+    const [resources, componentItems] = biFilter(components.filter(({ name }) => name !== 'Blueprint'), ({ uniqueName }) => (
+      uniqueName.includes('Items')));
     const blueprintString = bpSource.id === 1
       ? `${bpSource.location} Lab: ${bpSource.lab}`
       : `${bpSource.location}`;
     embed.addField('Blueprint', blueprintString, false);
-    if (resources) {
+    if (componentItems.length > 0) {
+      const componentsString = componentItems
+        .filter(({ drops }) => drops)
+        .map(({ name, itemCount }) => `${name} **${itemCount}**`)
+        .join('\n');
+      embed.addField('Componentes', componentsString, false);
+    }
+    if (resources.length > 0) {
       const resourcesNames = resources.map(({ name: resourceName, itemCount }) => (
         `${resourceName} **${itemCount}**`));
-      const resourcesString = resourcesNames.reduce((resourceStr, resource) => (
-        `${resourceStr}${resource}\n`
-      ), '');
+      const resourcesString = resourcesNames.join('\n');
       embed.addField('Recursos', resourcesString, false);
     }
     return embed;
@@ -40,31 +45,27 @@ class WeaponEmbed extends BaseWeapon {
     const { components } = weapon;
     if (bpSource.location !== 'Drop') return null;
     if (!components) return null;
-    const resourcesArr = [];
-    components.forEach((component) => {
-      const { drops, name, itemCount } = component;
-      const nameString = itemCount === 1 ? name : `${name} **${itemCount}**`;
-      let dataString = '\u200b';
-      if (drops && name === 'Blueprint') {
-        const nameAndChance = _.uniqBy(drops, 'location')
-          .map((drop) => parseEnemyInfo(drop))
-          .sort(({ 1: chanceA }, { 1: chanceB }) => {
-            if (chanceA === chanceB) return 0;
-            return chanceA < chanceB ? 1 : -1;
-          })
-          .slice(0, 3);
-        dataString = nameAndChance
-          .map(([enemyName, chance]) => `${enemyName} **${Math.round(chance * 100) / 100}%**`)
-          .join('\n');
-      }
-      if (name !== 'Blueprint') {
-        resourcesArr.push(nameString);
-      } else {
-        baseEmbed.addField(nameString, dataString, false);
-      }
+    const [resources, componentItems] = biFilter(components, ({ uniqueName }) => (
+      uniqueName.includes('Items')));
+    const componentsFields = componentItems.map(({ drops, name }) => {
+      const nameAndChance = _.uniqBy(drops, 'location')
+        .map((drop) => dropToNameAndChance(drop))
+        .sort(({ 1: chanceA }, { 1: chanceB }) => {
+          if (chanceA === chanceB) return 0;
+          return chanceA < chanceB ? 1 : -1;
+        })
+        .slice(0, 3);
+      const dataString = nameAndChance
+        .map(([enemyName, chance]) => `${enemyName} **${Math.round(chance * 100) / 100}%**`)
+        .join('\n');
+      return { name, value: dataString, inline: false };
     });
-    if (resourcesArr.length > 0) {
-      baseEmbed.addField('Recursos', resourcesArr.join('\n'));
+    baseEmbed.addFields(componentsFields);
+    if (resources.length > 0) {
+      const resourcesString = resources
+        .map(({ name, itemCount }) => `${name} **${itemCount}**`)
+        .join('\n');
+      baseEmbed.addField('Recursos', resourcesString, false);
     }
     return baseEmbed;
   }
