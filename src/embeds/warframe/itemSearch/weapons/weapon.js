@@ -16,7 +16,7 @@ class WeaponEmbed extends BaseWeapon {
 
   get mainInfoPage() {
     const { weapon, bpSource } = this;
-    const { components } = weapon;
+    const components = weapon.components || [];
     const embed = this.baseEmbed;
     const [resources, componentItems] = biFilter(components.filter(({ name }) => name !== 'Blueprint'), ({ uniqueName }) => (
       uniqueName.includes('Items')));
