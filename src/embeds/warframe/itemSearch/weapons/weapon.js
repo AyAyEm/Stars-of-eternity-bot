@@ -16,10 +16,15 @@ class WeaponEmbed extends BaseWeapon {
   }
 
   get mainInfoPage() {
-    const { weapon, bpSource } = this;
+    const { weapon, bpSource, baseEmbed: embed } = this;
     const { name: weaponName } = weapon;
+    const specialAdjustment = specialItems.get(weaponName);
+
+    if (specialAdjustment) {
+      return specialAdjustment(embed);
+    }
+
     const components = weapon.components || [];
-    const embed = this.baseEmbed;
     const [resources, componentItems] = biFilter(components.filter(({ name }) => name !== 'Blueprint'), ({ uniqueName }) => (
       uniqueName.includes('Items')));
     const blueprintString = bpSource.id === 1
@@ -41,12 +46,6 @@ class WeaponEmbed extends BaseWeapon {
       const resourcesString = resourcesNames.join('\n');
       embed.addField('Recursos', resourcesString, false);
     }
-
-    const specialAdjustment = specialItems.get(weaponName);
-    if (specialAdjustment) {
-      specialAdjustment(embed);
-    }
-
     return embed;
   }
 
