@@ -1,10 +1,9 @@
 const { MessageEmbed } = require('discord.js');
-const reqLib = require('app-root-path').require;
 
 const { parseSource } = require('../utils/blueprintsSource');
 const { biFilter } = require('../../../../utils');
 
-const masteryRankImgs = reqLib('/static/masteryRankImgs');
+const masteryRankImgs = require('../../../../static/masteryRankImgs');
 
 class BaseWarframe {
   constructor(warframe) {
