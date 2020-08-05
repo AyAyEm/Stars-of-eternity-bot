@@ -42,7 +42,7 @@ class WeaponEmbed extends BaseWeapon {
       embed.addField('Recursos', resourcesString, false);
     }
 
-    const specialAdjustment = specialItems.get(weaponName.toLowerCase());
+    const specialAdjustment = specialItems.get(weaponName);
     if (specialAdjustment) {
       specialAdjustment(embed);
     }
