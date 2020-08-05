@@ -19,4 +19,4 @@ const parseSource = (item) => {
   return { ...blueprintsSource.get(sourceIdentifier), lab: (sourceIdentifier === 'ClanTech' ? lab : null) };
 };
 
-module.exports = { blueprintsSource, parseSource };
+module.exports = parseSource;

@@ -1,9 +1,9 @@
 const _ = require('lodash');
+
 const BaseWeapon = require('./baseWeapon');
-const specialItems = require('../specialItems');
-const { parseSource } = require('../utils/blueprintsSource');
-const dropToNameAndChance = require('../utils/dropToNameAndChance');
+const { blueprintSource, dropToNameAndChance } = require('../utils');
 const { biFilter } = require('../../../../utils');
+const specialItems = require('../specialItems');
 
 class WeaponEmbed extends BaseWeapon {
   constructor(weapon) {
@@ -12,7 +12,7 @@ class WeaponEmbed extends BaseWeapon {
   }
 
   get bpSource() {
-    return parseSource(this.weapon);
+    return blueprintSource(this.weapon);
   }
 
   get mainInfoPage() {
