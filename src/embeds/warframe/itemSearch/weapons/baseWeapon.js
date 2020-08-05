@@ -1,8 +1,7 @@
 const { MessageEmbed } = require('discord.js');
-const reqLib = require('app-root-path').require;
 
-const masteryRankImgs = reqLib('/static/masteryRankImgs');
-const rivenDisposition = reqLib('/static/rivenDisposition');
+const masteryRankImgs = require('../../../../static/masteryRankImgs');
+const rivenDisposition = require('../../../../static/rivenDisposition');
 
 class BaseWeapon {
   constructor(weapon) {
