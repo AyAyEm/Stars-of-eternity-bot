@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const BaseWeapon = require('./baseWeapon');
+const specialItems = require('../specialItems');
 const { parseSource } = require('../utils/blueprintsSource');
 const dropToNameAndChance = require('../utils/dropToNameAndChance');
 const { biFilter } = require('../../../../utils');
@@ -16,6 +17,7 @@ class WeaponEmbed extends BaseWeapon {
 
   get mainInfoPage() {
     const { weapon, bpSource } = this;
+    const { name: weaponName } = weapon;
     const components = weapon.components || [];
     const embed = this.baseEmbed;
     const [resources, componentItems] = biFilter(components.filter(({ name }) => name !== 'Blueprint'), ({ uniqueName }) => (
@@ -24,6 +26,7 @@ class WeaponEmbed extends BaseWeapon {
       ? `${bpSource.location} Lab: ${bpSource.lab}`
       : `${bpSource.location}`;
     embed.addField('Blueprint', blueprintString, false);
+
     if (componentItems.length > 0) {
       const componentsString = componentItems
         .filter(({ drops }) => drops)
@@ -31,20 +34,29 @@ class WeaponEmbed extends BaseWeapon {
         .join('\n');
       embed.addField('Componentes', componentsString, false);
     }
+
     if (resources.length > 0) {
       const resourcesNames = resources.map(({ name: resourceName, itemCount }) => (
         `${resourceName} **${itemCount}**`));
       const resourcesString = resourcesNames.join('\n');
       embed.addField('Recursos', resourcesString, false);
     }
+
+    const specialAdjustment = specialItems.get(weaponName.toLowerCase());
+    if (specialAdjustment) {
+      specialAdjustment(embed);
+    }
+
     return embed;
   }
 
   get componentsPage() {
     const { weapon, baseEmbed, bpSource } = this;
     const { components } = weapon;
+
     if (bpSource.location !== 'Drop') return null;
     if (!components) return null;
+
     const [resources, componentItems] = biFilter(components, ({ uniqueName }) => (
       uniqueName.includes('Items')));
     const componentsFields = componentItems.map(({ drops, name }) => {
@@ -61,12 +73,14 @@ class WeaponEmbed extends BaseWeapon {
       return { name, value: dataString, inline: false };
     });
     baseEmbed.addFields(componentsFields);
+
     if (resources.length > 0) {
       const resourcesString = resources
         .map(({ name, itemCount }) => `${name} **${itemCount}**`)
         .join('\n');
       baseEmbed.addField('Recursos', resourcesString, false);
     }
+
     return baseEmbed;
   }
 }
