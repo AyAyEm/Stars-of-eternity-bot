@@ -3,7 +3,7 @@
 const { Provider, util: { mergeDefault, mergeObjects, isObject } } = require('klasa');
 const mongoose = require('mongoose');
 const chachegoose = require('cachegoose');
-const emojis = require('../../static/guildEmojis');
+const emojis = require('../static/guildEmojis');
 
 const { Schema } = mongoose;
 

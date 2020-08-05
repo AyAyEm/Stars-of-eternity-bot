@@ -1,5 +1,5 @@
 const { Command } = require('klasa');
-const staticGuildEmojis = require('../../../static/guildEmojis');
+const staticGuildEmojis = require('../../static/guildEmojis');
 
 module.exports = class extends Command {
   constructor(...args) {

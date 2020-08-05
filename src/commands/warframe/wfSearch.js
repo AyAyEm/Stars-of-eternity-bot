@@ -3,7 +3,7 @@ const { MessageEmbed } = require('discord.js');
 const Fuse = require('fuse.js');
 const Items = require('warframe-items');
 const itemToEmbed = require('../../embeds/warframe/itemSearch/index');
-const numberEmojis = require('../../../static/numberEmojis');
+const numberEmojis = require('../../static/numberEmojis');
 
 const warframeItems = [
   'Archwing', 'Arch-Gun', 'Arch-Melee',
