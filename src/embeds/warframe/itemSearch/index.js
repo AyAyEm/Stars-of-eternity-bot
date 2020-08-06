@@ -6,6 +6,7 @@ const typeFunctions = new Map([
   ['Weapons', (item) => (isPrime(item) ? primeWeapon(item) : weapon(item))],
   ['Warframes', (item) => (isPrime(item) ? warframePrime(item) : warframe(item))],
 ]);
+
 const typeDictionary = new Map([
   [['Arch-Gun', 'Arch-Melee', 'Melee', 'Primary', 'Secondary'], 'Weapons'],
   [['Archwing', 'Warframes'], 'Warframes'],
