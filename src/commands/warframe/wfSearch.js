@@ -11,12 +11,14 @@ const warframeItems = [
   'Relics', 'Resources', 'Secondary',
   'Sentinels', 'Warframes',
 ];
+
 const fuse = new Fuse(new Items({ category: warframeItems }), {
   includeScore: true,
   shouldSort: true,
   keys: ['name'],
 });
-const isAuthorFilter = (author) => (...{ 1: user }) => author.id === user.id;
+
+const isAuthorFilter = (author) => (_, user) => author.id === user.id;
 const sendItemMessage = async (item, msg, previousSentMessage) => {
   const { author } = msg;
   const embedsMap = itemToEmbed(item);
@@ -70,28 +72,34 @@ module.exports = class extends Command {
   async run(msg, [itemName]) {
     const { channel, author } = msg;
     const matchedItems = fuse.search(itemName).slice(0, 3);
+
     if (matchedItems[0].score > 0.15) {
-      const matchesString = ({ item }, index) => `${numberEmojis[index + 1]} ${item.name} ${item.category}`;
+      const matchItemsString = matchedItems
+        .map(({ item }, index) => `${numberEmojis[index + 1]} ${item.name} ${item.category}`);
+
       const noMatchEmbed = new MessageEmbed()
         .setTitle('Item não encontrado')
-        .setDescription(`Selecione um dos seguintes items:\n\n${matchedItems.map(matchesString).join('\n\n')}`);
+        .setDescription(`Selecione um dos seguintes items:\n\n${matchItemsString.join('\n\n')}`);
+
       const noMatchMessage = await channel.send(noMatchEmbed);
       const collector = noMatchMessage
         .createReactionCollector(isAuthorFilter(author), { time: 15000 });
-      const { reactionLoop, stopReactions } = await noMatchMessage.multiReact([...numberEmojis.slice(1, 4), '❌']);
+      const reactions = await noMatchMessage.multiReact([...numberEmojis.slice(1, 4), '❌']);
       collector.on('collect', async (reaction) => {
         if (reaction.emoji.name === '❌') {
           collector.stop('User decided to stop');
           return;
         }
-        stopReactions();
-        await reactionLoop;
+
+        reactions.stopReactions();
+        await reactions.reactionLoop;
         const index = numberEmojis.indexOf(reaction.emoji.name);
         reaction.message.reactions.removeAll();
         collector.stop('Reaction defined');
         sendItemMessage(matchedItems[index - 1].item, msg, noMatchMessage);
       });
-      collector.on('end', (...{ 1: endingReason }) => {
+
+      collector.on('end', (_, endingReason) => {
         if (endingReason === 'time' || endingReason === 'User decided to stop') {
           // msg.delete({ endingReason });
           collector.message.delete({ endingReason });
