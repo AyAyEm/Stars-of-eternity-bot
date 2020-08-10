@@ -1,21 +1,14 @@
 const { MessageEmbed } = require('discord.js');
 
-const commonItems = [
-  'nanoSpores', 'rubedo', 'salvage', 'plastids', 'polymerBundle',
-  'cryotic', 'circuits', 'ferrite', 'alloyPlate',
-];
-const uncommonItems = ['oxium', 'gallium', 'morphics', 'controlModule'];
-const rareItems = [
-  'neuralSensors', 'orokinCell', 'argonCrystal', 'tellurium', 'neurodes', 'nitain',
-];
-const weapons = ['vandal', 'wraith', 'weapon'];
-const goodOnes = ['reactor', 'catalyst', 'forma', 'aura', 'exilus', 'riven'];
-const faction = ['fieldron', 'detonite', 'mutagen'];
-const others = [
-  'mutalist', 'forma', 'synthula', 'kavatGene',
-  'kubrowEgg', 'traces', 'other', 'credits', 'skin',
-  'helmet', 'nightmare', 'endo',
-];
+const {
+  commonItems,
+  uncommonItems,
+  rareItems,
+  weapons,
+  goodOnes,
+  faction,
+  others,
+} = require('../../static/warframe/itemNames');
 
 const fields = [
   { name: 'Recursos comums', value: commonItems.join(' | '), inline: false },
