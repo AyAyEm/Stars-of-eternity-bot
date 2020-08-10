@@ -21,7 +21,7 @@ module.exports = class extends Command {
       permissionLevel: 6,
       subcommands: true,
       usage: '<items|listItems|add|disable|enable|delete|forceDelete|set> '
-      + '(...items:invasionItem) [...]',
+        + '(...items:invasionItem) [...]',
       usageDelim: ' ',
       description: '',
       extendedHelp: 'No extended help available.',
@@ -32,7 +32,7 @@ module.exports = class extends Command {
         const [action] = msg.prompter.args;
         if (!semiRequired.has(action)) return arg;
         if (arg && !possibleItems.has(arg)) {
-          throw `Item ${arg} inválido para listar as opções digite /invasion listItems!`;
+          throw new Error(`Item ${arg} inválido para listar as opções digite /invasion listItems!`);
         }
         return arg;
       });
@@ -58,7 +58,7 @@ module.exports = class extends Command {
     const { updateItems, updateStatus } = this;
     const guildDocument = await this.getDocument(guild);
     if (guildDocument.get(`channels.${channel.id}.invasionItems`)) {
-      throw 'Canal já está registrado!';
+      throw new Error('Canal já está registrado!');
     }
     await Promise.all([
       updateItems(guildDocument, channel, items),
@@ -66,7 +66,7 @@ module.exports = class extends Command {
     ])
       .then(() => {
         msg.replyAndDelete('Canal inscrito nas invasões com sucesso! Items:'
-        + `\`\`\`${items.join(' | ')}\`\`\``);
+          + `\`\`\`${items.join(' | ')}\`\`\``);
       });
   }
 
@@ -75,8 +75,8 @@ module.exports = class extends Command {
     const { updateItems } = this;
     const guildDocument = await this.getDocument(guild);
     const invasionItems = guildDocument.get(`channels.${channel.id}.invasionItems`);
-    if (!invasionItems) throw 'Este canal não está configurado para invasões!';
-    if (items.length === 0) throw 'Items precisam ser específicados!';
+    if (!invasionItems) throw new Error('Este canal não está configurado para invasões!');
+    if (items.length === 0) throw new Error('Items precisam ser específicados!');
     const updatedItems = items[0] === 'all' ? possibleItems : items;
     const itemsData = new Set([...invasionItems.items, ...updatedItems]);
     await updateItems(guildDocument, channel, [...itemsData.values()]);
@@ -89,7 +89,7 @@ module.exports = class extends Command {
     const guildDocument = await this.getDocument(guild);
     const invasionItems = guildDocument.get(`channels.${msg.channel.id}.invasionItems`) || {};
     if (invasionItems.enabled === false) {
-      throw 'Invasões já estão desabilitadas para este canal!';
+      throw new Error('Invasões já estão desabilitadas para este canal!');
     }
     await updateStatus(guildDocument, channel, false);
     msg.replyAndDelete('Invasões desabilitadas com sucesso!');
@@ -101,7 +101,7 @@ module.exports = class extends Command {
     const guildDocument = await this.getDocument(guild);
     const invasionItems = guildDocument.get(`channels.${msg.channel.id}.invasionItems`) || {};
     if (invasionItems.enabled === true) {
-      throw 'Invasões já estão habilitadas para este canal!';
+      throw new Error('Invasões já estão habilitadas para este canal!');
     }
     await updateStatus(guildDocument, channel, true);
     msg.replyAndDelete('Invasões habilitadas com sucesso!');
@@ -113,14 +113,14 @@ module.exports = class extends Command {
     const itemsPath = `channels.${channel.id}.invasionItems.items`;
     const invasionItems = guildDocument.get(itemsPath) || [];
     if (invasionItems.length === 0) {
-      throw 'Os items de invasão ainda não foram definidos para este canal!';
+      throw new Error('Os items de invasão ainda não foram definidos para este canal!');
     }
     const updatedItems = items.length > 0
       ? invasionItems.filter((invasionItem) => !items.includes(invasionItem))
       : [];
     await guildDocument.updateOne({ [itemsPath]: updatedItems });
     msg.replyAndDelete('Items de invasão excluídos com sucesso!'
-    + `\`\`\`${invasionItems.filter((invasionItem) => !updatedItems.includes(invasionItem)).join(' | ')}\`\`\``);
+      + `\`\`\`${invasionItems.filter((invasionItem) => !updatedItems.includes(invasionItem)).join(' | ')}\`\`\``);
   }
 
   async forceDelete(msg) {
@@ -136,7 +136,9 @@ module.exports = class extends Command {
   async items(msg) {
     const guildDocument = await this.getDocument(msg.guild);
     const items = guildDocument.get(`channels.${msg.channel.id}.invasionItems.items`);
-    if (!items || items.length === 0) throw 'Nenhum item de invasão encontrado para este canal!';
+    if (!items || items.length === 0) {
+      throw new Error('Nenhum item de invasão encontrado para este canal!');
+    }
     msg.channel.send(`\`\`\`Items encontrados: \n${items.join(' | ')}\`\`\``);
   }
 
