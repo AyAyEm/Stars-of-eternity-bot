@@ -51,13 +51,16 @@ module.exports = class extends Provider {
       enabled: Boolean,
       items: [String],
     });
+
     const relics = new Schema({
       enabled: Boolean,
       messages: { type: Map, of: String },
     });
+
     const memberData = new Schema({
       toFollow: { type: Boolean, default: false },
     });
+
     const guildsSchema = new Schema({
       id: String,
       name: String,
@@ -82,11 +85,13 @@ module.exports = class extends Provider {
         },
       },
     });
+
     const trackersSchema = new Schema({
       tracker: String,
       type: String,
       data: mongoose.Mixed,
     });
+
     const utilsSchema = new Schema({
       type: String,
       emojis: {
@@ -97,6 +102,7 @@ module.exports = class extends Provider {
         },
       },
     });
+
     const connection = mergeDefault({
       host: 'localhost',
       port: 27017,
@@ -106,18 +112,23 @@ module.exports = class extends Provider {
 
     // If full connection string is provided, use that, otherwise fall back to individual parameters
     const connectionString = this.client.options.providers.mongodb.connectionString || `mongodb://${connection.user}:${connection.password}@${connection.host}:${connection.port}/${connection.db}`;
+
     const mongoClient = await mongoose.connect(
       connectionString,
       mergeObjects(connection.options, { useNewUrlParser: true, useUnifiedTopology: true }),
     );
+
     this.db = mongoClient.connection;
+
     this.models = {
       Guilds: mongoose.model('Guilds', guildsSchema),
       Trackers: mongoose.model('trackers', trackersSchema),
       Utils: mongoose.model('Utils', utilsSchema),
     };
+
     const invasionTrackerDoc = { tracker: 'invasion', type: 'warframe' };
     const invasionTrackerExists = await this.models.Trackers.exists(invasionTrackerDoc);
+
     if (!invasionTrackerExists) this.models.Trackers.create({ ...invasionTrackerDoc, data: {} });
   }
 
@@ -151,19 +162,16 @@ module.exports = class extends Provider {
     return this.db;
   }
 
-  get Guild() {
-    const { models: { Guilds } } = this;
-    return (guildID) => new Document(Guilds, { id: guildID });
+  Guild(guildID) {
+    return new Document(this.models.Guilds, { id: guildID });
   }
 
-  get Tracker() {
-    const { models: { Trackers } } = this;
-    return (tracker, type) => new Document(Trackers, { tracker }, { type });
+  Tracker(tracker, type) {
+    return new Document(this.models.Trackers, { tracker }, { type });
   }
 
-  get Util() {
-    const { models: { Utils } } = this;
-    return (utilName) => new Document(Utils, { type: utilName });
+  Util(utilName) {
+    return new Document(this.models.Utils, { type: utilName });
   }
 
   hasTable(table) {
