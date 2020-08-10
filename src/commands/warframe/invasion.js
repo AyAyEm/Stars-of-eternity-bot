@@ -27,7 +27,7 @@ module.exports = class extends Command {
       extendedHelp: 'No extended help available.',
     });
     this
-      .createCustomResolver('invasionItem', (arg, possible, msg) => {
+      .createCustomResolver('invasionItem', (arg, _possible, msg) => {
         const semiRequired = new Set(['add', 'set']);
         const [action] = msg.prompter.args;
         if (!semiRequired.has(action)) return arg;
