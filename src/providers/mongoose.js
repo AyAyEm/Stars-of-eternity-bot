@@ -90,7 +90,9 @@ module.exports = class extends Provider {
       id: String,
       name: String,
       settings: {
-        follow: { type: Array, of: String },
+        follow: {
+          items: { type: Array, of: String },
+        },
       },
     });
 
