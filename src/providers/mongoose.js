@@ -86,6 +86,14 @@ module.exports = class extends Provider {
       },
     });
 
+    const usersSchema = new Schema({
+      id: String,
+      name: String,
+      settings: {
+        follow: { type: Array, of: String },
+      },
+    });
+
     const trackersSchema = new Schema({
       tracker: String,
       type: String,
@@ -122,6 +130,7 @@ module.exports = class extends Provider {
 
     this.models = {
       Guilds: mongoose.model('Guilds', guildsSchema),
+      Users: mongoose.model('Users', usersSchema),
       Trackers: mongoose.model('trackers', trackersSchema),
       Utils: mongoose.model('Utils', utilsSchema),
     };
@@ -164,6 +173,10 @@ module.exports = class extends Provider {
 
   Guild(guildID) {
     return new Document(this.models.Guilds, { id: guildID });
+  }
+
+  User(userID) {
+    return new Document(this.models.Users, { id: userID });
   }
 
   Tracker(tracker, type) {
