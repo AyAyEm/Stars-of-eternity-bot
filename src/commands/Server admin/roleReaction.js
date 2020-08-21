@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable no-unused-vars */
 const { Command } = require('klasa');
 const _ = require('lodash');
@@ -10,7 +11,7 @@ const updateEmojis = (rolesEmoji = new Map(), role, emoji, description = '') => 
   if (role && emoji) {
     const emojiID = emoji.id || emoji.name;
     if (rolesEmoji.has(emojiID)) {
-      throw 'Este roleReaction já possuí esta reação';
+      throw new Error('Este roleReaction já possuí esta reação');
     }
     rolesEmoji.set(emojiID, { roleID: role.id, description });
   }
@@ -124,10 +125,10 @@ module.exports = class extends Command {
   async delete(msg, [inputMessage]) {
     const provider = await this.client.providers.get('mongoose');
     const { messages, guildDocument } = await provider.getMessages(msg);
-    if (!messages) throw 'Este canal não possui role reactions!';
+    if (!messages) throw new Error('Este canal não possui role reactions!');
     const embedMessage = inputMessage || await (function getMessage() {
       const finalMessages = filterRoleReactionMessages(messages);
-      if (finalMessages.length < 1) throw 'Este canal não possui role reactions!';
+      if (finalMessages.length < 1) throw new Error('Este canal não possui role reactions!');
       return msg.channel.messages.fetch(finalMessages[0]);
     }());
     messages.delete(embedMessage.id);
@@ -143,7 +144,7 @@ module.exports = class extends Command {
     const embedMessage = roleMessage || await msg.channel.messages
       .fetch(_.last(roleReactionMessages));
     if (!messages || !embedMessage || !messages.has(embedMessage.id)) {
-      throw 'Este canal não possui role reaction!';
+      throw new Error('Este canal não possui role reaction!');
     }
     const emojisMap = messages.get(embedMessage.id).rolesEmoji;
     const roleEmojis = updateEmojis(emojisMap, role, emoji);
@@ -157,12 +158,12 @@ module.exports = class extends Command {
   async renew(msg, [option = 'all']) {
     const provider = await this.client.providers.get('mongoose');
     const { messages, guildDocument } = await provider.getMessages(msg);
-    if (!messages) throw 'Este canal não possuí role reaction para renovar!';
+    if (!messages) throw new Error('Este canal não possuí role reaction para renovar!');
     let roleReactionMessages = new Map([...messages.entries()]
       .filter((messageData) => messageData[1].msgType === 'roleReaction'));
     if (option !== 'all') {
       const embedMessage = await (msg.channel.messages.fetch(option).catch(() => {
-        throw 'Opção inválida!';
+        throw new Error('Opção inválida!');
       }));
       roleReactionMessages = new Map([
         [embedMessage.id, roleReactionMessages.get(embedMessage.id)],
@@ -187,13 +188,15 @@ module.exports = class extends Command {
   }
 
   async init() {
-    const reactionComparision = async (messageReaction, user, action) => {
-      if (user.bot) return;
+    this.client.on('messageReactionRemove', async (...params) => reactionComparision(...params, 'remove'));
+    this.client.on('messageReactionAdd', async (...params) => reactionComparision(...params, 'add'));
+    async function reactionComparision(messageReaction, user, action) {
+      if (user.bot || messageReaction.message.channel.type !== 'text') return;
+
       const msg = messageReaction.message;
       const [channelID, guildID] = [msg.channel.id, msg.guild.id];
-      const provider = await this.client.providers.get('mongoose');
-      const guildDocument = await provider.guildDocument(guildID);
-      const messageDocument = guildDocument.get(`channels.${channelID}.messages.${msg.id}`);
+      const guildDocument = await this.client.provider.Guild(guildID);
+      const messageDocument = await guildDocument.get(`channels.${channelID}.messages.${msg.id}`);
       if (!messageDocument || messageDocument.msgType !== 'roleReaction') return;
       const { rolesEmoji } = messageDocument;
       const emoji = messageReaction.emoji.id || messageReaction.emoji.name;
@@ -206,8 +209,6 @@ module.exports = class extends Command {
       if (action === 'remove' && member.roles.cache.has(role)) {
         member.roles.remove(role);
       }
-    };
-    this.client.on('messageReactionRemove', async (...params) => reactionComparision(...params, 'remove'));
-    this.client.on('messageReactionAdd', async (...params) => reactionComparision(...params, 'add'));
+    }
   }
 };
