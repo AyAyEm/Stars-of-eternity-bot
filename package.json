@@ -28,6 +28,7 @@
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
     "dropbox-v2-api": "^2.4.19",
+    "encoding": "^0.1.13",
     "erlpack": "github:discordapp/erlpack",
     "fluent-ffmpeg": "^2.1.2",
     "fuse.js": "^6.4.0",
