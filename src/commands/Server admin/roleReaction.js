@@ -1,5 +1,3 @@
-/* eslint-disable no-use-before-define */
-/* eslint-disable no-unused-vars */
 const { Command } = require('klasa');
 const _ = require('lodash');
 const { mapToEmbed, firstEmbed } = require('../../embeds/roleReaction');
@@ -54,13 +52,12 @@ module.exports = class extends Command {
         }
         return undefined;
       }],
-      ['add', (resolver, arg, possible, msg, [role, emoji, description]) => {
+      ['add', (resolver, arg, possible, msg, { 2: description }) => {
         const actionArgument = ['role', 'emoji', 'message'];
         if (resolver === 2 && !description) return undefined;
         return this.client.arguments.get(actionArgument[resolver]).run(arg, possible, msg);
       }],
       ['delete', (resolver, arg, possible, msg, [msgParam]) => {
-        const actionArgument = ['message'];
         if (msgParam && resolver === 0) {
           return this.client.arguments.get('message').run(arg, possible, msg);
         }
@@ -182,10 +179,10 @@ module.exports = class extends Command {
     });
   }
 
-  async update(msg, [emoji, role, descriptionOrMessage, message]) {
-    const provider = await this.client.providers.get('mongoose');
-    const { messages, guildDocument } = await provider.getMessages(msg);
-  }
+  // async update(msg, [emoji, role, descriptionOrMessage, message]) {
+  //   const provider = await this.client.providers.get('mongoose');
+  //   const { messages, guildDocument } = await provider.getMessages(msg);
+  // }
 
   async init() {
     const reactionComparision = async (messageReaction, user, action) => {
