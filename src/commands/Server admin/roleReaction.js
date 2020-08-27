@@ -188,9 +188,7 @@ module.exports = class extends Command {
   }
 
   async init() {
-    this.client.on('messageReactionRemove', async (...params) => reactionComparision(...params, 'remove'));
-    this.client.on('messageReactionAdd', async (...params) => reactionComparision(...params, 'add'));
-    async function reactionComparision(messageReaction, user, action) {
+    const reactionComparision = async (messageReaction, user, action) => {
       if (user.bot || messageReaction.message.channel.type !== 'text') return;
 
       const msg = messageReaction.message;
@@ -209,6 +207,8 @@ module.exports = class extends Command {
       if (action === 'remove' && member.roles.cache.has(role)) {
         member.roles.remove(role);
       }
-    }
+    };
+    this.client.on('messageReactionRemove', async (...params) => reactionComparision(...params, 'remove'));
+    this.client.on('messageReactionAdd', async (...params) => reactionComparision(...params, 'add'));
   }
 };
