@@ -1,6 +1,5 @@
 const { Task } = require('klasa');
 const axios = require('axios').default;
-const async = require('async');
 
 const invasionUrl = 'https://api.warframestat.us/pc/invasions';
 
@@ -15,16 +14,16 @@ module.exports = class extends Task {
   async init() {
     const runner = async () => {
       axios.get(invasionUrl).then(async ({ data: invasionsData }) => {
-        const activeInvasions = await async.filter(invasionsData, async ({ completed }) => !completed);
+        const activeInvasions = invasionsData.filter(({ completed }) => !completed);
         const invasionTracker = await this.client.provider.Tracker('invasion', 'warframe');
         const invasionsIDs = invasionTracker.get('data.cacheIDs', []);
-        const needUpdate = await async.reduce(activeInvasions, false, async (needToUpdate, invasion) => {
+        const needUpdate = activeInvasions.reduce((needToUpdate, invasion) => {
           if (!invasion.completed && !invasionsIDs.includes(invasion.id)) {
             this.client.emit('warframeNewInvasion', invasion);
             return true;
           }
           return needToUpdate;
-        });
+        }, false);
         if (needUpdate) {
           const updatedArr = invasionsData.map(({ id }) => id);
           await invasionTracker.set('data.cacheIDs', updatedArr);
