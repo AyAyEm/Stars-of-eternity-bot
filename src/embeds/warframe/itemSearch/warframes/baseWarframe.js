@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 
-const { parseSource } = require('../utils/blueprintsSource');
+const parseSource = require('../utils/blueprintsSource');
 const { biFilter } = require('../../../../utils');
 
 const masteryRankImgs = require('../../../../static/masteryRankImgs');
