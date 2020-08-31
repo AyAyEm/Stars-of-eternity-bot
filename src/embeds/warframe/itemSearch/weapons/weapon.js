@@ -34,7 +34,6 @@ class WeaponEmbed extends BaseWeapon {
 
     if (componentItems.length > 0) {
       const componentsString = componentItems
-        .filter(({ drops }) => drops)
         .map(({ name, itemCount }) => `${name} **${itemCount}**`)
         .join('\n');
       embed.addField('Componentes', componentsString, false);
