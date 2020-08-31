@@ -42,7 +42,7 @@ class ModEmbed {
 
     if (levelStats) {
       const statsFields = levelStats[0].stats.map((stat, index) => {
-        const percentageRegex = /[+-]{1}\d+%/;
+        const percentageRegex = /[+-]?\d+%/;
         const minStat = stat.match(percentageRegex)[0];
         const maxStat = levelStats[levelStats.length - 1].stats[index].match(percentageRegex)[0];
 
