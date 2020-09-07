@@ -1,14 +1,13 @@
 {
   "name": "stars-of-eternity-beta",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Discord js bot for stars of eternity server",
   "main": "src/index.js",
   "scripts": {
     "postinstall": "git update-index --skip-worktree .env",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "pm2-runtime start ecosystem.config.js --env production",
-    "nodemon": "nodemon src/index.js",
-    "nodeshift": "nodeshift --build.strategy docker"
+    "nodemon": "nodemon src/index.js"
   },
   "engines": {
     "node": "12.x"

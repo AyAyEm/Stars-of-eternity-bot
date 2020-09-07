@@ -1,7 +1,0 @@
-node_modules
-.vscode
-npm-debug.log
-audios
-package-lock.json
-.nodeshift
-tmp
