@@ -26,6 +26,7 @@
     "axios": "^0.19.2",
     "bufferutil": "^4.0.1",
     "cachegoose": "^8.0.0",
+    "cheerio": "^1.0.0-rc.3",
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
     "dropbox-v2-api": "^2.4.19",
