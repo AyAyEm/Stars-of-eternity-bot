@@ -1,4 +1,4 @@
-const items = {
+export const items: { [key: string]: string[] } = {
   commonItems: [
     'nanoSpores', 'rubedo', 'salvage', 'plastids', 'polymerBundle',
     'cryotic', 'circuits', 'ferrite', 'alloyPlate',
@@ -20,7 +20,4 @@ const items = {
     'helmet', 'nightmare', 'endo',
   ],
 };
-
 items.all = Object.values(items).flat();
-
-module.exports = items;
