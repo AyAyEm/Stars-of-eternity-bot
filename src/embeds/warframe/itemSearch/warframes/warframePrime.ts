@@ -1,18 +1,19 @@
+import { bestDrops, dropsString } from '../utils/relicDrop';
 import BaseWarframe from './baseWarframe';
+import type { Item } from 'warframe-items';
 
-import type { Warframe, Component } from '../../../../../types/warframe-items/warframe';
+type Component = Extract<Item['components'], Object>[0];
 
-const { bestDrops, dropsString } = require('../utils/relicDrop');
 
 class WarframePrimeEmbed extends BaseWarframe {
-  constructor(warframe: Warframe) {
+  constructor(warframe: Item) {
     super(warframe);
     this.warframe = warframe;
   }
 
   get componentsPage() {
     const { warframe: weapon, baseEmbed: embed } = this;
-    const { components = [] }: Warframe = weapon;
+    const { components = [] }: Item = weapon;
     const componentsFields = components
       .filter(({ drops = [] }: Component) => drops[0]?.type === 'Relics')
       .sort(({ name }: Component) => (name === 'Blueprint' ? -1 : 1))
@@ -26,7 +27,7 @@ class WarframePrimeEmbed extends BaseWarframe {
   }
 }
 
-export default (warframe: Warframe) => {
+export default (warframe: Item) => {
   const warframeEmbed = new WarframePrimeEmbed(warframe);
   const { mainInfoPage, componentsPage } = warframeEmbed;
   const embedMap = new Map();
