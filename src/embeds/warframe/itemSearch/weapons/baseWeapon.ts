@@ -1,13 +1,13 @@
-const { MessageEmbed } = require('discord.js');
+import { MessageEmbed } from 'discord.js';
 
-const masteryRankImgs = require('../../../../static/masteryRankImgs');
-const rivenDisposition = require('../../../../static/rivenDisposition');
+import masteryRankImgs from '../../../../static/masteryRankImgs';
+import rivenDisposition from '../../../../static/rivenDisposition';
 
-import type { Weapon } from '../../../../../types/warframe-items/weapon';
+import type { Item } from 'warframe-items';
 import type { EmbedField } from 'discord.js';
 
-class BaseWeapon {
-  constructor(public weapon: Weapon) {}
+export default class BaseWeapon {
+  constructor(public weapon: Item) {}
 
   get baseEmbed() {
     const {
@@ -57,5 +57,3 @@ class BaseWeapon {
     return baseEmbed;
   }
 }
-
-export default BaseWeapon;
