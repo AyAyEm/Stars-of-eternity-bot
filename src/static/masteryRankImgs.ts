@@ -1,4 +1,4 @@
-module.exports = [
+export const masteryRankImgs = [
   'https://vignette.wikia.nocookie.net/warframe/images/4/4e/Initiate.jpg',
   'https://vignette.wikia.nocookie.net/warframe/images/4/4e/Initiate.jpg',
   'https://vignette.wikia.nocookie.net/warframe/images/8/8f/Gold-initiate.jpg',
