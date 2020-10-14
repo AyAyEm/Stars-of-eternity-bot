@@ -1,12 +1,14 @@
-const _ = require('lodash');
+import _ from 'lodash';
 
 const BaseWeapon = require('./baseWeapon');
 const { blueprintSource, dropToNameAndChance } = require('../utils');
 const { biFilter } = require('../../../../utils');
 const specialItems = require('../specialItems');
 
+import type { Weapon, Component } from '../../../../../types/warframe-items/weapon';
+
 class WeaponEmbed extends BaseWeapon {
-  constructor(weapon) {
+  constructor(weapon: Weapon) {
     super(weapon);
     this.weapon = weapon;
   }
@@ -25,8 +27,9 @@ class WeaponEmbed extends BaseWeapon {
     }
 
     const components = weapon.components || [];
-    const [resources, componentItems] = biFilter(components.filter(({ name }) => name !== 'Blueprint'), ({ uniqueName }) => (
-      uniqueName.includes('Items')));
+    const [resources, componentItems] = biFilter(components.filter(
+      ({ name }: Component) => name !== 'Blueprint'), ({ uniqueName }: Component) => (
+        uniqueName.includes('Items')));
     const blueprintString = bpSource.id === 1
       ? `${bpSource.location} Lab: ${bpSource.lab}`
       : `${bpSource.location}`;
@@ -34,13 +37,13 @@ class WeaponEmbed extends BaseWeapon {
 
     if (componentItems.length > 0) {
       const componentsString = componentItems
-        .map(({ name, itemCount }) => `${name} **${itemCount}**`)
+        .map(({ name, itemCount }: Component) => `${name} **${itemCount}**`)
         .join('\n');
       embed.addField('Componentes', componentsString, false);
     }
 
     if (resources.length > 0) {
-      const resourcesNames = resources.map(({ name: resourceName, itemCount }) => (
+      const resourcesNames = resources.map(({ name: resourceName, itemCount }: Component) => (
         `${resourceName} **${itemCount}**`));
       const resourcesString = resourcesNames.join('\n');
       embed.addField('Recursos', resourcesString, false);
@@ -55,9 +58,9 @@ class WeaponEmbed extends BaseWeapon {
     if (bpSource.location !== 'Drop') return null;
     if (!components) return null;
 
-    const [resources, componentItems] = biFilter(components, ({ uniqueName }) => (
+    const [resources, componentItems] = biFilter(components, ({ uniqueName }: Component) => (
       uniqueName.includes('Items')));
-    const componentsFields = componentItems.map(({ drops, name }) => {
+    const componentsFields = componentItems.map(({ drops, name }: Component) => {
       const nameAndChance = _.uniqBy(drops, 'location')
         .map((drop) => dropToNameAndChance(drop))
         .sort(({ 1: chanceA }, { 1: chanceB }) => {
@@ -74,7 +77,7 @@ class WeaponEmbed extends BaseWeapon {
 
     if (resources.length > 0) {
       const resourcesString = resources
-        .map(({ name, itemCount }) => `${name} **${itemCount}**`)
+        .map(({ name, itemCount }: Component) => `${name} **${itemCount}**`)
         .join('\n');
       baseEmbed.addField('Recursos', resourcesString, false);
     }
@@ -83,7 +86,7 @@ class WeaponEmbed extends BaseWeapon {
   }
 }
 
-module.exports = (weapon) => {
+module.exports = (weapon: Weapon) => {
   const weaponEmbed = new WeaponEmbed(weapon);
   const { mainInfoPage, componentsPage, baseStatusEmbed } = weaponEmbed;
   const embedMap = new Map();
