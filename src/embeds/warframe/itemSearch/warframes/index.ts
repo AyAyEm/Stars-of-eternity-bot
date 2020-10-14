@@ -1,4 +1,2 @@
-import warframe from './warframe';
-import warframePrime from './warframePrime';
-
-export default { warframe, warframePrime };
+export * from './warframe';
+export * from './warframePrime';

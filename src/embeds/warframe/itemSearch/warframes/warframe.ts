@@ -57,8 +57,8 @@ class WeaponEmbed extends BaseWarframe {
   }
 }
 
-export default (warframe: Item) => {
-  const warframeEmbed = new WeaponEmbed(warframe);
+export function warframe(item: Item) {
+  const warframeEmbed = new WeaponEmbed(item);
   const { mainInfoPage, componentsPage } = warframeEmbed.buildPages();
   const embedMap = new Map();
   embedMap.set('📋', mainInfoPage);

@@ -27,8 +27,8 @@ class WarframePrimeEmbed extends BaseWarframe {
   }
 }
 
-export default (warframe: Item) => {
-  const warframeEmbed = new WarframePrimeEmbed(warframe);
+export function warframePrime(item: Item) {
+  const warframeEmbed = new WarframePrimeEmbed(item);
   const { mainInfoPage, componentsPage } = warframeEmbed;
   const embedMap = new Map();
   embedMap.set('📋', mainInfoPage);
