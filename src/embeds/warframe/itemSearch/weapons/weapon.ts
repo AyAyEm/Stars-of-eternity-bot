@@ -1,9 +1,9 @@
 import _ from 'lodash';
 
-const BaseWeapon = require('./baseWeapon');
-const { blueprintSource, dropToNameAndChance } = require('../utils');
-const { biFilter } = require('../../../../utils');
-const specialItems = require('../specialItems');
+import BaseWeapon from './baseWeapon';
+import { blueprintSource, dropToNameAndChance } from '../utils';
+import { biFilter } from '../../../../utils';
+import specialItems from '../specialItems';
 
 import type { Item } from 'warframe-items';
 
@@ -32,10 +32,13 @@ class WeaponEmbed extends BaseWeapon {
     const [resources, componentItems] = biFilter(components.filter(
       ({ name }: Component) => name !== 'Blueprint'), ({ uniqueName }: Component) => (
         uniqueName.includes('Items')));
-    const blueprintString = bpSource.id === 1
-      ? `${bpSource.location} Lab: ${bpSource.lab}`
-      : `${bpSource.location}`;
-    embed.addField('Blueprint', blueprintString, false);
+
+    if ('id' in bpSource && 'location' in bpSource) {
+      const blueprintString = bpSource.id === 1
+        ? `${bpSource.location} Lab: ${bpSource.lab}`
+        : `${bpSource.location}`;
+      embed.addField('Blueprint', blueprintString, false);
+    }
 
     if (componentItems.length > 0) {
       const componentsString = componentItems
@@ -57,7 +60,7 @@ class WeaponEmbed extends BaseWeapon {
     const { weapon, baseEmbed, bpSource } = this;
     const { components } = weapon;
 
-    if (bpSource.location !== 'Drop') return null;
+    if (!('location' in bpSource) || bpSource.location !== 'Drop') return null;
     if (!components) return null;
 
     const [resources, componentItems] = biFilter(components, ({ uniqueName }: Component) => (
@@ -65,13 +68,10 @@ class WeaponEmbed extends BaseWeapon {
     const componentsFields = componentItems.map(({ drops, name }: Component) => {
       const nameAndChance = _.uniqBy(drops, 'location')
         .map((drop) => dropToNameAndChance(drop))
-        .sort(({ 1: chanceA }, { 1: chanceB }) => {
-          if (chanceA === chanceB) return 0;
-          return chanceA < chanceB ? 1 : -1;
-        })
+        .sort(({ chance: A }, { chance: B }) => B - A)
         .slice(0, 3);
       const dataString = nameAndChance
-        .map(([enemyName, chance]) => `${enemyName} **${Math.round(chance * 100) / 100}%**`)
+        .map(({ name: enemyName, chance }) => `${enemyName} **${Math.round(chance * 100) / 100}%**`)
         .join('\n');
       return { name, value: dataString, inline: false };
     });
@@ -88,7 +88,7 @@ class WeaponEmbed extends BaseWeapon {
   }
 }
 
-export default function (weapon: Item) {
+export function weapon(weapon: Item) {
   const weaponEmbed = new WeaponEmbed(weapon);
   const { mainInfoPage, componentsPage, baseStatusEmbed } = weaponEmbed;
   const embedMap = new Map();
