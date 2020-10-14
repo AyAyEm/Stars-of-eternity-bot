@@ -1,3 +1,5 @@
+import type Items from 'warframe-items';
+
 const blueprintsSource = new Map([
   ['Recipes', { location: 'Mercado', id: 0 }],
   ['ClanTech', { location: 'Dojo', id: 1 }],
@@ -8,7 +10,7 @@ const blueprintsSource = new Map([
   ['Drop', { location: 'Drop', id: 6 }],
 ]);
 
-const parseSource = (item) => {
+export const parseSource = (item: Items[0]) => {
   const { components } = item;
   const { uniqueName, drops } = components
     ? components.filter((componentItem) => componentItem.name === 'Blueprint')[0]
@@ -18,5 +20,3 @@ const parseSource = (item) => {
   const sourceIdentifier = drops ? 'Drop' : uniqueNameArr[0];
   return { ...blueprintsSource.get(sourceIdentifier), lab: (sourceIdentifier === 'ClanTech' ? lab : null) };
 };
-
-module.exports = parseSource;
