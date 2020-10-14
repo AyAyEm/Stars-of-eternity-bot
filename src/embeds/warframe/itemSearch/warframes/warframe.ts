@@ -1,46 +1,52 @@
 const _ = require('lodash');
 const { biFilter } = require('../../../../utils');
 const dropToNameAndChance = require('../utils/dropToNameAndChance');
-const BaseWarframe = require('./baseWarframe');
+
+import BaseWarframe from './baseWarframe';
+
+import type { Warframe, Component, Drop } from '../../../../../types/warframe-items/warframe';
 
 class WeaponEmbed extends BaseWarframe {
-  constructor(warframe) {
+  constructor(warframe: Warframe) {
     super(warframe);
     this.warframe = warframe;
   }
 
-  get componentsPage() {
+  public componentsPage() {
     const { warframe, baseEmbed } = this;
     const { components, category } = warframe;
     if (!components) return null;
-    const [resources, componentItems] = biFilter(components, ({ uniqueName }) => (
+    const [resources, componentItems] = biFilter(components, ({ uniqueName }: Warframe) => (
       uniqueName.includes('Items')));
     if (category === 'Warframes') {
       const componentsFields = componentItems
-        .filter(({ drops }) => drops)
-        .map(({ drops, name }) => {
+        .filter(({ drops }: Component) => drops)
+        .map(({ drops, name }: Component) => {
+          type dropChance = {
+            chance: number,
+            name: string,
+          }
           const nameAndChance = _.uniqBy(drops, 'location')
-            .map((drop) => dropToNameAndChance(drop))
-            .sort(({ 1: chanceA }, { 1: chanceB }) => {
-              if (chanceA === chanceB) return 0;
-              return chanceA < chanceB ? 1 : -1;
+            .map((drop: Drop) => dropToNameAndChance(drop))
+            .sort(({ chance: a }: dropChance, { chance: b }: dropChance) => {
+              if (a === b) return 0;
+              return a < b ? 1 : -1;
             })
             .slice(0, 3);
           const dataString = nameAndChance
-            .map(([enemyName, chance]) => `${enemyName} **${Math.round(chance * 100) / 100}%**`)
+            .map(({ name: enemyName, chance }: dropChance) => `${enemyName} **${Math.round(chance * 100) / 100}%**`)
             .join('\n');
           return { name, value: dataString, inline: false };
         });
       baseEmbed.addFields(componentsFields);
-    }
-    if (category === 'Archwing') {
+    } else if (category === 'Archwing') {
       const componentsFields = componentItems
-        .map(({ name }) => ({ name, value: 'Tenno lab', inline: false }));
+        .map(({ name }: Component) => ({ name, value: 'Tenno lab', inline: false }));
       baseEmbed.addFields(componentsFields);
     }
     if (resources.length > 0) {
       const resourcesString = resources
-        .map(({ name, itemCount }) => `${name} **${itemCount}**`)
+        .map(({ name, itemCount }: Component) => `${name} **${itemCount}**`)
         .join('\n');
       baseEmbed.addField('Recursos', resourcesString, false);
     }
@@ -48,9 +54,9 @@ class WeaponEmbed extends BaseWarframe {
   }
 }
 
-module.exports = (weapon) => {
-  const weaponEmbed = new WeaponEmbed(weapon);
-  const { mainInfoPage, componentsPage } = weaponEmbed;
+export default (warframe: Warframe) => {
+  const warframeEmbed = new WeaponEmbed(warframe);
+  const { mainInfoPage, componentsPage } = warframeEmbed.buildPages();
   const embedMap = new Map();
   embedMap.set('📋', mainInfoPage);
   if (componentsPage) embedMap.set('♻', componentsPage);
