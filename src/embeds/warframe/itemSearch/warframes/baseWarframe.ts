@@ -1,13 +1,15 @@
-const { MessageEmbed } = require('discord.js');
+import { MessageEmbed } from 'discord.js'
 
-const parseSource = require('../utils/blueprintsSource');
-const { biFilter } = require('../../../../utils');
-const masteryRankImgs = require('../../../../static/masteryRankImgs');
+import { blueprintSource } from '../utils'
+import { biFilter } from '../../../../utils'
+import { masteryRankImgs } from '../../../../static'
 
-import type { Warframe, Component } from '../../../../../types/warframe-items/warframe';
+import type { Item } from 'warframe-items';
+
+type Component = Extract<Item['components'], Object>[0];
 
 class BaseWarframe {
-  constructor(public warframe: Warframe) { }
+  constructor(public warframe: Item) { }
 
   public get baseEmbed() {
     const {
@@ -18,19 +20,19 @@ class BaseWarframe {
       .setTitle(`${name}`)
       .setThumbnail(`https://cdn.warframestat.us/img/${imageName}`)
       .addField('Categoria', category, false)
-      .setFooter(`Maestria ${masteryReq}`, masteryRankImgs[masteryReq]);
+      .setFooter(`Maestria ${masteryReq}`, masteryRankImgs[masteryReq || 0]);
     return embed;
   }
 
   private get bpSource() {
-    return parseSource(this.warframe);
+    return blueprintSource(this.warframe);
   }
 
   public mainInfoPage() {
     const { warframe, bpSource } = this;
     const {
       components = [], health, armor, shield, power, sprintSpeed,
-    }: Warframe = warframe;
+    }: Item = warframe;
     const embed = this.baseEmbed;
     embed.addField('Status', `Vida: ${health}\nArmadura: ${armor}\nEscudo: ${shield}\n`
       + `Energia: ${power}\nVelocidade de corrida: ${sprintSpeed}`, false);
@@ -38,20 +40,24 @@ class BaseWarframe {
     const [
       resources,
       componentItems,
-    ]: [Component[], Component[]] = biFilter(components.filter(({ name }) => name !== 'Blueprint'),
-      ({ uniqueName }: Warframe) => (
+    ] = biFilter<Component>(components.filter(({ name }) => name !== 'Blueprint'),
+      ({ uniqueName }: Item) => (
         uniqueName.includes('Items')));
 
-    const blueprintString = bpSource.id === 1
-      ? `${bpSource.location} Lab: ${bpSource.lab}`
-      : `${bpSource.location}`;
-    embed.addField('Blueprint', blueprintString, false);
+    if ('location' in bpSource && 'id' in bpSource) {
+      const blueprintString = bpSource.id === 1
+        ? `${bpSource.location} Lab: ${bpSource.lab}`
+        : `${bpSource.location}`;
+      embed.addField('Blueprint', blueprintString, false);
+    }
+
     if (componentItems.length > 0) {
       const componentsString = componentItems
         .map(({ name, itemCount }) => `${name} **${itemCount}**`)
         .join('\n');
       embed.addField('Componentes', componentsString, false);
     }
+
     if (resources.length > 0) {
       const resourcesNames = resources.map(({ name: resourceName, itemCount }) => (
         `${resourceName} **${itemCount}**`));
