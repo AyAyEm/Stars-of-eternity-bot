@@ -88,8 +88,8 @@ class WeaponEmbed extends BaseWeapon {
   }
 }
 
-export function weapon(weapon: Item) {
-  const weaponEmbed = new WeaponEmbed(weapon);
+export function weapon(item: Item) {
+  const weaponEmbed = new WeaponEmbed(item);
   const { mainInfoPage, componentsPage, baseStatusEmbed } = weaponEmbed;
   const embedMap = new Map();
   embedMap.set('📋', mainInfoPage);
