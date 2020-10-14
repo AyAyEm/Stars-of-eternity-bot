@@ -1,4 +1,4 @@
-export const items: { [key: string]: string[] } = {
+export const itemNames: { [key: string]: string[] } = {
   commonItems: [
     'nanoSpores', 'rubedo', 'salvage', 'plastids', 'polymerBundle',
     'cryotic', 'circuits', 'ferrite', 'alloyPlate',
@@ -20,4 +20,4 @@ export const items: { [key: string]: string[] } = {
     'helmet', 'nightmare', 'endo',
   ],
 };
-items.all = Object.values(items).flat();
+itemNames.all = Object.values(itemNames).flat();
