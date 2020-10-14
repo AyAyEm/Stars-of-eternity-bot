@@ -5,16 +5,16 @@
  * and the second array will be with the false elements.
  *
  * @param {Array} array
- * @param {Function} callbackfn
+ * @param {Function} callbackFn
  * @param {Object} thisArg
  * @return {[Array, Array]} A matrix with two arrays.
  */
 
-function biFilter(array, callbackfn, thisArg = this) {
-  const [trueElements, falseElements] = [[], []];
+export function biFilter<T>(array: T[], callbackFn: Function, thisArg?: any) {
+  const [trueElements, falseElements]: [T[], T[]] = [[], []];
   for (let i = 0; i < array.length; i += 1) {
     const element = array[i];
-    if (callbackfn.call(thisArg, element, i, array)) {
+    if (callbackFn.call(thisArg, element, i, array)) {
       trueElements.push(element);
     } else {
       falseElements.push(element);
@@ -22,5 +22,3 @@ function biFilter(array, callbackfn, thisArg = this) {
   }
   return [trueElements, falseElements];
 }
-
-module.exports = biFilter;
