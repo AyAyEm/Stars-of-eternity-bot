@@ -3,17 +3,18 @@ const { MessageEmbed } = require('discord.js');
 const masteryRankImgs = require('../../../../static/masteryRankImgs');
 const rivenDisposition = require('../../../../static/rivenDisposition');
 
+import type { Weapon } from '../../../../../types/warframe-items/weapon';
+import type { EmbedField } from 'discord.js';
+
 class BaseWeapon {
-  constructor(weapon) {
-    this.weapon = weapon;
-  }
+  constructor(public weapon: Weapon) {}
 
   get baseEmbed() {
     const {
-      name, type, imageName, category, masteryReq, disposition,
+      name, type, imageName, category, masteryReq, disposition = 1,
     } = this.weapon;
     const embed = new MessageEmbed();
-    const fields = [{ name: 'Categoria', value: category, inline: true }];
+    const fields: EmbedField[] = [{ name: 'Categoria', value: category, inline: true }];
     if (type) fields.push({ name: 'Tipo', value: type, inline: true });
     embed
       .setTitle(`${name} ${rivenDisposition[disposition - 1]}`)
@@ -31,10 +32,10 @@ class BaseWeapon {
       // eslint-disable-next-line no-unused-vars
       noise, trigger, magazineSize, reloadTime, multishot, ammo, damage,
       // eslint-disable-next-line no-unused-vars
-      damageTypes, totalDamage, flight, projectile, secondary, areaAttack,
+      damageTypes = {}, totalDamage, flight, projectile, secondary, areaAttack,
       category,
-    } = weapon;
-    const embedStrings = {
+    }: Weapon = weapon;
+    const embedStrings: { [key: string]: string } = {
       chance: `Chance: ${Math.round(criticalChance * 100)}%\nMultiplicador: ${criticalMultiplier}x`,
       status: `Chance: ${Math.round(procChance * 100)}%`,
       damage: `${Object.entries(damageTypes).map(([type, dmg]) => `${type}: ${dmg}`).join('\n')}`,
@@ -57,4 +58,4 @@ class BaseWeapon {
   }
 }
 
-module.exports = BaseWeapon;
+export default BaseWeapon;
