@@ -1,17 +1,20 @@
 const { bestDrops, dropsString } = require('../utils/relicDrop');
-const BaseWeapon = require('./baseWeapon');
+
+import BaseWeapon from './baseWeapon';
+
+import type { Weapon } from '../../../../../types/warframe-items/weapon';
 
 class WeaponEmbed extends BaseWeapon {
-  constructor(weapon) {
+  constructor(weapon: Weapon) {
     super(weapon);
     this.weapon = weapon;
   }
 
   get mainInfoPage() {
     const { weapon, baseEmbed: embed } = this;
-    const { components } = weapon;
+    const { components = [] } = weapon;
     const primeComponentsString = components
-      .filter(({ drops }) => drops[0].type === 'Relics')
+      .filter(({ drops = [] }) => drops[0]?.type === 'Relics')
       .sort(({ name }) => (name === 'Blueprint' ? -1 : 0))
       .reduce((strings, component) => `${strings}${component.name} **${component.itemCount}**\n`, '');
     embed.addField('Componentes', primeComponentsString, false);
@@ -24,9 +27,9 @@ class WeaponEmbed extends BaseWeapon {
 
   get componentsPage() {
     const { weapon, baseEmbed: embed } = this;
-    const { components } = weapon;
+    const { components = [] } = weapon;
     const componentsFields = components
-      .filter(({ drops }) => drops[0].type === 'Relics')
+      .filter(({ drops = [] }) => drops[0]?.type === 'Relics')
       .sort(({ name }) => (name === 'Blueprint' ? -1 : 1))
       .map((component) => {
         const { name, drops } = component;
@@ -38,7 +41,7 @@ class WeaponEmbed extends BaseWeapon {
   }
 }
 
-module.exports = (weapon) => {
+module.exports = (weapon: Weapon) => {
   const weaponEmbed = new WeaponEmbed(weapon);
   const { mainInfoPage, componentsPage, baseStatusEmbed } = weaponEmbed;
   const embedMap = new Map();
