@@ -5,10 +5,12 @@ const { blueprintSource, dropToNameAndChance } = require('../utils');
 const { biFilter } = require('../../../../utils');
 const specialItems = require('../specialItems');
 
-import type { Weapon, Component } from '../../../../../types/warframe-items/weapon';
+import type { Item } from 'warframe-items';
+
+type Component = Extract<Item['components'], Object>[0];
 
 class WeaponEmbed extends BaseWeapon {
-  constructor(weapon: Weapon) {
+  constructor(weapon: Item) {
     super(weapon);
     this.weapon = weapon;
   }
@@ -86,7 +88,7 @@ class WeaponEmbed extends BaseWeapon {
   }
 }
 
-module.exports = (weapon: Weapon) => {
+export default function (weapon: Item) {
   const weaponEmbed = new WeaponEmbed(weapon);
   const { mainInfoPage, componentsPage, baseStatusEmbed } = weaponEmbed;
   const embedMap = new Map();
