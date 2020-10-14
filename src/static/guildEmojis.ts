@@ -1,4 +1,4 @@
-const emojis = new Map([
+export const guildEmojis = new Map([
   // Warframe
   ['warframeRelics', {
     lith: { name: 'lithRelic', image: 'https://i.imgur.com/ZSxJCTI.png' },
@@ -8,4 +8,3 @@ const emojis = new Map([
     requiem: { name: 'requiemRelic', image: 'https://i.imgur.com/CNdPs70.png' },
   }],
 ]);
-module.exports = emojis;
