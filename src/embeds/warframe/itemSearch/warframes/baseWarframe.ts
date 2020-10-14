@@ -4,12 +4,12 @@ const parseSource = require('../utils/blueprintsSource');
 const { biFilter } = require('../../../../utils');
 const masteryRankImgs = require('../../../../static/masteryRankImgs');
 
-import type { Warframe, Component } from '../../../../../types/warframe-items';
+import type { Warframe, Component } from '../../../../../types/warframe-items/warframe';
 
 class BaseWarframe {
   constructor(public warframe: Warframe) { }
 
-  private get baseEmbed() {
+  public get baseEmbed() {
     const {
       name, imageName, masteryReq, category,
     } = this.warframe;
