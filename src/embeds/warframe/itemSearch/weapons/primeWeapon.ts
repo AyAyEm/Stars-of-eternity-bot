@@ -1,13 +1,12 @@
-const { bestDrops, dropsString } = require('../utils/relicDrop');
+import type { Item } from 'warframe-items';
 
+import { bestDrops, dropsString } from '../utils';
 import BaseWeapon from './baseWeapon';
 
-import type { Weapon } from '../../../../../types/warframe-items/weapon';
 
 class WeaponEmbed extends BaseWeapon {
-  constructor(weapon: Weapon) {
+  constructor(public weapon: Item) {
     super(weapon);
-    this.weapon = weapon;
   }
 
   get mainInfoPage() {
@@ -41,7 +40,7 @@ class WeaponEmbed extends BaseWeapon {
   }
 }
 
-module.exports = (weapon: Weapon) => {
+export function primeWeapon(weapon: Item) {
   const weaponEmbed = new WeaponEmbed(weapon);
   const { mainInfoPage, componentsPage, baseStatusEmbed } = weaponEmbed;
   const embedMap = new Map();
