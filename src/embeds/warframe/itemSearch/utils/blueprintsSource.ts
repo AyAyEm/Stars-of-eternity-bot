@@ -10,7 +10,7 @@ const blueprintsSource = new Map([
   ['Drop', { location: 'Drop', id: 6 }],
 ]);
 
-export const parseSource = (item: Items[0]) => {
+export function blueprintSource(item: Items[0]) {
   const { components } = item;
   const { uniqueName, drops } = components
     ? components.filter((componentItem) => componentItem.name === 'Blueprint')[0]
