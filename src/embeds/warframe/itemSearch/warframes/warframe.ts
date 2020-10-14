@@ -4,10 +4,13 @@ const dropToNameAndChance = require('../utils/dropToNameAndChance');
 
 import BaseWarframe from './baseWarframe';
 
-import type { Warframe, Component, Drop } from '../../../../../types/warframe-items/warframe';
+import type { Item } from 'warframe-items';
+
+type Component = Extract<Item['components'], Object>[0];
+type Drop = Extract<Item['drops'], Object>[0];
 
 class WeaponEmbed extends BaseWarframe {
-  constructor(warframe: Warframe) {
+  constructor(warframe: Item) {
     super(warframe);
     this.warframe = warframe;
   }
@@ -16,7 +19,7 @@ class WeaponEmbed extends BaseWarframe {
     const { warframe, baseEmbed } = this;
     const { components, category } = warframe;
     if (!components) return null;
-    const [resources, componentItems] = biFilter(components, ({ uniqueName }: Warframe) => (
+    const [resources, componentItems] = biFilter(components, ({ uniqueName }: Item) => (
       uniqueName.includes('Items')));
     if (category === 'Warframes') {
       const componentsFields = componentItems
@@ -54,7 +57,7 @@ class WeaponEmbed extends BaseWarframe {
   }
 }
 
-export default (warframe: Warframe) => {
+export default (warframe: Item) => {
   const warframeEmbed = new WeaponEmbed(warframe);
   const { mainInfoPage, componentsPage } = warframeEmbed.buildPages();
   const embedMap = new Map();
