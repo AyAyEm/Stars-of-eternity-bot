@@ -1,4 +1,2 @@
-const primeWeapon = require('./primeWeapon');
-const weapon = require('./weapon');
-
-module.exports = { weapon, primeWeapon };
+export * from'./primeWeapon';
+export * from'./weapon';
