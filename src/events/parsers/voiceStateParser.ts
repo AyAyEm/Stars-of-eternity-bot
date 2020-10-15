@@ -1,8 +1,11 @@
 /* eslint-disable max-classes-per-file */
-const { Event } = require('klasa');
+import { Event } from 'klasa'
 
-module.exports = class extends Event {
-  constructor(...args) {
+import type { VoiceState } from 'discord.js';
+import type { EventStore } from 'klasa';
+
+export default class extends Event {
+  constructor(...args: [EventStore, string[], string]) {
     super(...args, {
       event: 'voiceStateUpdate',
       enabled: true,
@@ -10,7 +13,7 @@ module.exports = class extends Event {
     });
   }
 
-  async run(oldState, newState) {
+  async run(oldState: VoiceState, newState: VoiceState) {
     const oldChannelID = oldState.channelID;
     const newChannelID = newState.channelID;
     const bothDefined = oldChannelID && newChannelID;
@@ -18,22 +21,22 @@ module.exports = class extends Event {
     // Member joined a channel
     if (!oldChannelID || (oldChannelID !== newChannelID && bothDefined)) {
       const { member, channel } = newState;
-      const botOrMember = member.user.bot ? 'bot' : 'member';
+      const botOrMember = member?.user.bot ? 'bot' : 'member';
       this.client.emit(`${botOrMember}JoinedChannel`, {
         member, channel, state: newState, type: 'join',
       });
       // Custom events
-      if (!member.user.bot) this.client.emit(`${channel.id}memberJoined`, member);
+      if (!member?.user.bot) this.client.emit(`${channel?.id}memberJoined`, member);
     }
     // Member left a channel
     if (!newChannelID || (oldChannelID !== newChannelID && bothDefined)) {
       const { member, channel } = oldState;
-      const botOrMember = member.user.bot ? 'bot' : 'member';
+      const botOrMember = member?.user.bot ? 'bot' : 'member';
       this.client.emit(`${botOrMember}LeftChannel`, {
         member, channel, state: oldState, type: 'left',
       });
       // Custom events
-      if (!member.user.bot) this.client.emit(`${channel.id}memberLeft`, member);
+      if (!member?.user.bot) this.client.emit(`${channel?.id}memberLeft`, member);
     }
   }
 };
