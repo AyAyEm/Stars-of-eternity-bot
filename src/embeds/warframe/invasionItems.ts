@@ -1,4 +1,5 @@
-const { MessageEmbed } = require('discord.js');
+import { MessageEmbed  } from 'discord.js'
+import { itemNames } from '../../static/warframe/itemNames';
 
 const {
   commonItems,
@@ -8,7 +9,7 @@ const {
   goodOnes,
   faction,
   others,
-} = require('../../static/warframe/itemNames');
+} = itemNames;
 
 const fields = [
   { name: 'Recursos comums', value: commonItems.join(' | '), inline: false },
@@ -19,6 +20,6 @@ const fields = [
   { name: 'Items de facção', value: faction.join(' | '), inline: false },
   { name: 'Outros', value: others.join(' | '), inline: false },
 ];
-module.exports = new MessageEmbed()
+export default new MessageEmbed()
   .addFields(fields)
   .setTitle('Possíveis opções de items para a invasão:');
