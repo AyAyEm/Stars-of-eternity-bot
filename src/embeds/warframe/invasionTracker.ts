@@ -1,4 +1,6 @@
-const { MessageEmbed } = require('discord.js');
+import { MessageEmbed } from 'discord.js';
+
+import type { InvasionData, Reward } from '../../types/WFCD/invasionData'
 
 const factionsStyle = new Map([
   ['Grineer', { tumb: 'https://i.imgur.com/Yh9Ncdv.png', color: '#6c0607' }],
@@ -6,18 +8,20 @@ const factionsStyle = new Map([
   ['Infested', { tumb: 'https://i.imgur.com/n9THxDE.png', color: '#1a931e' }],
 ]);
 
-const embedMaker = (reward, invasion, defendingFaction, attackingFaction) => {
+function embedMaker(
+  reward: Reward, invasion: InvasionData, defendingFaction: string, attackingFaction: string,
+) {
   const embed = new MessageEmbed()
     .setTitle(`${reward.itemString}`)
     .setThumbnail(reward.thumbnail)
     .setTimestamp()
-    .setColor(factionsStyle.get(defendingFaction).color)
-    .setAuthor(`${invasion.node} ${invasion.desc}`, factionsStyle.get(defendingFaction).tumb)
-    .setFooter(`${defendingFaction} x ${attackingFaction}`, factionsStyle.get(attackingFaction).tumb);
+    .setColor(factionsStyle.get(defendingFaction)?.color || 'white')
+    .setAuthor(`${invasion.node} ${invasion.desc}`, factionsStyle.get(defendingFaction)?.tumb)
+    .setFooter(`${defendingFaction} x ${attackingFaction}`, factionsStyle.get(attackingFaction)?.tumb);
   return embed;
 };
 
-const embed = (invasion, matchedItems) => {
+export default function embed(invasion: InvasionData, matchedItems: string[]) {
   const embeds = [];
   const numbOfItems = matchedItems.length;
   const {
@@ -38,5 +42,3 @@ const embed = (invasion, matchedItems) => {
   // .addField(defendingFaction, defenderReward.itemString, true)
   // .setFooter(invasion.activation);
 };
-
-module.exports = embed;
