@@ -1,5 +1,14 @@
-const { MessageEmbed } = require('discord.js');
-const _ = require('lodash');
+import { MessageEmbed } from 'discord.js';
+import { blankField } from '../../../utils/discordjs/MessageEmbed';
+import _ from 'lodash';
+
+import type { Item as DefaultItem } from 'warframe-items';
+
+interface Item extends DefaultItem {
+  name: string;
+  levelStats: { stats: string[] }[];
+  transmutable: boolean;
+}
 
 const groupsDictionary = new Map([
   ['Enemy Mod Tables', 'Inimigos'],
@@ -15,17 +24,18 @@ const rarityColorMap = new Map([
 ]);
 
 class ModEmbed {
-  constructor(mod) {
+  public getBaseEmbed: () => InstanceType<typeof MessageEmbed>;
+
+  constructor(public mod: Item) {
     const {
       name, polarity, rarity, imageName,
     } = mod;
 
-    this.mod = mod;
     this.getBaseEmbed = () => new MessageEmbed()
       .setTitle(`Mod: ${name}`)
       .setThumbnail(`https://cdn.warframestat.us/img/${imageName}`)
       .setFooter(`${rarity} ${polarity}`)
-      .setColor(rarityColorMap.get(rarity) || 'WHITE');
+      .setColor(rarityColorMap.get(rarity as string) || 'WHITE');
   }
 
   get mainInfoPage() {
@@ -37,19 +47,19 @@ class ModEmbed {
     const embedPage = getBaseEmbed().addFields([
       { name: 'Trocável', value: tradable ? '✅' : '❌', inline: true },
       { name: 'Transmutável', value: transmutable ? '✅' : '❌', inline: true },
-      { ...MessageEmbed.blankField, inline: true },
+      { ...blankField, inline: true },
     ]);
 
     if (levelStats) {
       const statsFields = levelStats[0].stats.map((stat, index) => {
         const percentageRegex = /[+-]?\d+%/;
-        const minStat = stat.match(percentageRegex)[0];
-        const maxStat = levelStats[levelStats.length - 1].stats[index].match(percentageRegex)[0];
+        const minStat = stat.match(percentageRegex)?.[0];
+        const maxStat = levelStats[levelStats.length - 1].stats[index].match(percentageRegex)?.[0];
 
         return [
           { name: 'Atributo', value: stat, inline: true },
           { name: 'Min/Max', value: `${minStat}/${maxStat}`, inline: true },
-          { ...MessageEmbed.blankField, inline: true },
+          { ...blankField, inline: true },
         ];
       });
       embedPage.addFields(statsFields.flat());
@@ -69,14 +79,14 @@ class ModEmbed {
         ] = dropsList.reduce(([locations, percentages], { location, chance }) => (
           [
             `${locations}${location}\n`,
-            `${percentages}${(chance * 100).toFixed(2)}%\n`,
+            `${percentages}${((chance || 0) * 100).toFixed(2)}%\n`,
           ]
         ), ['', '']);
         const translatedGroup = groupsDictionary.get(group) || group;
         embedPage.addFields([
           { name: translatedGroup, value: locationsString, inline: true },
           { name: 'chance', value: percentagesString, inline: true },
-          { ...MessageEmbed.blankField, inline: true },
+          { ...blankField, inline: true },
         ]);
       });
     }
@@ -84,7 +94,7 @@ class ModEmbed {
   }
 }
 
-module.exports = (mod) => {
+export function mod(mod: Item) {
   const modEmbed = new ModEmbed(mod);
   const { mainInfoPage, dropsPage } = modEmbed;
   const embedMap = new Map();
