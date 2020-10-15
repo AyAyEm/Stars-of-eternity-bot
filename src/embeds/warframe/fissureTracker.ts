@@ -3,18 +3,7 @@ import { eachSeries } from 'async';
 import moment from 'moment-timezone';
 import _ from 'lodash';
 
-interface Fissure {
-  node: string;
-  expired: boolean;
-  eta: string;
-  missionType: string;
-  tier: string;
-  tierNum: number;
-  enemy: string;
-  id: string;
-  expiry: string;
-  activation: string;
-}
+import type { Fissure } from '../../types/WFCD';
 
 const { timezone } = require('../../config').config;
 // Fissures: Lith, Meso, Neo, Axi and Requiem
