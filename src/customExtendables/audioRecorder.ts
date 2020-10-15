@@ -1,17 +1,22 @@
 /* eslint-disable max-classes-per-file */
-const { Readable } = require('stream');
-const moment = require('moment-timezone');
-const AudioMixer = require('audio-mixer');
-const ffmpeg = require('fluent-ffmpeg');
-const fs = require('fs');
-require('twix');
+import { Readable } from 'stream';
+import moment from 'moment-timezone';
+import AudioMixer from 'audio-mixer';
+import ffmpeg from 'fluent-ffmpeg';
+import fs from 'fs';
+import 'twix';
 
-const { config } = require('../config');
+import type { VoiceConnection, VoiceChannel, GuildMember } from 'discord.js';
+import type { KlasaClient } from 'klasa';
+import type { Mixer } from 'audio-mixer';
+import type { WriteStream} from 'fs';
+
+import { config } from '../config';
 
 ffmpeg.setFfmpegPath(require('@ffmpeg-installer/ffmpeg').path);
 ffmpeg.setFfprobePath(require('@ffprobe-installer/ffprobe').path);
 
-const audioDate = () => {
+function audioDate() {
   const startDate = moment.tz(config.timezone);
   const formatOptions = 'DD-MM-YYTHH_mm';
   return {
@@ -42,11 +47,33 @@ const voiceInputOptions = {
   sampleRate: 48000,
 };
 
-module.exports = class AudioRecorder {
-  constructor(voiceConnection, client) {
+export default class AudioRecorder {
+  protected audioDateObject: ReturnType<typeof audioDate>;
+
+  protected channel: VoiceChannel;
+
+  protected basePath: string;
+
+  protected audioPath: string;
+
+  protected logPath: string;
+
+  protected checkFolder: () => void;
+
+  protected audioRename: () => Promise<void>;
+
+  protected logRename: () => Promise<void>;
+
+  protected pcmMixer: Mixer;
+
+  protected isRecording: boolean;
+
+  protected outputAudioStream?: WriteStream;
+
+  protected outputLogStream?: WriteStream;
+
+  constructor(public voiceConnection: VoiceConnection, public client: KlasaClient) {
     this.audioDateObject = audioDate();
-    this.voiceConnection = voiceConnection;
-    this.client = client;
     this.channel = voiceConnection.channel;
     this.basePath = './audios/';
     this.audioPath = `${this.basePath}${this.audioDateObject.startDate}.ogg`;
@@ -59,13 +86,14 @@ module.exports = class AudioRecorder {
       }
     };
     const { startToEndDate } = this.audioDateObject;
-    const fileRename = async (actualPath, newPath) => fs.promises.rename(actualPath, newPath);
+
+    async function fileRename(actualPath: string, newPath: string) {
+      return fs.promises.rename(actualPath, newPath);
+    }
+
     this.audioRename = async () => fileRename(audioPath, `${basePath}${startToEndDate()}.ogg`);
     this.logRename = async () => fileRename(logPath, `${basePath}${startToEndDate()}.txt`);
-    this.pcmMixer = new AudioMixer.Mixer({
-      ...voiceInputOptions,
-      clearInterval: 100,
-    });
+    this.pcmMixer = new AudioMixer.Mixer(voiceInputOptions);
     this.isRecording = false;
   }
 
@@ -117,13 +145,13 @@ module.exports = class AudioRecorder {
     this.pcmMixer.destroy();
     this.client.removeAllListeners(`${this.channel.id}memberJoined`);
     this.client.removeAllListeners(`${this.channel.id}memberLeft`);
-    this.outputLogStream.end();
+    this.outputLogStream?.end();
     this.isRecording = false;
   }
 
   async channelLogger() {
     const {
-      logPath, client, channel, audioDateObject: { newDate },
+      logPath, channel, audioDateObject: { newDate },
     } = this;
     this.outputLogStream = fs.createWriteStream(logPath);
     const { outputLogStream } = this;
@@ -133,19 +161,19 @@ module.exports = class AudioRecorder {
       + `in the guild: [${channel.guild.name}]:[${channel.guild.id}]\n`
       + ' With the following members:\n';
     const startLog = channel.members.array().reduce((string, member) => {
-      if (member.user.id === client.user.id) return string;
+      if (member.user.id === this.client.user?.id) return string;
       const newString = `${string}`
         + ` -NickName[${member.nickname}]:UserName:[${member.user.tag}]\n`;
       return newString;
     }, startString);
     outputLogStream.write(startLog);
-    client.on(`${channel.id}memberJoined`, async (member) => {
+    this.client.on(`${channel.id}memberJoined`, async (member) => {
       const string = `[${newDate()}]  :[Member joined]: `
         + `NickName[${member.nickname}]: `
         + `UserName[${member.user.tag}]:\n`;
       outputLogStream.write(string);
     });
-    client.on(`${channel.id}memberLeft`, async (member) => {
+    this.client.on(`${channel.id}memberLeft`, async (member) => {
       const string = `[${newDate()}]  :[Member left]: `
         + `NickName[${member.nickname}]: `
         + `UserName[${member.user.tag}]\n`;
@@ -156,7 +184,7 @@ module.exports = class AudioRecorder {
     });
   }
 
-  async assignVoiceConnection(member) {
+  async assignVoiceConnection(member: GuildMember) {
     const { voiceConnection, pcmMixer } = this;
     const voiceStream = voiceConnection.receiver.createStream(member.user, { mode: 'pcm', end: 'manual' });
     const standaloneInput = new AudioMixer.Input({ ...voiceInputOptions, volume: 100 });
