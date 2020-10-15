@@ -19,6 +19,7 @@
     "@discordjs/opus": "^0.3.2",
     "@ffmpeg-installer/ffmpeg": "^1.0.20",
     "@ffprobe-installer/ffprobe": "^1.0.12",
+    "@types/async": "^3.2.3",
     "@types/node": "^14.6.4",
     "async": "^3.2.0",
     "audio-mixer": "github:WarNote/Audio-Mixer",
