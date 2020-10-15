@@ -3,8 +3,9 @@
  * Any option that you wish to use the default value can be removed from this file.
  * This file is init with defaults from both Klasa and Discord.js.
  */
+import type { KlasaClient } from 'klasa';
 
-exports.config = {
+export const config = {
   /**
    * General Options
    */
@@ -30,7 +31,11 @@ exports.config = {
   // A presence to login with
   presence: {},
   // A once ready message for your console
-  readyMessage: (client) => `Successfully initialized. Ready to serve ${client.guilds.cache.size} guild${client.guilds.size === 1 ? '' : 's'}.`,
+  readyMessage: (client: KlasaClient) => {
+    const guildsAmmount = client.guilds.cache.array().length;
+    return `Successfully initialized. Ready to serve ${guildsAmmount}`
+      + ` guild${guildsAmmount === 1 ? '' : 's'}.`;
+  },
   /**
    * Caching Options
    */
@@ -184,10 +189,10 @@ exports.config = {
 };
 
 // The token for this bot to login with
-exports.token = process.env.DISCORD_TOKEN;
+export const token = process.env.DISCORD_TOKEN;
 
 // MongoDB provider config
 
-exports.extandablesConfig = {
+export const extandablesConfig = {
   replyAndDeleteTimeout: 20000,
 };
