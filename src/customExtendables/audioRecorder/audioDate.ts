@@ -20,4 +20,4 @@ export function audioDate() {
     startDate: startDate.format(formatOptions),
     newDate: () => moment.tz(config.timezone).format('DD/MM/YYYY HH:mm:ss'),
   };
-};
+}
