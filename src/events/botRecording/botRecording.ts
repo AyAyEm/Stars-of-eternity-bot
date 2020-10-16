@@ -1,9 +1,8 @@
 import { Event } from 'klasa';
 
-import AudioRecorder from '../../customExtendables/audioRecorder';
-
 import type { EventStore } from 'klasa';
 import type { VoiceConnection, VoiceState } from 'discord.js';
+import AudioRecorder from '../../customExtendables/audioRecorder';
 
 const recorderMap = new Map();
 
@@ -27,4 +26,4 @@ export default class extends Event {
     recorderMap.set(state.guild.id, newRecorder);
     await newRecorder.startRecording();
   }
-};
+}
