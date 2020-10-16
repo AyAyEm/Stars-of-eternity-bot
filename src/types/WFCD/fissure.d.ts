@@ -9,4 +9,5 @@ export interface Fissure {
   id: string;
   expiry: string;
   activation: string;
+  active: boolean;
 }
