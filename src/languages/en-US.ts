@@ -1,12 +1,14 @@
-const { Language, util } = require('klasa');
+import { Language, util } from 'klasa';
 
-module.exports = class extends Language {
-  constructor(...args) {
+import type { LanguageStore } from 'klasa';
+
+export default class extends Language {
+  constructor(...args: [LanguageStore, string[], string]) {
     super(...args);
     this.language = {
-      DEFAULT: (key) => `${key} has not been localized for en-US yet.`,
+      DEFAULT: (key: string) => `${key} has not been localized for en-US yet.`,
       DEFAULT_LANGUAGE: 'Default Language',
-      PREFIX_REMINDER: (prefix = `@${this.client.user.tag}`) => `The prefix${Array.isArray(prefix)
+      PREFIX_REMINDER: (prefix = `@${this.client.user?.tag}`) => `The prefix${Array.isArray(prefix)
         ? `es for this guild are: ${prefix.map((pre) => `\`${pre}\``).join(', ')}`
         : ` in this guild is set to: \`${prefix}\``
       }`,
@@ -106,7 +108,7 @@ module.exports = class extends Language {
       COMMAND_PING_DESCRIPTION: 'Runs a connection test to Discord.',
       COMMAND_PINGPONG: (diff, ping) => `Pong! (Roundtrip took: ${diff}ms. Heartbeat: ${ping}ms.)`,
       COMMAND_INVITE: () => [
-        `To add ${this.client.user.username} to your discord guild:`,
+        `To add ${this.client.user?.username} to your discord guild:`,
         `<${this.client.invite}>`,
         util.codeBlock('', [
           'The above link is generated requesting the minimum permissions required to use every command currently.',
@@ -183,7 +185,7 @@ module.exports = class extends Language {
           `• Klasa      :: v${klasaVersion}`,
           `• Discord.js :: v${discordVersion}`,
           `• Node.js    :: ${processVersion}`,
-          `• Shard      :: ${(message.guild ? message.guild.shardID : 0) + 1} / ${this.client.options.totalShardCount}`,
+          `• Shard      :: ${(message.guild ? message.guild.shardID : 0) + 1} / ${this.client.options.shardCount}`,
         ];
       },
       COMMAND_STATS_DESCRIPTION: 'Provides some details about the bot and stats.',

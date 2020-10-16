@@ -1,13 +1,15 @@
-const { Language, util } = require('klasa');
+import { Language, util } from 'klasa';
 
-module.exports = class extends Language {
-  constructor(...args) {
+import type { LanguageStore } from 'klasa';
+
+export default class extends Language {
+  constructor(...args: [LanguageStore, string[], string]) {
     super(...args, { enabled: true });
 
     this.language = {
       DEFAULT: (key) => `${key} não foi encotrada para pt-BR ainda.`,
       DEFAULT_LANGUAGE: 'Idioma padrão',
-      PREFIX_REMINDER: (prefix = `@${this.client.user.tag}`) => (Array.isArray(prefix)
+      PREFIX_REMINDER: (prefix = `@${this.client.user?.tag}`) => (Array.isArray(prefix)
         ? `Os prefixos para esta guilda são: ${prefix.map((pre) => `\`${pre}\``).join(', ')}`
         : ` O prefixo para esta guilda é: \`${prefix}\``
       ),
@@ -66,7 +68,7 @@ module.exports = class extends Language {
       INHIBITOR_NSFW: 'Você pode apenas usar comandos \'NSFW\' em canais \'NSFW\'.',
       INHIBITOR_PERMISSIONS: 'Você não tem permissão para utilizar este comando.',
       INHIBITOR_REQUIRED_SETTINGS: (settings) => (`A guilda está faltando ${settings.length !== 1 ? 'as configuraçãos' : 'a configuração'}`
-      + `**${settings.join(', ')}**   e por isso este comando não irá rodar.`),
+        + `**${settings.join(', ')}**   e por isso este comando não irá rodar.`),
       INHIBITOR_RUNIN: (types) => `Este comando está apenas disponível em canais do tipo ${types}.`,
       INHIBITOR_RUNIN_NONE: (name) => `O comando ${name} não está configurado para rodar em qualquer canal.`,
       COMMAND_BLACKLIST_DESCRIPTION: '\'Blacklists\' ou \'un-blacklists\' de usuários e guildas do bot.',
@@ -112,7 +114,7 @@ module.exports = class extends Language {
       COMMAND_PING_DESCRIPTION: 'Roda um teste de conexão com o Discord.',
       COMMAND_PINGPONG: (diff, ping) => `Pong! (Volta completa demorou: ${diff}ms. Batimento cardíaco: ${ping}ms.)`,
       COMMAND_INVITE: () => [
-        `Para adicionar ${this.client.user.username} para sua guilda do discord:`,
+        `Para adicionar ${this.client.user?.username} para sua guilda do discord:`,
         `<${this.client.invite}>`,
         util.codeBlock('', [
           'O link acima é gerado requirindo o mínimo de permissões para utilizar todos os comandos atualmente.',
@@ -153,7 +155,7 @@ module.exports = class extends Language {
       COMMAND_DISABLE: (type, name) => `+ Desabilitado com sucesso ${type}: ${name}`,
       COMMAND_DISABLE_DESCRIPTION: 'Desabilita novamente ou temporiariamente desabilita um comando/inibidor/monitor/finalisador/evento. Estado padrão é restaurado no reinício.',
       COMMAND_DISABLE_WARN: 'Você provavelmente não quer desabilitar aquilo, '
-      + 'já que você não conseguiria rodar nenhum comando para habilitar novamente',
+        + 'já que você não conseguiria rodar nenhum comando para habilitar novamente',
       COMMAND_CONF_NOKEY: 'Você deve fornecer uma chave',
       COMMAND_CONF_NOVALUE: 'Você deve fornecer um valor',
       COMMAND_CONF_GUARDED: (name) => `${util.toTitleCase(name)} não pode ser desabilitado.`,
@@ -190,7 +192,7 @@ module.exports = class extends Language {
           `• Klasa      :: v${klasaVersion}`,
           `• Discord.js :: v${discordVersion}`,
           `• Node.js    :: ${processVersion}`,
-          `• Shard      :: ${(message.guild ? message.guild.shardID : 0) + 1} / ${this.client.options.totalShardCount}`,
+          `• Shard      :: ${(message.guild ? message.guild.shardID : 0) + 1} / ${this.client.options.shardCount}`,
         ];
       },
       COMMAND_STATS_DESCRIPTION: 'Provê alguns detalhes sobre o bot e seu estado.',
