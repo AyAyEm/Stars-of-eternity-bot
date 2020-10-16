@@ -2,13 +2,13 @@ import AudioMixer from 'audio-mixer';
 import ffmpeg from 'fluent-ffmpeg';
 import fs from 'fs';
 
-import { SilenceStream } from './silenceStream';
-import { audioDate } from './audioDate';
-
 import type { VoiceConnection, VoiceChannel, GuildMember } from 'discord.js';
 import type { KlasaClient } from 'klasa';
 import type { Mixer } from 'audio-mixer';
-import type { WriteStream} from 'fs';
+import type { WriteStream } from 'fs';
+
+import { SilenceStream } from './silenceStream';
+import { audioDate } from './audioDate';
 
 ffmpeg.setFfmpegPath(require('@ffmpeg-installer/ffmpeg').path);
 ffmpeg.setFfprobePath(require('@ffprobe-installer/ffprobe').path);
@@ -77,7 +77,7 @@ export default class AudioRecorder {
     await this.channelLogger();
     this.isRecording = true;
     const {
-      audioPath, voiceConnection, client, channel, audioRename, pcmMixer, assignVoiceConnection,
+      audioPath, voiceConnection, channel, audioRename, pcmMixer, assignVoiceConnection,
     } = this;
     this.outputAudioStream = fs.createWriteStream(audioPath);
     const { outputAudioStream } = this;
@@ -91,7 +91,7 @@ export default class AudioRecorder {
       return assignVoiceConnection.call(this, member);
     });
     const memberJoinEventPath = `${channel.id}memberJoined`;
-    client.on(memberJoinEventPath, async (member) => {
+    this.client.on(memberJoinEventPath, async (member) => {
       if (member.guild.id !== voiceConnection.channel.guild.id) return;
       await assignVoiceConnection.call(this, member);
     });
@@ -101,7 +101,7 @@ export default class AudioRecorder {
       .audioChannels(1)
       .audioCodec('opus')
       .format('opus')
-      .on('error', client.console.error)
+      .on('error', this.client.console.error)
       .on('end', async () => {
         await audioRename();
         await this.logRename();
@@ -163,4 +163,4 @@ export default class AudioRecorder {
     pcmMixer.addInput(standaloneInput);
     voiceStream.pipe(standaloneInput);
   }
-};
+}
