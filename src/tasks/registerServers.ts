@@ -1,12 +1,14 @@
-const { Task } = require('klasa');
+import { Task } from 'klasa';
 
-module.exports = class extends Task {
-  constructor(...args) {
+import type { TaskStore } from 'klasa';
+
+export default class extends Task {
+  constructor(...args: [TaskStore, string[], string]) {
     super(...args, { enabled: true });
   }
 
   async init() {
-    const { Guilds } = await this.client.providers.get('mongoose');
+    const { Guilds }: any = await this.client.providers.get('mongoose');
     this.client.guilds.cache.each(async (guild, guildID) => {
       const exists = await Guilds.exists({ id: guildID });
       if (!exists) {
@@ -15,4 +17,6 @@ module.exports = class extends Task {
       }
     });
   }
-};
+
+  run() { }
+}
