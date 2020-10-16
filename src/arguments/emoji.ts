@@ -13,8 +13,8 @@ export default class extends Argument {
     if (emojiRegex.test(arg)) {
       emoji = this.client.emojis.cache.get(emojiRegex.exec(arg)?.[1] || '');
     } else if (unicodeEmojiRegex.test(arg)) {
-      const unicodeEmoji = unicodeEmojiRegex.exec(arg)?.[0];
-      emoji = new GuildEmoji(this.client, { name: unicodeEmoji, id: null }, message.guild as KlasaGuild);
+      const unicodeEmoji = { name: unicodeEmojiRegex.exec(arg)?.[0], id: null };
+      emoji = new GuildEmoji(this.client, unicodeEmoji, message.guild as KlasaGuild);
     } else {
       emoji = null;
     }
@@ -22,4 +22,4 @@ export default class extends Argument {
     if (emoji) return emoji;
     throw message.language.get('RESOLVER_INVALID_EMOJI', possible.name);
   }
-};
+}
