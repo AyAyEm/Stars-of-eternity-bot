@@ -1,11 +1,13 @@
-const { Command } = require('klasa');
-const _ = require('lodash');
-const { mapToEmbed, firstEmbed } = require('../../embeds/roleReaction');
+import { Command } from 'klasa';
+import _ from 'lodash';
 
-const unicodeEmojiRegex = /u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]/;
-// this.client.arguments.get('message').run(arg, possible, msg)
+import type { CommandStore, KlasaMessage, Possible } from 'klasa';
+import type { Role, Emoji, Guild, Message, MessageReaction } from 'discord.js';
 
-const updateEmojis = (rolesEmoji = new Map(), role, emoji, description = '') => {
+import { mapToEmbed, firstEmbed } from '../../embeds/roleReaction';
+import { unicodeEmojiRegex } from '../../utils';
+
+const updateEmojis = (rolesEmoji = new Map(), role: Role, emoji: Emoji, description = '') => {
   if (role && emoji) {
     const emojiID = emoji.id || emoji.name;
     if (rolesEmoji.has(emojiID)) {
@@ -16,15 +18,15 @@ const updateEmojis = (rolesEmoji = new Map(), role, emoji, description = '') => 
   return rolesEmoji;
 };
 
-const filterRoleReactionMessages = (messagesMap) => {
+const filterRoleReactionMessages = (messagesMap: Map<string, KlasaMessage>) => {
   const lastMessages = [...messagesMap.entries()]
-    .filter(({ 1: value }) => value.msgType === 'roleReaction')
+    .filter(({ 1: value }) => (value as any).msgType === 'roleReaction')
     .map(([key]) => key);
   return lastMessages;
 };
 
-module.exports = class extends Command {
-  constructor(...args) {
+export default class extends Command {
+  constructor(...args: [CommandStore, string[], string]) {
     super(...args, {
       enabled: true,
       runIn: ['text'],
@@ -41,7 +43,10 @@ module.exports = class extends Command {
       quotedStringSupport: false,
       subcommands: true,
     });
-    const actionsValidators = new Map([
+
+    type ActionValidatorArgs = [number, string, Possible, KlasaMessage, any[]];
+    type ActionValidator = (...argumentsArray: ActionValidatorArgs) => any | undefined;
+    const actionsValidators = new Map<string, ActionValidator>([
       ['create', (resolver, arg, possible, msg, [role, emoji, description]) => {
         const actionArgument = ['role', 'emoji', 'string'];
         if ((role || emoji) && resolver < 2) {
@@ -73,42 +78,42 @@ module.exports = class extends Command {
     ]);
     this
       .createCustomResolver('firstParam', (arg, possible, msg) => {
-        const [action, role, emoji] = msg.prompter.args;
-        return actionsValidators.get(action)(0, arg, possible, msg, [role, emoji]);
+        const [action, role, emoji] = (msg as any).prompter?.args || [];
+        return actionsValidators.get(action)?.(0, arg, possible, msg, [role, emoji]);
       })
       .createCustomResolver('secondParam', (arg, possible, msg) => {
-        const [action, role, emoji] = msg.prompter.args;
-        return actionsValidators.get(action)(1, arg, possible, msg, [role, emoji], this.client);
+        const [action, role, emoji] = (msg as any).prompter?.args || [];
+        return actionsValidators.get(action)?.(1, arg, possible, msg, [role, emoji]);
       })
       .createCustomResolver('thirdParam', (arg, possible, msg) => {
-        const [action, ...params] = msg.prompter.args;
-        return actionsValidators.get(action)(2, arg, possible, msg, [...params], this.client);
+        const [action, ...params] = (msg as any).prompter?.args || [];
+        return actionsValidators.get(action)?.(2, arg, possible, msg, [...params]);
       });
   }
 
-  async updateEmbed(embedMessage, data) {
-    const embed = await mapToEmbed(embedMessage.guild, data);
+  async updateEmbed(embedMessage: KlasaMessage, data: any) {
+    const embed = await mapToEmbed(embedMessage.guild as Guild, data);
     embedMessage.edit(embed);
   }
 
-  async updateReactions(embedMessage) {
-    const provider = await this.client.providers.get('mongoose');
+  async updateReactions(embedMessage: Message) {
+    const provider: any = await this.client.providers.get('mongoose');
     const { messages } = await provider.getMessages(embedMessage);
     const { rolesEmoji } = messages.get(embedMessage.id);
-    rolesEmoji.forEach(async (roleEmoji, emojiID) => {
+    rolesEmoji.forEach(async (_roleEmoji: any, emojiID: string) => {
       const emoji = unicodeEmojiRegex.test(emojiID) ? emojiID
         : await this.client.emojis.resolve(emojiID);
-      embedMessage.react(emoji);
+      if (emoji) embedMessage.react(emoji);
     });
   }
 
-  async create(msg, [role, emoji, description]) {
-    const provider = await this.client.providers.get('mongoose');
+  async create(msg: KlasaMessage, [role, emoji, description]: [Role, Emoji, string]) {
+    const provider: any = await this.client.providers.get('mongoose');
     const { guildDocument } = await provider.getMessages(msg);
     const rolesEmojiMap = updateEmojis(undefined, role, emoji, description);
-    const embed = role && emoji ? await mapToEmbed(msg.guild, rolesEmojiMap) : firstEmbed;
+    const embed = role && emoji ? await mapToEmbed(msg.guild as Guild, rolesEmojiMap) : firstEmbed;
     msg.channel.send(embed).then(async (embedMessage) => {
-      guildDocument.channels = embedMessage.newMap(guildDocument, {
+      guildDocument.channels = (embedMessage as any).newMap(guildDocument, {
         msgType: 'roleReaction',
         rolesEmoji: updateEmojis(undefined, role, emoji, description),
       });
@@ -119,8 +124,8 @@ module.exports = class extends Command {
     });
   }
 
-  async delete(msg, [inputMessage]) {
-    const provider = await this.client.providers.get('mongoose');
+  async delete(msg: KlasaMessage, [inputMessage]: [KlasaMessage]) {
+    const provider: any = await this.client.providers.get('mongoose');
     const { messages, guildDocument } = await provider.getMessages(msg);
     if (!messages) throw new Error('Este canal não possui role reactions!');
     const embedMessage = inputMessage || await (function getMessage() {
@@ -131,15 +136,15 @@ module.exports = class extends Command {
     messages.delete(embedMessage.id);
     await guildDocument.save();
     embedMessage.delete();
-    msg.replyAndDelete(`Role reaction: ${embedMessage.id} deletado com sucesso!`);
+    (msg as any).replyAndDelete(`Role reaction: ${embedMessage.id} deletado com sucesso!`);
   }
 
-  async add(msg, [role, emoji, roleMessage]) {
-    const provider = await this.client.providers.get('mongoose');
+  async add(msg: KlasaMessage, [role, emoji, roleMessage]: [Role, Emoji, Message]) {
+    const provider: any = await this.client.providers.get('mongoose');
     const { messages, guildDocument } = await provider.getMessages(msg);
     const roleReactionMessages = filterRoleReactionMessages(messages);
     const embedMessage = roleMessage || await msg.channel.messages
-      .fetch(_.last(roleReactionMessages));
+      .fetch(_.last<any>(roleReactionMessages));
     if (!messages || !embedMessage || !messages.has(embedMessage.id)) {
       throw new Error('Este canal não possui role reaction!');
     }
@@ -147,13 +152,13 @@ module.exports = class extends Command {
     const roleEmojis = updateEmojis(emojisMap, role, emoji);
     messages.get(embedMessage.id).rolesEmoji = roleEmojis;
     await guildDocument.save();
-    this.updateEmbed(embedMessage, roleEmojis);
+    this.updateEmbed(embedMessage as any, roleEmojis);
     this.updateReactions(embedMessage);
-    msg.replyAndDelete(`Cargo: \`${role.name}\` adicionado com sucesso ao emoji: \`${emoji.name}\``);
+    (msg as any).replyAndDelete(`Cargo: \`${role.name}\` adicionado com sucesso ao emoji: \`${emoji.name}\``);
   }
 
-  async renew(msg, [option = 'all']) {
-    const provider = await this.client.providers.get('mongoose');
+  async renew(msg: KlasaMessage, [option = 'all']) {
+    const provider: any = await this.client.providers.get('mongoose');
     const { messages, guildDocument } = await provider.getMessages(msg);
     if (!messages) throw new Error('Este canal não possuí role reaction para renovar!');
     let roleReactionMessages = new Map([...messages.entries()]
@@ -166,17 +171,19 @@ module.exports = class extends Command {
         [embedMessage.id, roleReactionMessages.get(embedMessage.id)],
       ]);
     }
-    await roleReactionMessages.forEach(async (reactionMessage, reactionMessageID) => {
-      const embed = await mapToEmbed(msg.guild, reactionMessage.rolesEmoji);
-      const oldEmbedMessage = await msg.channel.messages.fetch(reactionMessageID);
-      msg.channel.send(embed).then(async (newEmbed) => {
-        messages.set(newEmbed.id, reactionMessage);
-        messages.delete(reactionMessageID);
-        oldEmbedMessage.delete();
-        await guildDocument.save();
-        this.updateReactions(newEmbed);
-      });
-    });
+    await roleReactionMessages.forEach(
+      async (reactionMessage, reactionMessageID) => {
+        const embed = await mapToEmbed(msg.guild as Guild, (reactionMessage as any).rolesEmoji);
+        const oldEmbedMessage = await msg.channel.messages.fetch((reactionMessageID as string));
+        msg.channel.send(embed).then(async (newEmbed) => {
+          messages.set(newEmbed.id, reactionMessage);
+          messages.delete(reactionMessageID);
+          oldEmbedMessage.delete();
+          await guildDocument.save();
+          this.updateReactions(newEmbed);
+        });
+      },
+    );
   }
 
   // async update(msg, [emoji, role, descriptionOrMessage, message]) {
@@ -185,27 +192,28 @@ module.exports = class extends Command {
   // }
 
   async init() {
-    const reactionComparision = async (messageReaction, user, action) => {
-      if (user.bot || messageReaction.message.channel.type !== 'text') return;
+    const reactionComparision = (
+      async (messageReaction: MessageReaction, user: any, action: string) => {
+        if (user.bot || messageReaction.message.channel.type !== 'text') return;
 
-      const msg = messageReaction.message;
-      const [channelID, guildID] = [msg.channel.id, msg.guild.id];
-      const guildDocument = await this.client.provider.Guild(guildID);
-      const messageDocument = await guildDocument.get(`channels.${channelID}.messages.${msg.id}`);
-      if (!messageDocument || messageDocument.msgType !== 'roleReaction') return;
-      const { rolesEmoji } = messageDocument;
-      const emoji = messageReaction.emoji.id || messageReaction.emoji.name;
-      if (!rolesEmoji || rolesEmoji.length === 0) return;
-      const role = rolesEmoji.get(emoji).roleID;
-      const member = await msg.guild.members.fetch(user.id);
-      if (action === 'add' && !member.roles.cache.has(role)) {
-        member.roles.add(role);
-      }
-      if (action === 'remove' && member.roles.cache.has(role)) {
-        member.roles.remove(role);
-      }
-    };
+        const msg = messageReaction.message;
+        const [channelID, guildID] = [msg.channel.id, msg.guild?.id];
+        const guildDocument = await (this.client.providers.get('mongoose') as any).Guild(guildID);
+        const messageDocument = await guildDocument.get(`channels.${channelID}.messages.${msg.id}`);
+        if (!messageDocument || messageDocument.msgType !== 'roleReaction') return;
+        const { rolesEmoji } = messageDocument;
+        const emoji = messageReaction.emoji.id || messageReaction.emoji.name;
+        if (!rolesEmoji || rolesEmoji.length === 0) return;
+        const role = rolesEmoji.get(emoji).roleID;
+        const member = await msg.guild?.members.fetch(user.id);
+        if (action === 'add' && !member?.roles.cache.has(role)) {
+          member?.roles.add(role);
+        }
+        if (action === 'remove' && member?.roles.cache.has(role)) {
+          member?.roles.remove(role);
+        }
+      });
     this.client.on('messageReactionRemove', async (...params) => reactionComparision(...params, 'remove'));
     this.client.on('messageReactionAdd', async (...params) => reactionComparision(...params, 'add'));
   }
-};
+}
