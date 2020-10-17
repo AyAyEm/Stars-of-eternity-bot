@@ -34,6 +34,13 @@
         "tsx": "never"
       }
     ],
+    "object-curly-newline": ["error", {
+      "ImportDeclaration": "never",
+      "ExportDeclaration": "never",
+      "minProperties": 6,
+      "multiline": true,
+      "consistent": true
+    }],
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-empty-function": ["off"],
     "class-methods-use-this": "off",
