@@ -1,14 +1,8 @@
+import type { Item } from 'warframe-items';
+
 import { weapon, primeWeapon } from './weapons';
 import { warframe, warframePrime } from './warframes';
 import { mod } from './mod';
-
-import type { Item as DefaultItem } from 'warframe-items';
-
-interface Item extends DefaultItem {
-  name: string;
-  levelStats: { stats: string[] }[];
-  transmutable: boolean;
-}
 
 const isPrime = ({ name }: Item) => name.includes('Prime');
 const typeFunctions = new Map([

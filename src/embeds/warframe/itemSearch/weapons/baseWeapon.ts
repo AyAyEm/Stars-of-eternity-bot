@@ -1,9 +1,9 @@
 import { MessageEmbed } from 'discord.js';
 
-import { masteryRankImgs, rivenDisposition } from '../../../../static';
-
 import type { Item } from 'warframe-items';
 import type { EmbedField } from 'discord.js';
+
+import { masteryRankImgs, rivenDisposition } from '../../../../static';
 
 export default class BaseWeapon {
   constructor(public weapon: Item) { }
@@ -26,11 +26,11 @@ export default class BaseWeapon {
   get baseStatusEmbed() {
     const { baseEmbed, weapon } = this;
     const {
-      // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       criticalChance, criticalMultiplier, procChance, fireRate, accuracy,
-      // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       noise, trigger, magazineSize, reloadTime, ammo, damage, // multishot,
-      // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       damageTypes = {}, totalDamage, flight, projectile, secondary, areaAttack,
       category,
     }: Item = weapon;

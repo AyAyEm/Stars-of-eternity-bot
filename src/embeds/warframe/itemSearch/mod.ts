@@ -1,14 +1,8 @@
 import { MessageEmbed } from 'discord.js';
-import { blankField } from '../../../utils/discordjs/MessageEmbed';
 import _ from 'lodash';
 
-import type { Item as DefaultItem } from 'warframe-items';
-
-interface Item extends DefaultItem {
-  name: string;
-  levelStats: { stats: string[] }[];
-  transmutable: boolean;
-}
+import type { Item } from 'warframe-items';
+import { blankField } from '../../../utils/discordjs/MessageEmbed';
 
 const groupsDictionary = new Map([
   ['Enemy Mod Tables', 'Inimigos'],
@@ -26,10 +20,10 @@ const rarityColorMap = new Map([
 class ModEmbed {
   public getBaseEmbed: () => InstanceType<typeof MessageEmbed>;
 
-  constructor(public mod: Item) {
+  constructor(public modItem: Item) {
     const {
       name, polarity, rarity, imageName,
-    } = mod;
+    } = modItem;
 
     this.getBaseEmbed = () => new MessageEmbed()
       .setTitle(`Mod: ${name}`)
@@ -39,10 +33,10 @@ class ModEmbed {
   }
 
   get mainInfoPage() {
-    const { getBaseEmbed, mod } = this;
+    const { getBaseEmbed, modItem } = this;
     const {
       tradable, levelStats, transmutable,
-    } = mod;
+    } = modItem;
 
     const embedPage = getBaseEmbed().addFields([
       { name: 'Trocável', value: tradable ? '✅' : '❌', inline: true },
@@ -68,7 +62,7 @@ class ModEmbed {
   }
 
   get dropsPage() {
-    const { getBaseEmbed, mod: { drops } } = this;
+    const { getBaseEmbed, modItem: { drops } } = this;
     const embedPage = drops ? getBaseEmbed() : null;
     if (embedPage) {
       const dropsGroups = _.groupBy(drops, 'type');
@@ -94,12 +88,12 @@ class ModEmbed {
   }
 }
 
-export function mod(mod: Item) {
-  const modEmbed = new ModEmbed(mod);
+export function mod(modItem: Item) {
+  const modEmbed = new ModEmbed(modItem);
   const { mainInfoPage, dropsPage } = modEmbed;
   const embedMap = new Map();
   embedMap.set('📋', mainInfoPage);
   if (dropsPage) embedMap.set('♻', dropsPage);
 
   return embedMap;
-};
+}

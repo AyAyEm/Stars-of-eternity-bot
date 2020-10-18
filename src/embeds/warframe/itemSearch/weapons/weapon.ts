@@ -1,18 +1,15 @@
 import _ from 'lodash';
 
+import type { Item, Component } from 'warframe-items';
+
 import BaseWeapon from './baseWeapon';
 import { blueprintSource, dropToNameAndChance } from '../utils';
 import { biFilter } from '../../../../utils';
 import specialItems from '../specialItems';
 
-import type { Item } from 'warframe-items';
-
-type Component = Extract<Item['components'], Object>[0];
-
 class WeaponEmbed extends BaseWeapon {
-  constructor(weapon: Item) {
+  constructor(public weapon: Item) {
     super(weapon);
-    this.weapon = weapon;
   }
 
   get bpSource() {
@@ -30,8 +27,9 @@ class WeaponEmbed extends BaseWeapon {
 
     const components = weapon.components || [];
     const [resources, componentItems] = biFilter(components.filter(
-      ({ name }: Component) => name !== 'Blueprint'), ({ uniqueName }: Component) => (
-        uniqueName.includes('Items')));
+      ({ name }: Component) => name !== 'Blueprint',
+    ), ({ uniqueName }: Component) => (
+      uniqueName.includes('Items')));
 
     if ('id' in bpSource && 'location' in bpSource) {
       const blueprintString = bpSource.id === 1
@@ -88,7 +86,7 @@ class WeaponEmbed extends BaseWeapon {
   }
 }
 
-export function weapon(item: Item) {
+export function weaponFn(item: Item) {
   const weaponEmbed = new WeaponEmbed(item);
   const { mainInfoPage, componentsPage, baseStatusEmbed } = weaponEmbed;
   const embedMap = new Map();
@@ -96,4 +94,4 @@ export function weapon(item: Item) {
   if (componentsPage) embedMap.set('♻', componentsPage);
   embedMap.set('🃏', baseStatusEmbed);
   return embedMap;
-};
+}

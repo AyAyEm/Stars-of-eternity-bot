@@ -3,7 +3,6 @@ import type { Item } from 'warframe-items';
 import { bestDrops, dropsString } from '../utils';
 import BaseWeapon from './baseWeapon';
 
-
 class WeaponEmbed extends BaseWeapon {
   constructor(public weapon: Item) {
     super(weapon);
@@ -48,4 +47,4 @@ export function primeWeapon(item: Item) {
   if (componentsPage) embedMap.set('♻', componentsPage);
   embedMap.set('🃏', baseStatusEmbed);
   return embedMap;
-};
+}
