@@ -1,15 +1,19 @@
-const { Command } = require('klasa');
-const { MessageEmbed } = require('discord.js');
-const Fuse = require('fuse.js');
-const Items = require('warframe-items');
-const itemToEmbed = require('../../embeds/warframe/itemSearch/index');
-const numberEmojis = require('../../static/numberEmojis');
+import { Command } from 'klasa';
+import { MessageEmbed } from 'discord.js';
+import Fuse from 'fuse.js';
+import Items from 'warframe-items';
 
-const warframeItems = [
-  'Archwing', 'Arch-Gun', 'Arch-Melee',
+import type { Category, Item } from 'warframe-items';
+import type { User, GuildMember } from 'discord.js';
+import type { KlasaMessage, CommandStore } from 'klasa';
+
+import itemToEmbed from '../../embeds/warframe/itemSearch/index';
+import { numberEmojis } from '../../static/numberEmojis';
+
+const warframeItems: Category[] = [
+  'Archwing', 'Sentinels', 'Warframes',
   'Melee', 'Mods', 'Pets', 'Primary',
   'Relics', 'Resources', 'Secondary',
-  'Sentinels', 'Warframes',
 ];
 
 const fuse = new Fuse(new Items({ category: warframeItems }), {
@@ -18,13 +22,20 @@ const fuse = new Fuse(new Items({ category: warframeItems }), {
   keys: ['name'],
 });
 
-const isAuthorFilter = (author) => (_, user) => author.id === user.id;
-const sendItemMessage = async (item, msg, previousSentMessage) => {
+function isAuthorFilter(author: User | GuildMember) {
+  return function checkIfUserIsAuthor(_: any, user: User) {
+    return author.id === user.id;
+  };
+}
+
+const sendItemMessage = async (
+  item: Item, msg: KlasaMessage, previousSentMessage?: KlasaMessage,
+) => {
   const { author } = msg;
   const embedsMap = itemToEmbed(item);
   const sentMessage = previousSentMessage
-    ? await previousSentMessage.edit(undefined, [...embedsMap.values()][0])
-    : await msg.channel.send([...embedsMap.values()][0]);
+    ? await previousSentMessage.edit(undefined, [...(embedsMap?.values() || [])][0])
+    : await msg.channel.send([...(embedsMap?.values() || [])][0]);
   const timerOptions = { time: 0, idle: 240000 };
   const collector = sentMessage
     .createReactionCollector(isAuthorFilter(author), { ...timerOptions, dispose: true });
@@ -33,7 +44,7 @@ const sendItemMessage = async (item, msg, previousSentMessage) => {
       collector.stop('User decided to end it');
       return;
     }
-    sentMessage.edit(undefined, embedsMap.get(reaction.emoji.name));
+    sentMessage.edit(undefined, embedsMap?.get(reaction.emoji.name));
     collector.resetTimer(timerOptions);
     reaction.users.remove(author);
   });
@@ -43,11 +54,11 @@ const sendItemMessage = async (item, msg, previousSentMessage) => {
     // collector.message.delete({ reason });
     collector.message.reactions.removeAll();
   });
-  sentMessage.multiReact([...embedsMap.keys(), '❌']);
+  (sentMessage as any).multiReact([...(embedsMap?.keys() || []), '❌']);
 };
 
-module.exports = class extends Command {
-  constructor(...args) {
+export default class extends Command {
+  constructor(...args: [CommandStore, string[], string]) {
     super(...args, {
       enabled: true,
       runIn: ['text'],
@@ -69,11 +80,11 @@ module.exports = class extends Command {
     });
   }
 
-  async run(msg, [itemName]) {
+  async run(msg: KlasaMessage, [itemName]: [string]) {
     const { channel, author } = msg;
     const matchedItems = fuse.search(itemName).slice(0, 3);
 
-    if (matchedItems[0].score > 0.15) {
+    if ((matchedItems[0].score || 0) > 0.15) {
       const matchItemsString = matchedItems
         .map(({ item }, index) => `${numberEmojis[index + 1]} ${item.name} ${item.category}`);
 
@@ -84,7 +95,7 @@ module.exports = class extends Command {
       const noMatchMessage = await channel.send(noMatchEmbed);
       const collector = noMatchMessage
         .createReactionCollector(isAuthorFilter(author), { time: 15000 });
-      const reactions = await noMatchMessage.multiReact([...numberEmojis.slice(1, 4), '❌']);
+      const reactions = await (noMatchMessage as any).multiReact([...numberEmojis.slice(1, 4), '❌']);
       collector.on('collect', async (reaction) => {
         if (reaction.emoji.name === '❌') {
           collector.stop('User decided to stop');
@@ -96,17 +107,17 @@ module.exports = class extends Command {
         const index = numberEmojis.indexOf(reaction.emoji.name);
         reaction.message.reactions.removeAll();
         collector.stop('Reaction defined');
-        sendItemMessage(matchedItems[index - 1].item, msg, noMatchMessage);
+        sendItemMessage(matchedItems[index - 1].item, msg, noMatchMessage as KlasaMessage);
       });
 
       collector.on('end', (_, endingReason) => {
         if (endingReason === 'time' || endingReason === 'User decided to stop') {
           // msg.delete({ endingReason });
-          collector.message.delete({ endingReason });
+          collector.message.delete({ reason: endingReason });
         }
       });
     } else {
       sendItemMessage(matchedItems[0].item, msg);
     }
   }
-};
+}
