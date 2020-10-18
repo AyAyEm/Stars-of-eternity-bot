@@ -2,7 +2,7 @@ import { Task } from 'klasa';
 import axios from 'axios';
 
 import type { TaskStore } from 'klasa';
-import type { Fissure } from '../../types/WFCD';
+import type { Fissure } from '../../../types/WFCD';
 
 const fissuresUrl = 'https://api.warframestat.us/pc/fissures';
 

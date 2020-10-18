@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
-import { Event } from 'klasa'
-import { eachOf } from 'async'
-import invasionEmbed from '../../embeds/warframe/invasionTracker'
+import { Event } from 'klasa';
+import { eachOf } from 'async';
 
 import type { EventStore } from 'klasa';
 import type { TextChannel } from 'discord.js';
-import type { InvasionData } from '../../types/WFCD/invasionData';
+import invasionEmbed from '../../../embeds/warframe/invasionTracker';
+import type { InvasionData } from '../../../types/WFCD/invasionData';
 
 export default class extends Event {
   constructor(...args: [EventStore, string[], string]) {
@@ -33,4 +33,4 @@ export default class extends Event {
         });
       });
   }
-};
+}

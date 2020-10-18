@@ -7,8 +7,8 @@ import type { Category, Item } from 'warframe-items';
 import type { User, GuildMember } from 'discord.js';
 import type { KlasaMessage, CommandStore } from 'klasa';
 
-import itemToEmbed from '../../embeds/warframe/itemSearch/index';
-import { numberEmojis } from '../../static/numberEmojis';
+import itemToEmbed from '../../../embeds/warframe/itemSearch/index';
+import { numberEmojis } from '../../../static/numberEmojis';
 
 const warframeItems: Category[] = [
   'Archwing', 'Sentinels', 'Warframes',

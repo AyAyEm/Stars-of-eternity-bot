@@ -3,7 +3,7 @@ import { Command } from 'klasa';
 import type { Channel } from 'discord.js';
 import type { CommandStore, KlasaGuild, KlasaMessage } from 'klasa';
 
-import invasionItemsEmbed from '../../embeds/warframe/invasionItems';
+import invasionItemsEmbed from '../../../embeds/warframe/invasionItems';
 
 const possibleItems = new Set([
   'vauban', 'vandal', 'wraith', 'skin', 'helmet',

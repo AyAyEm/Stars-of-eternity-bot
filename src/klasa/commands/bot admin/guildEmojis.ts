@@ -2,7 +2,7 @@ import { Command } from 'klasa';
 
 import type { CommandStore, KlasaMessage } from 'klasa';
 
-import { guildEmojis } from '../../static';
+import { guildEmojis } from '../../../static';
 
 export default class extends Command {
   constructor(...args: [CommandStore, string[], string]) {

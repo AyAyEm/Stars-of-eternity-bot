@@ -2,7 +2,7 @@ import { Task } from 'klasa';
 import axios from 'axios';
 
 import type { TaskStore } from 'klasa';
-import type { InvasionData } from '../../types/WFCD';
+import type { InvasionData } from '../../../types/WFCD';
 
 const invasionUrl = 'https://api.warframestat.us/pc/invasions';
 

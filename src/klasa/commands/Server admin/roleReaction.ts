@@ -4,8 +4,8 @@ import _ from 'lodash';
 import type { CommandStore, KlasaMessage, Possible } from 'klasa';
 import type { Role, Emoji, Guild, Message, MessageReaction } from 'discord.js';
 
-import { mapToEmbed, firstEmbed } from '../../embeds/roleReaction';
-import { unicodeEmojiRegex } from '../../utils';
+import { mapToEmbed, firstEmbed } from '../../../embeds/roleReaction';
+import { unicodeEmojiRegex } from '../../../utils';
 
 const updateEmojis = (rolesEmoji = new Map(), role: Role, emoji: Emoji, description = '') => {
   if (role && emoji) {

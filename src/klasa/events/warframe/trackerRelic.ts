@@ -1,10 +1,10 @@
 import { Event } from 'klasa';
 import { eachOf, eachOfSeries } from 'async';
-import fissureEmbed from '../../embeds/warframe/fissureTracker';
 
 import type { EventStore } from 'klasa';
 import type { MessageEmbed, TextChannel } from 'discord.js';
-import type { InvasionData, Fissure } from '../../types/WFCD';
+import fissureEmbed from '../../../embeds/warframe/fissureTracker';
+import type { Fissure } from '../../../types/WFCD';
 
 export default class extends Event {
   constructor(...args: [EventStore, string[], string]) {
@@ -28,16 +28,17 @@ export default class extends Event {
             messages.set(tier, sentMessage.id);
             await guildDocument.set(messagesPath, messages);
           };
-          await eachOfSeries(fissureEmbeds as any, async ([tier, embed]: [number, MessageEmbed]) => {
-            if (!messages.has(tier)) {
-              await undefinedMessage(embed, tier);
-            } else {
-              const messageID = messages.get(tier);
-              const oldMessage = await (channel as TextChannel).messages.fetch(messageID)
-                .catch(async () => undefinedMessage(embed, tier));
-              if (oldMessage) await oldMessage.edit(embed);
-            }
-          });
+          await eachOfSeries(fissureEmbeds as any,
+            async ([tier, embed]: [number, MessageEmbed]) => {
+              if (!messages.has(tier)) {
+                await undefinedMessage(embed, tier);
+              } else {
+                const messageID = messages.get(tier);
+                const oldMessage = await (channel as TextChannel).messages.fetch(messageID)
+                  .catch(async () => undefinedMessage(embed, tier));
+                if (oldMessage) await oldMessage.edit(embed);
+              }
+            });
         });
       });
   }

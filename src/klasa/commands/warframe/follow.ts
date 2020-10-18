@@ -2,8 +2,8 @@ import { Command } from 'klasa';
 
 import type { CommandStore, KlasaMessage } from 'klasa';
 
-import { itemNames } from '../../static/warframe/itemNames';
-import { biFilter } from '../../utils';
+import { itemNames } from '../../../static/warframe/itemNames';
+import { biFilter } from '../../../utils';
 
 export default class extends Command {
   constructor(...args: [CommandStore, string[], string]) {

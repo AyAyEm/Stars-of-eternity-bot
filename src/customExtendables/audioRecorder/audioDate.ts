@@ -1,7 +1,7 @@
 import moment from 'moment-timezone';
 import 'twix';
 
-import { config } from '../../config';
+import { config } from '../../klasa/config';
 
 export function audioDate() {
   const startDate = moment.tz(config.timezone);

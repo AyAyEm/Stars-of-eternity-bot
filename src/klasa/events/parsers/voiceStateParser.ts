@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import { Event } from 'klasa'
+import { Event } from 'klasa';
 
 import type { VoiceState } from 'discord.js';
 import type { EventStore } from 'klasa';
@@ -39,4 +39,4 @@ export default class extends Event {
       if (!member?.user.bot) this.client.emit(`${channel?.id}memberLeft`, member);
     }
   }
-};
+}

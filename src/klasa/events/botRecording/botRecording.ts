@@ -2,7 +2,7 @@ import { Event } from 'klasa';
 
 import type { EventStore } from 'klasa';
 import type { VoiceConnection, VoiceState } from 'discord.js';
-import AudioRecorder from '../../customExtendables/audioRecorder';
+import AudioRecorder from '../../../customExtendables/audioRecorder';
 
 const recorderMap = new Map();
 

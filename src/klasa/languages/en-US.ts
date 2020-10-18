@@ -197,4 +197,4 @@ export default class extends Language {
   async init() {
     await super.init();
   }
-};
+}
