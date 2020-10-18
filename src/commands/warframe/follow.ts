@@ -1,9 +1,12 @@
-const { Command } = require('klasa');
-const warframeItemNames = require('../../static/warframe/itemNames').all;
-const { biFilter } = require('../../utils');
+import { Command } from 'klasa';
 
-module.exports = class extends Command {
-  constructor(...args) {
+import type { CommandStore, KlasaMessage } from 'klasa';
+
+import { itemNames } from '../../static/warframe/itemNames';
+import { biFilter } from '../../utils';
+
+export default class extends Command {
+  constructor(...args: [CommandStore, string[], string]) {
     super(...args, {
       runIn: ['dm'],
       aliases: ['seguir', 'f', 's'],
@@ -16,40 +19,41 @@ module.exports = class extends Command {
     });
     const subCommandMethods = {
       items: new Map([
-        ['add'],
-        ['remove'],
-        ['list'],
+        // ['add'],
+        // ['remove'],
+        // ['list'],
         ['default', 'list'],
       ]),
     };
 
     this.createCustomResolver('method', (method, _possible, message, params) => {
-      const methods = subCommandMethods[params[0]];
+      const methods = (subCommandMethods as any)[params[0]];
       const defaultMethod = methods.get('default');
       if (!methods) return method;
       if (!methods.has(method) && !defaultMethod) {
         throw new Error(`Método "${method}" inválido. Possíveis métodos: ${methods.join(' | ')}`);
       } else if (defaultMethod && !methods.has(method)) {
-        return [defaultMethod, ...message.prompter.args.slice(2)];
+        return [defaultMethod, ...((message as any).prompter?.args.slice(2) || [])];
       }
-      return message.prompter.args.slice(1);
+      return (message as any).prompter?.args.slice(1);
     });
   }
 
-  async items(msg, [[method, ...items]]) {
-    const warframeItems = items.filter((item) => warframeItemNames.includes(item));
+  async items(msg: KlasaMessage, [[method, ...items]]: any[]) {
+    const warframeItems = items.filter((item: string) => (itemNames as any).includes(item));
 
-    const userDoc = await this.client.provider.User(msg.author.id);
+    const provider = this.client.providers.get('mongoose');
+    const userDoc = await (provider as any).User(msg.author.id);
     const storedItems = userDoc.get('settings.follow.items', []);
 
     const itemsMDFormat = `\`\`\`\n${items.join(' | ')}\`\`\``;
 
-    const checkItems = async (whitelistItems = []) => {
-      const possibleItems = warframeItemNames.concat(whitelistItems);
+    const checkItems = async (whitelistItems: string[] = []) => {
+      const possibleItems = (itemNames as any).concat(whitelistItems);
       const [
         notIncludedItems,
         includedItems,
-      ] = biFilter(items, (item) => !possibleItems.includes(item));
+      ] = biFilter(items, (item: string) => !possibleItems.includes(item));
 
       if (includedItems.length === 0) {
         msg.channel.send(`Nenhuma das seguintes opções são compatíveis: ${itemsMDFormat}`);
@@ -67,7 +71,7 @@ module.exports = class extends Command {
 
         const reactions = ['✔', '❌'];
 
-        incompatibleItemsMessage.multiReact(reactions);
+        (incompatibleItemsMessage as any).multiReact(reactions);
 
         const reaction = (await incompatibleItemsMessage
           .awaitReactions(({ emoji }, { bot }) => !bot && reactions.includes(emoji.name),
@@ -85,7 +89,7 @@ module.exports = class extends Command {
         if (!(await checkItems())) return;
 
         const toStoreItems = storedItems
-          .filter((item) => !warframeItems.includes(item))
+          .filter((item: string) => !warframeItems.includes(item))
           .concat(warframeItems);
 
         const updatedUserDoc = await userDoc.set('settings.follow.items', toStoreItems);
@@ -98,7 +102,7 @@ module.exports = class extends Command {
 
       async remove() {
         if (items.length === 0) {
-          msg.replyAndDelete('Nenhum item foi especificado.');
+          (msg as any).replyAndDelete('Nenhum item foi especificado.');
         }
 
         const allItemsParam = ['all', 'todos'];
@@ -109,7 +113,7 @@ module.exports = class extends Command {
           await userDoc.set('settings.follow.items', []);
           msg.channel.send('Foram removidos todos os items de seu cadastro');
         } else {
-          const updatedItemsList = storedItems.filter((item) => !items.includes(item));
+          const updatedItemsList = storedItems.filter((item: string) => !items.includes(item));
           await userDoc.set('settings.follow.items', updatedItemsList);
         }
       },
@@ -123,12 +127,12 @@ module.exports = class extends Command {
         const possibleItemsList = '`'
           + 'Possíveis items:`\n'
           + '```'
-          + `${warframeItemNames.join(' | ')}`
+          + `${(itemNames as any).join(' | ')}`
           + '```';
         msg.channel.send(`${storedItems.length > 0 ? memberItemsList : ''}${possibleItemsList}`);
       },
     };
 
-    methods[method]();
+    (methods as any)[method]();
   }
-};
+}
