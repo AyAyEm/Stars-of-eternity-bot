@@ -35,8 +35,6 @@
       }
     ],
     "object-curly-newline": ["error", {
-      "ImportDeclaration": "never",
-      "ExportDeclaration": "never",
       "minProperties": 6,
       "multiline": true,
       "consistent": true
