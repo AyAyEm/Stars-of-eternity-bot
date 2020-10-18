@@ -5,7 +5,7 @@ const unicodeEmojiRegex = /u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\u
 
 type RolesEmoji = Map<string, {roleID: string, description: string}>
 
-export async function mapToEmbed(guild: Guild, rolesEmoji: RolesEmoji, title: string) {
+export async function mapToEmbed(guild: Guild, rolesEmoji: RolesEmoji, title?: string) {
   const embed = new MessageEmbed();
   const fields = [
     { name: 'Emoji', value: '', inline: true },
@@ -27,7 +27,7 @@ export async function mapToEmbed(guild: Guild, rolesEmoji: RolesEmoji, title: st
   if (title) embed.setTitle(title);
   embed.addFields(...fields);
   return embed;
-};
+}
 
 export const firstEmbed = new MessageEmbed()
   .setTitle('Adicione seus cargos com o comando /roleReaction add');
