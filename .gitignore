@@ -1,4 +1,3 @@
-node_modules
-npm-debug.log
-audios
-tmp
+node_modules/
+dist/
+.env

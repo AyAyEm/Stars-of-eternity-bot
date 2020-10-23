@@ -1,0 +1,57 @@
+{
+  "SapphireCommand": {
+    "scope": "typescript",
+    "prefix": "command",
+    "body": [
+      "import { Command, CommandOptions } from '@sapphire/framework';",
+      "import { ApplyOptions } from '@sapphire/decorators';",
+      "import { Message } from 'discord.js';",
+      "",
+      "@ApplyOptions<CommandOptions>({",
+      "\tpreconditions: [],",
+      "})",
+      "export default class extends Command {",
+      "\tpublic async run(msg: Message) {",
+      "\t}",
+      "}",
+      ""
+    ],
+    "description": "Creates a Command"
+  },
+  "GodfatherEvent": {
+    "scope": "typescript",
+    "prefix": "event",
+    "body": [
+      "import { Event, Events, PieceContext } from '@sapphire/framework';",
+      "",
+      "export default class extends Event<Events.${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g}> {",
+      "",
+      "\tpublic constructor(context: PieceContext) {",
+      "\t\tsuper(context, { event: Events.${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g} });",
+      "\t}",
+      "",
+      "\tpublic run() {",
+      "\t}",
+      "",
+      "}",
+      ""
+    ]
+  },
+  "GodfatherPrecondition": {
+    "scope": "typescript",
+    "prefix": "precondition",
+    "body": [
+      "import { Precondition } from '@sapphire/framework';",
+      "import { Message } from 'discord.js';",
+      "",
+      "export default class extends Precondition {",
+      "",
+      "\tpublic run(message: Message) {",
+      "\t\t",
+      "\t}",
+      "",
+      "}",
+      ""
+    ]
+  }
+}
