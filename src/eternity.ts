@@ -5,6 +5,6 @@ import { config } from '@config';
 
 const client = new EternityClient();
 
-client.login(config.token);
-client.registerUserDirectories();
-console.log(client.commands.size);
+void async function main() {
+  client.login(config.token);
+}();
