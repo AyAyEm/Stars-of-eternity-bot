@@ -15,7 +15,7 @@ export function generateMongoDocument(model: Query['model']) {
       this.reload();
     }
 
-    public async reload(): Promise<this> {
+    public async reload() {
       this.document = (models[model] as any).findOne(this.query.id);
       return this;
     }
@@ -24,7 +24,7 @@ export function generateMongoDocument(model: Query['model']) {
       return this.document.get(path, defaultType);
     }
 
-    public async set<Value = any>(path: string, value: Value): Promise<this> {
+    public async set<Value = any>(path: string, value: Value) {
       this.document.updateOne({ [path]: value }, { upsert: true });
       return this.reload();
     }

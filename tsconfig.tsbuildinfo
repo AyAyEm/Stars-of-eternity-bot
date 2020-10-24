@@ -161,6 +161,21 @@
         "signature": "d2f31f19e1ba6ed59be9259d660a239d9a3fcbbc8e038c6b2009bde34b175fed",
         "affectsGlobalScope": false
       },
+      "./dist/config.d.ts": {
+        "version": "3a42d2b91d348d4228180e70e08530fe1c667717788282e67a12a1d2a32fe05d",
+        "signature": "3a42d2b91d348d4228180e70e08530fe1c667717788282e67a12a1d2a32fe05d",
+        "affectsGlobalScope": false
+      },
+      "./dist/eternity.d.ts": {
+        "version": "3f2486effb6ed751ed75efadfb60f18d733073ef29c5d8b170bdf9e8c479f2c3",
+        "signature": "3f2486effb6ed751ed75efadfb60f18d733073ef29c5d8b170bdf9e8c479f2c3",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@discordjs/collection/dist/index.d.ts": {
+        "version": "7be7f76b784383fa84812ca7eb8ad10315c9d482c0d25f178645365405509d44",
+        "signature": "7be7f76b784383fa84812ca7eb8ad10315c9d482c0d25f178645365405509d44",
+        "affectsGlobalScope": false
+      },
       "./node_modules/@types/node/globals.d.ts": {
         "version": "f0e1ae308bd02b992192a5340ca3c4aef6674109db4bc5a316efffca5538c897",
         "signature": "f0e1ae308bd02b992192a5340ca3c4aef6674109db4bc5a316efffca5538c897",
@@ -396,20 +411,15 @@
         "signature": "5825520e2099309182c6e2a2b3061b060d42a098c58f67d1754880a7e2cce99a",
         "affectsGlobalScope": false
       },
-      "./node_modules/dotenv/types/index.d.ts": {
-        "version": "c9ae0b351a07b52f29a28e869d8c7c8d29743bbb5eeddc7c0b5b2a69a2450528",
-        "signature": "c9ae0b351a07b52f29a28e869d8c7c8d29743bbb5eeddc7c0b5b2a69a2450528",
+      "./node_modules/@types/ws/index.d.ts": {
+        "version": "30ce0ba2c80c39007ab8e0132807437b4eb58ff73461e1602e2e2bf07b6416ed",
+        "signature": "30ce0ba2c80c39007ab8e0132807437b4eb58ff73461e1602e2e2bf07b6416ed",
         "affectsGlobalScope": false
       },
-      "./src/config.ts": {
-        "version": "aaa28e5e29921fa3719eae0a04297a857a8ea4ddb4187757d9c17b7bb70f64f5",
-        "signature": "3a42d2b91d348d4228180e70e08530fe1c667717788282e67a12a1d2a32fe05d",
-        "affectsGlobalScope": false
-      },
-      "./node_modules/@discordjs/collection/dist/index.d.ts": {
-        "version": "7be7f76b784383fa84812ca7eb8ad10315c9d482c0d25f178645365405509d44",
-        "signature": "7be7f76b784383fa84812ca7eb8ad10315c9d482c0d25f178645365405509d44",
-        "affectsGlobalScope": false
+      "./node_modules/discord.js/typings/index.d.ts": {
+        "version": "3e0c924c29dcc8645a2d881e0b5cb919c88fe4f46208fe118ee90b426576d16a",
+        "signature": "3e0c924c29dcc8645a2d881e0b5cb919c88fe4f46208fe118ee90b426576d16a",
+        "affectsGlobalScope": true
       },
       "./node_modules/@sapphire/pieces/dist/lib/strategies/filters/ifilter.d.ts": {
         "version": "ba060b0cdeb240d55d67d524a51d12c9e00198c7f38c2a7f44107d026e992be8",
@@ -475,16 +485,6 @@
         "version": "47b9e7168286487757f5d7a016cd669080201bcc054e8a7b9402fbaf250f68eb",
         "signature": "47b9e7168286487757f5d7a016cd669080201bcc054e8a7b9402fbaf250f68eb",
         "affectsGlobalScope": false
-      },
-      "./node_modules/@types/ws/index.d.ts": {
-        "version": "30ce0ba2c80c39007ab8e0132807437b4eb58ff73461e1602e2e2bf07b6416ed",
-        "signature": "30ce0ba2c80c39007ab8e0132807437b4eb58ff73461e1602e2e2bf07b6416ed",
-        "affectsGlobalScope": false
-      },
-      "./node_modules/discord.js/typings/index.d.ts": {
-        "version": "3e0c924c29dcc8645a2d881e0b5cb919c88fe4f46208fe118ee90b426576d16a",
-        "signature": "3e0c924c29dcc8645a2d881e0b5cb919c88fe4f46208fe118ee90b426576d16a",
-        "affectsGlobalScope": true
       },
       "./node_modules/@sapphire/framework/dist/lib/errors/usererror.d.ts": {
         "version": "f4a595bdb04795ac41465d07f48bbe77f74bb83e9983568f1a93b8587662d32f",
@@ -826,6 +826,16 @@
         "signature": "f5907c563adc19cb2cd2e42de8149e7cdac46da3830f268d6158c9545fa7d160",
         "affectsGlobalScope": false
       },
+      "./node_modules/dotenv/types/index.d.ts": {
+        "version": "c9ae0b351a07b52f29a28e869d8c7c8d29743bbb5eeddc7c0b5b2a69a2450528",
+        "signature": "c9ae0b351a07b52f29a28e869d8c7c8d29743bbb5eeddc7c0b5b2a69a2450528",
+        "affectsGlobalScope": false
+      },
+      "./src/config.ts": {
+        "version": "aaa28e5e29921fa3719eae0a04297a857a8ea4ddb4187757d9c17b7bb70f64f5",
+        "signature": "3a42d2b91d348d4228180e70e08530fe1c667717788282e67a12a1d2a32fe05d",
+        "affectsGlobalScope": false
+      },
       "./src/lib/providers/mongoose/models/guilds.ts": {
         "version": "4a6821c8b91db6ef159ec5dc9863bee8a45166116ad639114c82a093a48f07d5",
         "signature": "97113da2524e6a88627186c86b94ad323dfcd75397de94263bad4805133fc97b",
@@ -852,13 +862,13 @@
         "affectsGlobalScope": false
       },
       "./src/lib/providers/mongoose/mongodocument.ts": {
-        "version": "07925b7683302e545a68c62cf71918eaaa5048b591663458008083d9218404d5",
-        "signature": "181b153fdd023fdbba6f001fd7ab4662692c4256cc4048d9534a081f1f583145",
+        "version": "93eab34216341235b30220b995814966260011b4f3c68b954b30f6e5501fb2f3",
+        "signature": "f45de4adf3df6a13751948cbe01f324d607c94a0571b3d6cf410c4862918f61b",
         "affectsGlobalScope": false
       },
       "./src/lib/providers/provider.ts": {
-        "version": "5867ff505c9f646b79303e21f7d0058e2482ca960148b721d1e4928e7ce240e1",
-        "signature": "770462027c6d9c5612ef2afea4a845c162b32b0634e35b2941b7c26451ad7a06",
+        "version": "68e62b56975df591d757dec5cdf70ad56dd010c1d97c000a8bbcd84a3be2a4dc",
+        "signature": "d10c6d5aef92659d63198f60b5b710e8538ced554fd81ec94e8620e12cf758ac",
         "affectsGlobalScope": false
       },
       "./src/lib/providers/mongoose/mongoose.ts": {
@@ -879,6 +889,81 @@
       "./src/lib/client.ts": {
         "version": "86fcd7fa7f25429000f3f72a1169ab83714f70745e22ba1c6a773b6c0988f02c",
         "signature": "49c8c5c3908db7c04b38adad5e0a5ddec1388990cf851429b30196042907e331",
+        "affectsGlobalScope": false
+      },
+      "./src/lib/command.ts": {
+        "version": "bde1954aeaee844752f5e26ae1568ccc8cb7a685b018d6767da77516b46825d8",
+        "signature": "3e0e5c1bdbc84bf5a81cb646b287b77fb33c250f3ef2de49df7bc4630188d115",
+        "affectsGlobalScope": false
+      },
+      "./dist/commands/teste/teste.d.ts": {
+        "version": "236b51d4471b1d36c496126946f2384df893dcffed981f25eff5b0b9e7cfe202",
+        "signature": "236b51d4471b1d36c496126946f2384df893dcffed981f25eff5b0b9e7cfe202",
+        "affectsGlobalScope": false
+      },
+      "./dist/lib/providers/mongoose/mongodocument.d.ts": {
+        "version": "f45de4adf3df6a13751948cbe01f324d607c94a0571b3d6cf410c4862918f61b",
+        "signature": "f45de4adf3df6a13751948cbe01f324d607c94a0571b3d6cf410c4862918f61b",
+        "affectsGlobalScope": false
+      },
+      "./dist/lib/providers/provider.d.ts": {
+        "version": "d10c6d5aef92659d63198f60b5b710e8538ced554fd81ec94e8620e12cf758ac",
+        "signature": "d10c6d5aef92659d63198f60b5b710e8538ced554fd81ec94e8620e12cf758ac",
+        "affectsGlobalScope": false
+      },
+      "./dist/lib/providers/mongoose/models/guilds.d.ts": {
+        "version": "97113da2524e6a88627186c86b94ad323dfcd75397de94263bad4805133fc97b",
+        "signature": "97113da2524e6a88627186c86b94ad323dfcd75397de94263bad4805133fc97b",
+        "affectsGlobalScope": false
+      },
+      "./dist/lib/providers/mongoose/models/trackers.d.ts": {
+        "version": "f4f8427a714cbf83f2ce1588241762b339f849b65e28225f181136bf5b8f864e",
+        "signature": "f4f8427a714cbf83f2ce1588241762b339f849b65e28225f181136bf5b8f864e",
+        "affectsGlobalScope": false
+      },
+      "./dist/lib/providers/mongoose/models/users.d.ts": {
+        "version": "21033aa754d09a2eeabd6db312ce05d510db04455ec5c435ce644577ef8c3370",
+        "signature": "21033aa754d09a2eeabd6db312ce05d510db04455ec5c435ce644577ef8c3370",
+        "affectsGlobalScope": false
+      },
+      "./dist/lib/providers/mongoose/models/utils.d.ts": {
+        "version": "8b28b0e144a7aba63a0e35656af74fefe2eef2a31e451bcec43ed4d3318d1efa",
+        "signature": "8b28b0e144a7aba63a0e35656af74fefe2eef2a31e451bcec43ed4d3318d1efa",
+        "affectsGlobalScope": false
+      },
+      "./dist/lib/providers/mongoose/models/index.d.ts": {
+        "version": "3b1ae1e5c3a208cb6bebdcf2242837b922117c6c152c5a63360c78e8ba9c7520",
+        "signature": "3b1ae1e5c3a208cb6bebdcf2242837b922117c6c152c5a63360c78e8ba9c7520",
+        "affectsGlobalScope": false
+      },
+      "./dist/lib/providers/mongoose/mongoose.d.ts": {
+        "version": "77089b1b71ea128176791708a0888c17251bc18a90e3c8df3edf06a80718dd8b",
+        "signature": "77089b1b71ea128176791708a0888c17251bc18a90e3c8df3edf06a80718dd8b",
+        "affectsGlobalScope": false
+      },
+      "./dist/lib/providers/mongoose/index.d.ts": {
+        "version": "00c52793098b832977018ae73f07bdfdc64a879d7aeae74d7e9ab15e1838def7",
+        "signature": "00c52793098b832977018ae73f07bdfdc64a879d7aeae74d7e9ab15e1838def7",
+        "affectsGlobalScope": false
+      },
+      "./dist/lib/providers/index.d.ts": {
+        "version": "e3e7956538723be2772bca31e45a7ffcf377b53032d6916e8ad332619e7af0fa",
+        "signature": "e3e7956538723be2772bca31e45a7ffcf377b53032d6916e8ad332619e7af0fa",
+        "affectsGlobalScope": false
+      },
+      "./dist/lib/client.d.ts": {
+        "version": "49c8c5c3908db7c04b38adad5e0a5ddec1388990cf851429b30196042907e331",
+        "signature": "49c8c5c3908db7c04b38adad5e0a5ddec1388990cf851429b30196042907e331",
+        "affectsGlobalScope": false
+      },
+      "./dist/lib/command.d.ts": {
+        "version": "3e0e5c1bdbc84bf5a81cb646b287b77fb33c250f3ef2de49df7bc4630188d115",
+        "signature": "3e0e5c1bdbc84bf5a81cb646b287b77fb33c250f3ef2de49df7bc4630188d115",
+        "affectsGlobalScope": false
+      },
+      "./dist/lib/index.d.ts": {
+        "version": "c2c30589735e76f9ca374deadc566bb8c14efcba670990971b7285e9286603e9",
+        "signature": "c2c30589735e76f9ca374deadc566bb8c14efcba670990971b7285e9286603e9",
         "affectsGlobalScope": false
       },
       "./src/eternity.ts": {
@@ -902,13 +987,8 @@
         "affectsGlobalScope": false
       },
       "./src/commands/teste/teste.ts": {
-        "version": "7f7e03ad52df59ea706688a0f1e57a61854483d389723486b58499708575eae5",
-        "signature": "1dd292950d767d3cd766479f08c04af8897e9c7174c67e9b69b81ffa2b467a8e",
-        "affectsGlobalScope": false
-      },
-      "./src/lib/command.ts": {
-        "version": "bde1954aeaee844752f5e26ae1568ccc8cb7a685b018d6767da77516b46825d8",
-        "signature": "3e0e5c1bdbc84bf5a81cb646b287b77fb33c250f3ef2de49df7bc4630188d115",
+        "version": "153efcf1630877176235473239f7168e83ae3d2dc94932353969d94a31be3459",
+        "signature": "236b51d4471b1d36c496126946f2384df893dcffed981f25eff5b0b9e7cfe202",
         "affectsGlobalScope": false
       },
       "./src/lib/index.ts": {
@@ -951,6 +1031,10 @@
         ],
         "@lib/*": [
           "./lib/*"
+        ],
+        "@providers*": [
+          "./lib/providers/*",
+          "./lib/providers"
         ]
       },
       "pretty": false,
@@ -961,6 +1045,58 @@
       "configFilePath": "./tsconfig.json"
     },
     "referencedMap": {
+      "./dist/commands/teste/teste.d.ts": [
+        "./node_modules/discord.js/typings/index.d.ts",
+        "./src/lib/command.ts"
+      ],
+      "./dist/lib/client.d.ts": [
+        "./dist/lib/providers/index.d.ts",
+        "./node_modules/@sapphire/framework/dist/index.d.ts",
+        "./node_modules/discord.js/typings/index.d.ts"
+      ],
+      "./dist/lib/command.d.ts": [
+        "./dist/lib/client.d.ts",
+        "./node_modules/@sapphire/framework/dist/index.d.ts"
+      ],
+      "./dist/lib/index.d.ts": [
+        "./dist/lib/client.d.ts",
+        "./dist/lib/command.d.ts"
+      ],
+      "./dist/lib/providers/index.d.ts": [
+        "./dist/lib/providers/mongoose/index.d.ts"
+      ],
+      "./dist/lib/providers/mongoose/index.d.ts": [
+        "./dist/lib/providers/mongoose/mongodocument.d.ts",
+        "./dist/lib/providers/mongoose/mongoose.d.ts"
+      ],
+      "./dist/lib/providers/mongoose/models/guilds.d.ts": [
+        "./node_modules/@typegoose/typegoose/lib/typegoose.d.ts"
+      ],
+      "./dist/lib/providers/mongoose/models/index.d.ts": [
+        "./dist/lib/providers/mongoose/models/guilds.d.ts",
+        "./dist/lib/providers/mongoose/models/trackers.d.ts",
+        "./dist/lib/providers/mongoose/models/users.d.ts",
+        "./dist/lib/providers/mongoose/models/utils.d.ts"
+      ],
+      "./dist/lib/providers/mongoose/models/trackers.d.ts": [
+        "./node_modules/@typegoose/typegoose/lib/typegoose.d.ts"
+      ],
+      "./dist/lib/providers/mongoose/models/users.d.ts": [
+        "./node_modules/@typegoose/typegoose/lib/typegoose.d.ts"
+      ],
+      "./dist/lib/providers/mongoose/models/utils.d.ts": [
+        "./node_modules/@typegoose/typegoose/lib/typegoose.d.ts"
+      ],
+      "./dist/lib/providers/mongoose/mongodocument.d.ts": [
+        "./dist/lib/providers/mongoose/mongoose.d.ts",
+        "./node_modules/@typegoose/typegoose/lib/typegoose.d.ts"
+      ],
+      "./dist/lib/providers/mongoose/mongoose.d.ts": [
+        "./dist/lib/providers/mongoose/models/index.d.ts",
+        "./dist/lib/providers/mongoose/mongodocument.d.ts",
+        "./dist/lib/providers/provider.d.ts",
+        "./node_modules/@typegoose/typegoose/lib/typegoose.d.ts"
+      ],
       "./node_modules/@sapphire/decorators/dist/core-decorators.d.ts": [
         "./node_modules/@sapphire/framework/dist/index.d.ts",
         "./node_modules/@sapphire/pieces/dist/index.d.ts"
@@ -1550,7 +1686,9 @@
       "./src/commands/teste/teste.ts": [
         "./node_modules/@sapphire/decorators/dist/index.d.ts",
         "./node_modules/@sapphire/framework/dist/index.d.ts",
-        "./node_modules/discord.js/typings/index.d.ts"
+        "./node_modules/discord.js/typings/index.d.ts",
+        "./src/lib/command.ts",
+        "./src/lib/providers/mongoose/index.ts"
       ],
       "./src/config.ts": [
         "./node_modules/dotenv/types/index.d.ts"
@@ -1613,6 +1751,58 @@
       ]
     },
     "exportedModulesMap": {
+      "./dist/commands/teste/teste.d.ts": [
+        "./node_modules/discord.js/typings/index.d.ts",
+        "./src/lib/command.ts"
+      ],
+      "./dist/lib/client.d.ts": [
+        "./dist/lib/providers/index.d.ts",
+        "./node_modules/@sapphire/framework/dist/index.d.ts",
+        "./node_modules/discord.js/typings/index.d.ts"
+      ],
+      "./dist/lib/command.d.ts": [
+        "./dist/lib/client.d.ts",
+        "./node_modules/@sapphire/framework/dist/index.d.ts"
+      ],
+      "./dist/lib/index.d.ts": [
+        "./dist/lib/client.d.ts",
+        "./dist/lib/command.d.ts"
+      ],
+      "./dist/lib/providers/index.d.ts": [
+        "./dist/lib/providers/mongoose/index.d.ts"
+      ],
+      "./dist/lib/providers/mongoose/index.d.ts": [
+        "./dist/lib/providers/mongoose/mongodocument.d.ts",
+        "./dist/lib/providers/mongoose/mongoose.d.ts"
+      ],
+      "./dist/lib/providers/mongoose/models/guilds.d.ts": [
+        "./node_modules/@typegoose/typegoose/lib/typegoose.d.ts"
+      ],
+      "./dist/lib/providers/mongoose/models/index.d.ts": [
+        "./dist/lib/providers/mongoose/models/guilds.d.ts",
+        "./dist/lib/providers/mongoose/models/trackers.d.ts",
+        "./dist/lib/providers/mongoose/models/users.d.ts",
+        "./dist/lib/providers/mongoose/models/utils.d.ts"
+      ],
+      "./dist/lib/providers/mongoose/models/trackers.d.ts": [
+        "./node_modules/@typegoose/typegoose/lib/typegoose.d.ts"
+      ],
+      "./dist/lib/providers/mongoose/models/users.d.ts": [
+        "./node_modules/@typegoose/typegoose/lib/typegoose.d.ts"
+      ],
+      "./dist/lib/providers/mongoose/models/utils.d.ts": [
+        "./node_modules/@typegoose/typegoose/lib/typegoose.d.ts"
+      ],
+      "./dist/lib/providers/mongoose/mongodocument.d.ts": [
+        "./dist/lib/providers/mongoose/mongoose.d.ts",
+        "./node_modules/@typegoose/typegoose/lib/typegoose.d.ts"
+      ],
+      "./dist/lib/providers/mongoose/mongoose.d.ts": [
+        "./dist/lib/providers/mongoose/models/index.d.ts",
+        "./dist/lib/providers/mongoose/mongodocument.d.ts",
+        "./dist/lib/providers/provider.d.ts",
+        "./node_modules/@typegoose/typegoose/lib/typegoose.d.ts"
+      ],
       "./node_modules/@sapphire/decorators/dist/core-decorators.d.ts": [
         "./node_modules/@sapphire/framework/dist/index.d.ts",
         "./node_modules/@sapphire/pieces/dist/index.d.ts"
@@ -2148,6 +2338,10 @@
         "./node_modules/lexure/dist/types/option.d.ts",
         "./node_modules/lexure/dist/types/result.d.ts"
       ],
+      "./src/commands/teste/teste.ts": [
+        "./node_modules/discord.js/typings/index.d.ts",
+        "./src/lib/command.ts"
+      ],
       "./src/lib/client.ts": [
         "./src/lib/providers/index.ts"
       ],
@@ -2227,6 +2421,22 @@
       "c:/users/andre/.vscode/extensions/basarat.god-0.0.99/node_modules/typescript/lib/lib.esnext.intl.d.ts",
       "c:/users/andre/.vscode/extensions/basarat.god-0.0.99/node_modules/typescript/lib/lib.scripthost.d.ts",
       "c:/users/andre/.vscode/extensions/basarat.god-0.0.99/node_modules/typescript/lib/lib.webworker.importscripts.d.ts",
+      "./dist/commands/teste/teste.d.ts",
+      "./dist/config.d.ts",
+      "./dist/eternity.d.ts",
+      "./dist/lib/client.d.ts",
+      "./dist/lib/command.d.ts",
+      "./dist/lib/index.d.ts",
+      "./dist/lib/providers/index.d.ts",
+      "./dist/lib/providers/mongoose/index.d.ts",
+      "./dist/lib/providers/mongoose/models/guilds.d.ts",
+      "./dist/lib/providers/mongoose/models/index.d.ts",
+      "./dist/lib/providers/mongoose/models/trackers.d.ts",
+      "./dist/lib/providers/mongoose/models/users.d.ts",
+      "./dist/lib/providers/mongoose/models/utils.d.ts",
+      "./dist/lib/providers/mongoose/mongodocument.d.ts",
+      "./dist/lib/providers/mongoose/mongoose.d.ts",
+      "./dist/lib/providers/provider.d.ts",
       "./node_modules/@discordjs/collection/dist/index.d.ts",
       "./node_modules/@sapphire/decorators/dist/core-decorators.d.ts",
       "./node_modules/@sapphire/decorators/dist/index.d.ts",
@@ -2401,6 +2611,70 @@
       ],
       [
         "c:/users/andre/.vscode/extensions/basarat.god-0.0.99/node_modules/typescript/lib/lib.es2018.d.ts",
+        1
+      ],
+      [
+        "./dist/commands/teste/teste.d.ts",
+        1
+      ],
+      [
+        "./dist/config.d.ts",
+        1
+      ],
+      [
+        "./dist/eternity.d.ts",
+        1
+      ],
+      [
+        "./dist/lib/client.d.ts",
+        1
+      ],
+      [
+        "./dist/lib/command.d.ts",
+        1
+      ],
+      [
+        "./dist/lib/index.d.ts",
+        1
+      ],
+      [
+        "./dist/lib/providers/index.d.ts",
+        1
+      ],
+      [
+        "./dist/lib/providers/mongoose/index.d.ts",
+        1
+      ],
+      [
+        "./dist/lib/providers/mongoose/models/guilds.d.ts",
+        1
+      ],
+      [
+        "./dist/lib/providers/mongoose/models/index.d.ts",
+        1
+      ],
+      [
+        "./dist/lib/providers/mongoose/models/trackers.d.ts",
+        1
+      ],
+      [
+        "./dist/lib/providers/mongoose/models/users.d.ts",
+        1
+      ],
+      [
+        "./dist/lib/providers/mongoose/models/utils.d.ts",
+        1
+      ],
+      [
+        "./dist/lib/providers/mongoose/mongodocument.d.ts",
+        1
+      ],
+      [
+        "./dist/lib/providers/mongoose/mongoose.d.ts",
+        1
+      ],
+      [
+        "./dist/lib/providers/provider.d.ts",
         1
       ],
       [

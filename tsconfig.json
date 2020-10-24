@@ -12,8 +12,8 @@
     "paths": {
       "@root/*": ["./*"],
       "@config": ["./config"],
-      "@lib/*": ["./lib/*"]
-      // "@util/*": ["lib/util/*"]
+      "@lib/*": ["./lib/*"],
+      "@providers*": ["./lib/providers/*", "./lib/providers"]
     }
   }
 }

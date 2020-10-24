@@ -1,21 +1,8 @@
 {
+  "extends": "../tsconfig",
   "compilerOptions": {
     "outDir": "../dist",
     "rootDir": ".",
-    "target": "ES2017",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "composite": true,
-    "declaration": true,
-    "useDefineForClassFields": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "baseUrl": "./",
-    "paths": {
-      "@root/*": ["./*"],
-      "@config": ["./config"],
-      "@lib/*": ["./lib/*"],
-      "@providers": ["./lib/providers"]
-    }
+    "baseUrl": "./"
   }
 }
