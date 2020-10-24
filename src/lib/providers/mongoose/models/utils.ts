@@ -1,6 +1,7 @@
 /* eslint-disable max-classes-per-file */
-import { prop, getModelForClass } from '@typegoose/typegoose';
+import { prop, getModelForClass, ModelOptions } from '@typegoose/typegoose';
 
+@ModelOptions({ options: { customName: 'Utils' } })
 class UtilsSchema {
   @prop()
   type: String;

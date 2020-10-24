@@ -6,7 +6,7 @@ type Data = {
   cacheIDs: string[],
 };
 
-@ModelOptions({ options: { allowMixed: 0 } })
+@ModelOptions({ options: { allowMixed: 0, customName: 'Trackers' } })
 class TrackersSchema {
   @prop()
   tracker: string;

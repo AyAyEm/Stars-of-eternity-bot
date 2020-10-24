@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import { prop, getModelForClass } from '@typegoose/typegoose';
+import { prop, getModelForClass, ModelOptions } from '@typegoose/typegoose';
 
 class Member {
   @prop({ default: false })
@@ -33,6 +33,7 @@ class Channel {
   public messages: Map<string, Message>;
 }
 
+@ModelOptions({ options: { customName: 'Guilds' } })
 class GuildsSchema {
   @prop()
   public id: string;
