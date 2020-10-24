@@ -2,11 +2,12 @@
   "name": "stars_of_eternity_bot_saphire_rewrite",
   "version": "0.0.1",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/eternity.js",
   "scripts": {
     "build": "tsc -b src",
-    "dev": "yarn build && node .",
-    "nodemon": "nodemon -e ts --exec \"yarn run dev\"",
+    "dev": "npm run build && node .",
+    "nodemon": "nodemon --watch src -e ts --exec \"yarn run dev\"",
+    "clean": "tsc -b src --clean",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,7 +18,7 @@
     "@sapphire/framework": "github:sapphire-project/framework#build",
     "@sapphire/utilities": "^1.0.2",
     "@typegoose/typegoose": "^7.4.1",
-    "discord.js": "^12.x",
+    "discord.js": "^12.4.0",
     "dotenv": "^8.2.0",
     "module-alias": "^2.2.2",
     "mongoose": "^5.10.9"
