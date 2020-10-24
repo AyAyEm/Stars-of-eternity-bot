@@ -19,7 +19,7 @@
     "fsharp": "fsi",
     "csharp": "scriptcs",
     "vbscript": "cscript //Nologo",
-    "typescript": "ts-node",
+    "typescript": "ts-node -r tsconfig-paths/register",
     "coffeescript": "coffee",
     "scala": "scala",
     "swift": "swift",
