@@ -16,6 +16,7 @@
   "dependencies": {
     "@sapphire/decorators": "^1.0.2",
     "@sapphire/framework": "github:sapphire-project/framework#build",
+    "@sapphire/pieces": "github:sapphire-project/pieces#build",
     "@sapphire/utilities": "^1.0.2",
     "@typegoose/typegoose": "^7.4.1",
     "discord.js": "^12.4.0",
@@ -43,6 +44,7 @@
     "@root": "./dist",
     "@config": "./dist/config",
     "@lib": "./dist/lib",
+    "@utils": "./dist/lib/utils",
     "@providers": "./dist/lib/providers"
   }
 }
