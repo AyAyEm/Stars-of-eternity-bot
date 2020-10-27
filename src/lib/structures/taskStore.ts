@@ -1,6 +1,6 @@
 import { BaseStore } from '@sapphire/framework';
 
-import type { EternityClient } from '@lib/client';
+import type { EternityClient } from '@lib';
 
 import { Task } from './task';
 
