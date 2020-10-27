@@ -1,2 +1,2 @@
-export * from './task';
-export * from './taskStore';
+export * from './Task';
+export * from './TaskStore';

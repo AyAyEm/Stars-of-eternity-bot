@@ -1,2 +1,2 @@
-export * from './mongoose';
-export * from './mongoDocument';
+export * from './Mongoose';
+export * from './MongoDocument';

@@ -2,7 +2,7 @@ import type { DocumentType } from '@typegoose/typegoose';
 
 import * as models from './models';
 
-import type { Query } from './mongoose';
+import type { Query } from './Mongoose';
 
 export function generateMongoDocument(model: Query['model']) {
   return class MongoDocument {

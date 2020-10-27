@@ -2,11 +2,11 @@ import type { DocumentType } from '@typegoose/typegoose';
 import * as mongoose from 'mongoose';
 
 import { config } from '@config';
-import { generateMongoDocument } from './mongoDocument';
-import { Provider, GetAllParams } from '../provider';
+import { generateMongoDocument } from './MongoDocument';
+import { Provider, GetAllParams } from '../Provider';
 import * as models from './models';
 
-import type { Query as ProviderQuery } from '../provider';
+import type { Query as ProviderQuery } from '../Provider';
 
 const mongoConnectionOptions = {
   useNewUrlParser: true,
