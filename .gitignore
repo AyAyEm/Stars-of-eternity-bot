@@ -3,3 +3,4 @@ dist/
 .env
 *teste.ts
 tsconfig.tsbuildinfo
+src/config.ts
