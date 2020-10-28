@@ -17,5 +17,6 @@
       "@utils*": ["./lib/utils/*", "./lib/utils"],
       "@providers*": ["./lib/providers/*", "./lib/providers"]
     }
-  }
+  },
+  "include": ["src/*.ts", "src/*.tsx", "src/**/*.ts", "src/**/*.tsx", "src/languages/*/*.json"]
 }
