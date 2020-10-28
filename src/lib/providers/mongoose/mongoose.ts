@@ -1,7 +1,7 @@
 import type { DocumentType } from '@typegoose/typegoose';
 import * as mongoose from 'mongoose';
 
-import { config } from '@config';
+import { config } from '@root/config';
 import { generateMongoDocument } from './MongoDocument';
 import { Provider, GetAllParams } from '../Provider';
 import * as models from './models';
