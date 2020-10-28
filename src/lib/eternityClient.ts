@@ -4,6 +4,8 @@ import { ClientOptions } from 'discord.js';
 import { Mongoose } from './providers';
 import { TaskStore } from './structures';
 
+import '@scp/in17n/register';
+
 export class EternityClient extends SapphireClient {
   public tasks = new TaskStore(this);
 
@@ -11,8 +13,11 @@ export class EternityClient extends SapphireClient {
 
   public fetchPrefix = () => '/';
 
+  public fetchLanguage = () => 'pt-BR';
+
   constructor(options?: ClientOptions) {
     super(options);
+
     this.registerStore(this.tasks)
       .registerUserDirectories();
   }
