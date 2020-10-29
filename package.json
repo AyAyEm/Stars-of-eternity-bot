@@ -22,6 +22,7 @@
     "@typegoose/typegoose": "^7.4.1",
     "discord.js": "^12.4.0",
     "dotenv": "^8.2.0",
+    "graceful-fs": "^4.2.4",
     "i18next": "^19.8.3",
     "module-alias": "^2.2.2",
     "mongoose": "^5.10.9"
