@@ -35,9 +35,7 @@
         "consistent": true
       }
     ],
-    "no-underscore-dangle": ["error", {
-      "allowAfterThis": true
-    }],
+    "no-underscore-dangle": "off",
     "class-methods-use-this": "off",
     "import/prefer-default-export": "off",
     "no-console": "off"
