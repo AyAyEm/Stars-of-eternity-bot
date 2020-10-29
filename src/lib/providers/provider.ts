@@ -1,7 +1,7 @@
 export type Filter = Record<string, any>;
 export interface Query {
   model?: string;
-  id: string;
+  id: string | Record<string, any>;
 }
 
 export interface GetAllParams {
