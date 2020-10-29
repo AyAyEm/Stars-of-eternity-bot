@@ -1,24 +1,27 @@
 {
-  "SapphireCommand": {
+  "EternityCommand": {
     "scope": "typescript",
     "prefix": "command",
     "body": [
-      "import { Command, CommandOptions } from '@sapphire/framework';",
+      "import { CommandOptions } from '@sapphire/framework';",
       "import { ApplyOptions } from '@sapphire/decorators';",
-      "import { Message } from 'discord.js';",
+      "",
+      "import { EternityCommand } from '@lib';",
+      "",
+      "import type { Message } from 'discord.js';",
       "",
       "@ApplyOptions<CommandOptions>({",
-      "\tpreconditions: [],",
+      "  preconditions: [],",
       "})",
       "export default class extends Command {",
-      "\tpublic async run(msg: Message) {",
-      "\t}",
+      "  public async run(msg: Message) {",
+      "  }",
       "}",
       ""
     ],
     "description": "Creates a Command"
   },
-  "GodfatherEvent": {
+  "EternityEvent": {
     "scope": "typescript",
     "prefix": "event",
     "body": [
@@ -26,18 +29,18 @@
       "",
       "export default class extends Event<Events.${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g}> {",
       "",
-      "\tpublic constructor(context: PieceContext) {",
-      "\t\tsuper(context, { event: Events.${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g} });",
-      "\t}",
+      "  public constructor(context: PieceContext) {",
+      "    super(context, { event: Events.${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g} });",
+      "  }",
       "",
-      "\tpublic run() {",
-      "\t}",
+      "  public run() {",
+      "  }",
       "",
       "}",
       ""
     ]
   },
-  "GodfatherPrecondition": {
+  "EternityPrecondition": {
     "scope": "typescript",
     "prefix": "precondition",
     "body": [
@@ -46,12 +49,30 @@
       "",
       "export default class extends Precondition {",
       "",
-      "\tpublic run(message: Message) {",
-      "\t\t",
-      "\t}",
+      "  public run(message: Message) {",
+      "    ",
+      "  }",
       "",
       "}",
       ""
     ]
+  },
+  "EternityTask": {
+    "scope": "typescript",
+    "prefix": "task",
+    "body": [
+      "import { ApplyOptions } from '@sapphire/decorators';",
+      "import { Task, TaskOptions } from '@lib/structures';",
+      "",
+      "@ApplyOptions<TaskOptions>({",
+      "  time: 10000,",
+      "})",
+      "export default class extends Task {",
+      "  public async run() {",
+      "  }",
+      "}",
+      ""
+    ],
+    "description": "Creates a task"
   }
 }
