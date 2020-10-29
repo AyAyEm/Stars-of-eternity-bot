@@ -1,11 +1,13 @@
-import { Awaited, BasePiece, PieceContext } from '@sapphire/framework';
+import { Awaited, PieceContext } from '@sapphire/framework';
 import { AliasPieceOptions } from '@sapphire/pieces';
+
+import { EternityBasePiece } from './EternityBasePiece';
 
 export interface TaskOptions extends AliasPieceOptions {
   time: number;
 }
 
-export abstract class Task extends BasePiece {
+export abstract class Task extends EternityBasePiece {
   private _interval: NodeJS.Timer | null;
 
   public time: number;
