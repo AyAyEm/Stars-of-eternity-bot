@@ -4,7 +4,8 @@ import { AliasPieceOptions } from '@sapphire/pieces';
 import { EternityBasePiece } from './EternityBasePiece';
 
 export interface TaskOptions extends AliasPieceOptions {
-  time: number;
+  time?: number;
+  once?: boolean;
 }
 
 export abstract class Task extends EternityBasePiece {
@@ -12,20 +13,25 @@ export abstract class Task extends EternityBasePiece {
 
   public time: number;
 
+  public once: boolean;
+
   public abstract run(...args: readonly unknown[]): Awaited<void>;
 
   constructor(context: PieceContext, { name, ...options }: TaskOptions) {
     super(context, { name: (name ?? context.name).toLowerCase(), ...options });
     this.time = options.time || 1000;
     this.enabled = options.enabled ?? true;
-    if (!this._interval && this.enabled) this._interval = this._create();
+    this.once = options.once ?? false;
   }
 
-  private _create(): NodeJS.Timer {
+  public async create(): Promise<void> {
     this.run();
-    return this.client.setInterval(() => {
-      this.run();
-    }, this.time);
+    if (!this.once) {
+      this._interval = this.client.setInterval(() => {
+        this.run();
+      }, this.time);
+    }
+    return null;
   }
 
   public onUnload() {
