@@ -1,5 +1,7 @@
 {
   "teste": {
-    "teste": "testado"
+    "errors": {
+      "teste": "testado"
+    }
   }
 }

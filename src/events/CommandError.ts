@@ -10,7 +10,8 @@ export default class extends Event<Events.CommandError> {
   }
 
   public run(error: PossibleErrors, { message }: CommandErrorPayload) {
-    if (typeof error === 'object' && (error as Error).name === 'CommandError') {
+    if (typeof error !== 'object') return;
+    if ((error as CommandError).name === 'CommandError') {
       const { langPath } = error as CommandError;
       message.sendTranslated(langPath);
     }

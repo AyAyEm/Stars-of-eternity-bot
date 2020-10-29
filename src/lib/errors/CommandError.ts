@@ -7,6 +7,6 @@ export class CommandError extends Error {
 
   constructor(public langKey: string, command: EternityCommand) {
     super(`The command ${command.name} generated an error`);
-    this.langPath = `commands:${command.name}.${langKey}`;
+    this.langPath = `commands:${command.name}.errors.${langKey}`;
   }
 }
