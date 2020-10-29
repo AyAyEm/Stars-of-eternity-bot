@@ -10,13 +10,15 @@ export function generateMongoDocument(model: Query['model']) {
 
     public query: Query;
 
-    constructor(query: Query) {
+    public load: Promise<MongoDocument>;
+
+    constructor(query: { id: Query['id'] }) {
       this.query = { ...query, model };
-      this.reload();
+      this.load = this.reload();
     }
 
     public async reload() {
-      this.document = (models[model] as any).findOne(this.query.id);
+      this.document = await (models[model] as any).findOne(this.query.id);
       return this;
     }
 
