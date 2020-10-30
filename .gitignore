@@ -4,3 +4,4 @@ dist/
 *teste.ts
 tsconfig.tsbuildinfo
 src/config.ts
+data/
