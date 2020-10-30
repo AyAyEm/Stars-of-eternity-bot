@@ -20,12 +20,14 @@
     "@sapphire/utilities": "^1.0.2",
     "@scp/in17n": "github:sapphirecommunityplugins/in17n#build",
     "@typegoose/typegoose": "^7.4.1",
+    "axios": "^0.21.0",
     "discord.js": "^12.4.0",
     "dotenv": "^8.2.0",
     "graceful-fs": "^4.2.4",
     "i18next": "^19.8.3",
     "module-alias": "^2.2.2",
-    "mongoose": "^5.10.9"
+    "mongoose": "^5.10.9",
+    "warframe-items": "^1.1199.0"
   },
   "devDependencies": {
     "@sapphire/eslint-config": "^1.0.3",
