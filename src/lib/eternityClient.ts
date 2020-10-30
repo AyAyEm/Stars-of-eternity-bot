@@ -3,6 +3,7 @@ import { ClientOptions } from 'discord.js';
 
 import { Mongoose } from './providers';
 import { TaskStore } from './structures';
+import { Items } from './eternity/warframe';
 
 import '@scp/in17n/register';
 
@@ -14,6 +15,10 @@ export class EternityClient extends SapphireClient {
   public fetchPrefix = () => '/';
 
   public fetchLanguage = () => 'pt-BR';
+
+  public warframe = {
+    items: new Items(),
+  };
 
   constructor(options?: ClientOptions) {
     super(options);
