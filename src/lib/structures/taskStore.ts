@@ -15,7 +15,7 @@ export class TaskStore extends BaseStore<Task> {
     this.set(task.name, task);
     this.onPostLoad(this, task);
     await task.onLoad();
-    await task.create();
+    task.create();
     return task;
   }
 }

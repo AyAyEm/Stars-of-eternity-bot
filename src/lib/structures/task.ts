@@ -25,6 +25,7 @@ export abstract class Task extends EternityBasePiece {
   }
 
   public async create(): Promise<void> {
+    await new Promise((resolve) => { this.client.once('ready', resolve); });
     this.run();
     if (!this.once) {
       this._interval = this.client.setInterval(() => {
