@@ -17,6 +17,7 @@
     "@sapphire/decorators": "^1.0.2",
     "@sapphire/framework": "github:sapphire-project/framework#build",
     "@sapphire/pieces": "github:sapphire-project/pieces#build",
+    "@sapphire/snowflake": "^1.0.1",
     "@sapphire/utilities": "^1.0.2",
     "@scp/in17n": "github:sapphirecommunityplugins/in17n#build",
     "@typegoose/typegoose": "^7.4.1",
