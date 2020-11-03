@@ -26,4 +26,8 @@ export class EternityClient extends SapphireClient {
     this.registerStore(this.tasks)
       .registerUserDirectories();
   }
+
+  public get invite() {
+    return `https://discord.com/oauth2/authorize?client_id=${this.user!.id}&scope=bot`;
+  }
 }
