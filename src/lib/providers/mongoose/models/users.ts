@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import { prop, getModelForClass, ModelOptions } from '@typegoose/typegoose';
+import { prop, ModelOptions } from '@typegoose/typegoose';
 
 class Follow {
   @prop()
@@ -12,7 +12,7 @@ class Settings {
 }
 
 @ModelOptions({ options: { customName: 'Users' } })
-class UsersSchema {
+export class Users {
   @prop()
   public id: string;
 
@@ -22,5 +22,3 @@ class UsersSchema {
   @prop({ _id: false })
   public settings: Settings;
 }
-
-export const Users = getModelForClass(UsersSchema);

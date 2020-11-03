@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import { prop, getModelForClass, ModelOptions } from '@typegoose/typegoose';
+import { prop, ModelOptions } from '@typegoose/typegoose';
 import * as mongoose from 'mongoose';
 
 type Data = {
@@ -7,7 +7,7 @@ type Data = {
 };
 
 @ModelOptions({ options: { allowMixed: 0, customName: 'Trackers' } })
-class TrackersSchema {
+export class Trackers {
   @prop()
   tracker: string;
 
@@ -17,5 +17,3 @@ class TrackersSchema {
   @prop({ type: mongoose.Schema.Types.Mixed })
   data: Data;
 }
-
-export const Trackers = getModelForClass(TrackersSchema);

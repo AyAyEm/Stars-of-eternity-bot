@@ -1,10 +1,11 @@
-import type { DocumentType } from '@typegoose/typegoose';
 import * as mongoose from 'mongoose';
-
 import { config } from '@root/config';
+
+import type { DocumentType } from '@typegoose/typegoose';
+
 import { generateMongoDocument } from './MongoDocument';
 import { Provider, GetAllParams } from '../Provider';
-import * as models from './models';
+import { models } from './models';
 
 import type { Query as ProviderQuery } from '../Provider';
 

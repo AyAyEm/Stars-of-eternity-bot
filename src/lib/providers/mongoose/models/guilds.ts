@@ -1,12 +1,12 @@
 /* eslint-disable max-classes-per-file */
-import { prop, getModelForClass, ModelOptions } from '@typegoose/typegoose';
+import { prop, ModelOptions } from '@typegoose/typegoose';
 
-class Member {
+export class Member {
   @prop({ default: false })
   public toFollow: boolean;
 }
 
-class Message {
+export class Message {
   @prop()
   public msgType: string;
 
@@ -16,7 +16,7 @@ class Message {
   };
 }
 
-class Channel {
+export class Channel {
   @prop({ _id: false })
   public relicTracker: {
     enabled: boolean,
@@ -34,7 +34,7 @@ class Channel {
 }
 
 @ModelOptions({ options: { customName: 'Guilds' } })
-class GuildsSchema {
+export class Guilds {
   @prop()
   public id: string;
 
@@ -47,5 +47,3 @@ class GuildsSchema {
   @prop({ _id: false })
   public channels: Map<string, Channel>;
 }
-
-export const Guilds = getModelForClass(GuildsSchema);
