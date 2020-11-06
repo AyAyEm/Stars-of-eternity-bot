@@ -2,7 +2,7 @@
 import { prop, ModelOptions } from '@typegoose/typegoose';
 
 class Follow {
-  @prop()
+  @prop({ type: () => [String] })
   public items: string[];
 }
 
