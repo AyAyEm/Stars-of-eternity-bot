@@ -1,13 +1,13 @@
-import { Event, Events, PieceContext } from '@sapphire/framework';
+import { EternityEvent } from '@lib';
+import { Events } from '@sapphire/framework';
+import { ApplyOptions } from '@sapphire/decorators';
 
 import type { VoiceState } from 'discord.js';
+import type { EventOptions } from '@sapphire/framework';
 
 // TODO CLEAN UNECESSARY EVENT EMITTERS
-export default class extends Event<Events.VoiceStateUpdate> {
-  public constructor(context: PieceContext) {
-    super(context, { event: Events.VoiceStateUpdate });
-  }
-
+@ApplyOptions<EventOptions>({ event: Events.VoiceStateUpdate })
+export default class extends EternityEvent<Events.VoiceStateUpdate> {
   public async run(oldState: VoiceState, newState: VoiceState) {
     const oldChannelId = oldState.channelID;
     const newChannelId = newState.channelID;

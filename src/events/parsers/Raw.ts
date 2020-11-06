@@ -1,14 +1,13 @@
-import { Event, PieceContext } from '@sapphire/framework';
+import { EternityEvent } from '@lib';
+import { ApplyOptions } from '@sapphire/decorators';
 import { MessageReaction } from 'discord.js';
 
+import type { EventOptions } from '@sapphire/framework';
 import type { TextChannel, User } from 'discord.js';
 import type { RawPacket } from '@lib/types/Discord';
 
-export default class extends Event<'raw'> {
-  public constructor(context: PieceContext) {
-    super(context, { event: 'raw' });
-  }
-
+@ApplyOptions<EventOptions>({ event: 'raw' })
+export default class extends EternityEvent<'raw'> {
   public async run(packet: RawPacket) {
     // We don't want this to run on unrelated packets
     if (!['MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(packet.t)) return;

@@ -1,14 +1,14 @@
-import { CommandErrorPayload, Event, Events, PieceContext } from '@sapphire/framework';
+import { EternityEvent } from '@lib';
+import { ApplyOptions } from '@sapphire/decorators';
+import { Events } from '@sapphire/framework';
 
+import type { EventOptions, CommandErrorPayload } from '@sapphire/framework';
 import type { CommandError } from '@lib/errors';
 
 type PossibleErrors = Error | CommandError | unknown;
 
-export default class extends Event<Events.CommandError> {
-  public constructor(context: PieceContext) {
-    super(context, { event: Events.CommandError });
-  }
-
+@ApplyOptions<EventOptions>({ event: Events.CommandError })
+export default class extends EternityEvent<Events.CommandError> {
   public run(error: PossibleErrors, { message }: CommandErrorPayload) {
     if (typeof error !== 'object') return;
     if ((error as CommandError).name === 'CommandError') {
