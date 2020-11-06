@@ -34,14 +34,12 @@ export class Items {
   }
 
   public async get(name: string, createIfNotExists = false): Promise<Item | null> {
-    if (!this.uniqueNameDict && createIfNotExists && !this.latestUpdate) await this.create();
-    else if (!this.uniqueNameDict && !createIfNotExists && !this.latestUpdate) return null;
+    const uniqueNameDict = this.uniqueNameDict || await import(`${this.dir}.json`);
+    if (!this.uniqueNameDict && createIfNotExists) await this.create();
+    else if (!uniqueNameDict && !createIfNotExists) return null;
 
-    const uniqueNameDict: string = this.uniqueNameDict || await import(`${this.dir}.json`);
+    if (!this.uniqueNameDict && !!uniqueNameDict) this.uniqueNameDict = uniqueNameDict;
 
     return import(path.join(this.dir, uniqueNameDict[name.toLowerCase()]));
   }
 }
-
-const items = new Items();
-items.get('paris').then(console.log);
