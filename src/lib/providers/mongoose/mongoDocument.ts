@@ -27,7 +27,7 @@ export function generateMongoDocument(model: Query['model']) {
     }
 
     public async set<Value = any>(path: string, value: Value) {
-      this.document.updateOne({ [path]: value }, { upsert: true });
+      await this.document.updateOne({ [path]: value }, { upsert: true });
       return this.reload();
     }
   };
