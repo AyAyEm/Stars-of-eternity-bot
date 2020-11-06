@@ -21,6 +21,7 @@
     "@sapphire/utilities": "^1.0.2",
     "@scp/in17n": "github:sapphirecommunityplugins/in17n#build",
     "@typegoose/typegoose": "^7.4.1",
+    "@types/lodash": "^4.14.164",
     "app-root-path": "^3.0.0",
     "async": "^3.2.0",
     "axios": "^0.21.0",
@@ -29,6 +30,7 @@
     "fs-extra": "^9.0.1",
     "graceful-fs": "^4.2.4",
     "i18next": "^19.8.3",
+    "lodash": "^4.17.20",
     "module-alias": "^2.2.2",
     "mongoose": "^5.10.9",
     "warframe-items": "^1.1199.0"
