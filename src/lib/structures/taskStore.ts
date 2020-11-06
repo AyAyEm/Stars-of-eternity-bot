@@ -10,11 +10,8 @@ export class TaskStore extends BaseStore<Task> {
   }
 
   protected async insert(task: Task): Promise<Task> {
-    if (!task.enabled) return task;
+    await super.insert(task);
 
-    this.set(task.name, task);
-    this.onPostLoad(this, task);
-    await task.onLoad();
     task.create();
     return task;
   }
