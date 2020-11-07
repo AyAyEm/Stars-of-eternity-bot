@@ -1,3 +1,5 @@
+import '@lib/extenders';
+
 import { SapphireClient } from '@sapphire/framework';
 import { ClientOptions } from 'discord.js';
 
