@@ -3,6 +3,6 @@ import { EternityClient } from './EternityClient';
 
 export abstract class EternityEvent<E extends string | number | symbol = ''> extends Event<E> {
   public get client(): EternityClient {
-    return this.extras.client as EternityClient;
+    return super.client as EternityClient;
   }
 }

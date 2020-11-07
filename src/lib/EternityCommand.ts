@@ -7,6 +7,6 @@ export abstract class EternityCommand extends Command {
   public error = (langKey: string) => new CommandError(langKey, this);
 
   public get client(): EternityClient {
-    return this.extras.client as EternityClient;
+    return super.client as EternityClient;
   }
 }
