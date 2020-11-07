@@ -12,7 +12,7 @@ export class TaskStore extends BaseStore<Task> {
   protected async insert(task: Task): Promise<Task> {
     await super.insert(task);
 
-    task.create();
+    task._create();
     return task;
   }
 }

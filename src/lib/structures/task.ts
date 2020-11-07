@@ -24,7 +24,7 @@ export abstract class Task extends EternityBasePiece {
     this.once = options.once ?? false;
   }
 
-  public async create(): Promise<void> {
+  public async _create(): Promise<void> {
     await new Promise((resolve) => { this.client.once('ready', resolve); });
     this.run();
     if (!this.once) {
@@ -32,7 +32,6 @@ export abstract class Task extends EternityBasePiece {
         this.run();
       }, this.time);
     }
-    return null;
   }
 
   public onUnload() {
