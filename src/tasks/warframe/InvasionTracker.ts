@@ -11,7 +11,8 @@ export default class InvasionTracker extends Task {
   public invasionUrl = 'https://api.warframestat.us/pc/invasions';
 
   public async onLoad() {
-    return this.document.load;
+    await super.onLoad();
+    await this.document.load;
   }
 
   public async run() {
