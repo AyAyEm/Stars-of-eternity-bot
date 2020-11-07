@@ -4,9 +4,7 @@ import axios from 'axios';
 
 import type { InvasionData } from '@lib/types/Warframe';
 
-@ApplyOptions<TaskOptions>({
-  time: 10000,
-})
+@ApplyOptions<TaskOptions>({ time: 10000 })
 export default class InvasionTracker extends Task {
   public document = new this.client.provider.Trackers({ id: { tracker: 'invasion' } });
 
@@ -18,6 +16,8 @@ export default class InvasionTracker extends Task {
 
   public async run() {
     axios.get(this.invasionUrl).then(async ({ data: invasionsData }: { data: InvasionData[] }) => {
+      if (process.env.NODE_ENV !== 'production') await this.document.reload();
+
       const activeInvasions = invasionsData.filter(({ completed }) => !completed);
 
       const invasionsIds = this.document.get('data.cacheIds', []);

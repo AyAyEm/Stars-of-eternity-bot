@@ -4,10 +4,7 @@ import { SnowflakeUtil } from 'discord.js';
 
 import type { Guild } from 'discord.js';
 
-@ApplyOptions<TaskOptions>({
-  time: 10000,
-  once: true,
-})
+@ApplyOptions<TaskOptions>({ time: 10000, once: true })
 export default class extends Task {
   public async run() {
     // Cache active bot voice connections

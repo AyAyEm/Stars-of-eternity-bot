@@ -1,10 +1,7 @@
 import { Task, TaskOptions } from '@lib/structures';
 import { ApplyOptions } from '@sapphire/decorators';
 
-@ApplyOptions<TaskOptions>({
-  time: 10000,
-  once: true,
-})
+@ApplyOptions<TaskOptions>({ time: 10000, once: true })
 export default class extends Task {
   public async run() {
     const { Guilds } = this.client.provider.models;

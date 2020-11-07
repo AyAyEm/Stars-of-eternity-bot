@@ -4,9 +4,7 @@ import axios from 'axios';
 
 import type { Fissure } from '@lib/types/Warframe';
 
-@ApplyOptions<TaskOptions>({
-  time: 10000,
-})
+@ApplyOptions<TaskOptions>({ time: 10000 })
 export default class extends Task {
   public document = new this.client.provider.Trackers({ id: { tracker: 'fissure' } });
 
