@@ -12,24 +12,25 @@ export default class extends EternityEvent<Events.VoiceStateUpdate> {
     const oldChannelId = oldState.channelID;
     const newChannelId = newState.channelID;
     const bothDefined = oldChannelId && newChannelId;
+
     if (oldChannelId === newChannelId) return;
+
     // Member joined a channel
     if (!oldChannelId || (oldChannelId !== newChannelId && bothDefined)) {
       const { member, channel } = newState;
       const botOrMember = member?.user.bot ? 'bot' : 'member';
-      this.client.emit(`${botOrMember}JoinedChannel`, {
-        member, channel, state: newState, type: 'join',
-      });
+      this.client.emit(`${botOrMember}JoinedChannel`, channel, member, newState);
+
       // Custom events
       if (!member?.user.bot) this.client.emit(`${channel?.id}memberJoined`, member);
     }
+
     // Member left a channel
     if (!newChannelId || (oldChannelId !== newChannelId && bothDefined)) {
       const { member, channel } = oldState;
       const botOrMember = member?.user.bot ? 'bot' : 'member';
-      this.client.emit(`${botOrMember}LeftChannel`, {
-        member, channel, state: oldState, type: 'left',
-      });
+      this.client.emit(`${botOrMember}LeftChannel`, channel, member, oldState);
+
       // Custom events
       if (!member?.user.bot) this.client.emit(`${channel?.id}memberLeft`, member);
     }
