@@ -25,12 +25,14 @@ export abstract class Task extends EternityBasePiece {
   }
 
   public async onLoad(): Promise<void> {
-    this.run();
-    if (!this.once) {
-      this._interval = this.client.setInterval(() => {
-        this.run();
-      }, this.time);
-    }
+    this.client.ready.then(() => {
+      this.run();
+      if (!this.once) {
+        this._interval = this.client.setInterval(() => {
+          this.run();
+        }, this.time);
+      }
+    });
   }
 
   public onUnload() {
