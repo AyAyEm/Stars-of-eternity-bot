@@ -73,5 +73,20 @@
       ""
     ],
     "description": "Creates a saphire task"
+  },
+  "Import lib": {
+    "scope": "typescript",
+    "prefix": "@lib",
+    "body": "import { $0 } from '@lib';"
+  },
+  "Import lib types": {
+    "scope": "typescript",
+    "prefix": "@lib:types",
+    "body": "import type { $0 } from '@lib';"
+  },
+  "Import sapphire": {
+    "scope": "typescript",
+    "prefix": "@sapphire",
+    "body": "import { $0 } from '@sapphire/${1|framework,decorators|}';"
   }
 }
