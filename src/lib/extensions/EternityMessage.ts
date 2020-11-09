@@ -5,9 +5,11 @@ import type { EmojiResolvable, MessageReaction } from 'discord.js';
 import type { IterableCollection } from 'async';
 import type { EternityGuild } from './EternityGuild';
 
-export class EternityMessage extends SapphireMessage {
-  public guild = super.guild as EternityGuild;
+export interface EternityMessage {
+  guild: EternityGuild;
+}
 
+export class EternityMessage extends SapphireMessage {
   public async replyAndDelete(content: string, { timeout = 10000, reason = '', delSource = false }) {
     const reply = await this.reply(content);
     if (delSource) this.delete({ timeout, reason });
