@@ -22,6 +22,10 @@ export class EternityClient extends SapphireClient {
     items: new Items(),
   };
 
+  public console = console;
+
+  public ready = new Promise<boolean>((resolve) => this.once('ready', () => resolve(true)));
+
   constructor(options?: ClientOptions) {
     super(options);
 
