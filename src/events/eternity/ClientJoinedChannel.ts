@@ -16,7 +16,7 @@ export default class extends EternityEvent<'clientJoinedChannel'> {
       this.recorders.delete(state.guild.id);
     }
 
-    const recorder = new AudioRecorder(state.connection, this.client);
+    const recorder = new AudioRecorder(state.connection);
     this.recorders.set(state.guild.id, recorder);
     recorder.startRecording();
   }
