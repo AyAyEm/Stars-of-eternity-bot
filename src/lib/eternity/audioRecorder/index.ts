@@ -1,13 +1,11 @@
-// Not working
 import * as AudioMixer from 'audio-mixer';
 import * as ffmpeg from 'fluent-ffmpeg';
 import * as fse from 'fs-extra';
 
 import type { VoiceConnection, VoiceChannel, GuildMember } from 'discord.js';
-import type { EternityClient } from '@lib';
-import type { Mixer } from 'audio-mixer';
 import type { WriteStream } from 'fs';
 
+import type { EternityClient } from '@lib';
 import { SilenceStream } from './silenceStream';
 import { audioDate } from './audioDate';
 
@@ -21,23 +19,21 @@ export class AudioRecorder {
     sampleRate: 48000,
   };
 
-  protected audioDateObject: ReturnType<typeof audioDate>;
+  public client: EternityClient;
+
+  protected pcmMixer = new AudioMixer.Mixer(this.voiceInputOptions);
 
   protected channel: VoiceChannel;
 
-  protected basePath: string;
+  public audioDateObject = audioDate();
 
-  protected audioPath: string;
+  public readonly basePath = './audios/';
 
-  protected logPath: string;
+  public readonly audioPath = `${this.basePath}${this.audioDateObject.startDate}.ogg`;
 
-  protected audioRename: () => Promise<void>;
+  public readonly logPath = `${this.basePath}${this.audioDateObject.startDate}.txt`;
 
-  protected logRename: () => Promise<void>;
-
-  protected pcmMixer: Mixer;
-
-  protected isRecording: boolean;
+  protected isRecording = false;
 
   protected outputAudioStream?: WriteStream;
 
@@ -45,19 +41,9 @@ export class AudioRecorder {
 
   protected removeListeners: Array<() => void> = [];
 
-  constructor(public voiceConnection: VoiceConnection, public client: EternityClient) {
-    this.audioDateObject = audioDate();
+  constructor(public voiceConnection: VoiceConnection) {
     this.channel = voiceConnection.channel;
-    this.basePath = './audios/';
-    this.audioPath = `${this.basePath}${this.audioDateObject.startDate}.ogg`;
-    this.logPath = `${this.basePath}${this.audioDateObject.startDate}.txt`;
-    const { basePath, audioPath, logPath } = this;
-    const { startToEndDate } = this.audioDateObject;
-
-    this.audioRename = async () => fse.rename(audioPath, `${basePath}${startToEndDate()}.ogg`);
-    this.logRename = async () => fse.rename(logPath, `${basePath}${startToEndDate()}.txt`);
-    this.pcmMixer = new AudioMixer.Mixer(this.voiceInputOptions);
-    this.isRecording = false;
+    this.client = voiceConnection.client as EternityClient;
   }
 
   async assignVoiceConnection(member: GuildMember) {
@@ -101,14 +87,23 @@ export class AudioRecorder {
       .audioCodec('opus')
       .format('opus')
       .on('error', this.client.console.error)
-      .on('end', async () => this.audioRename().then(this.logRename))
+      .on('end', async () => {
+        const { startToEndDate } = this.audioDateObject;
+        await fse.rename(this.audioPath, `${this.basePath}${startToEndDate()}.ogg`);
+        await fse.rename(this.logPath, `${this.basePath}${startToEndDate()}.txt`);
+      })
       .pipe(this.outputAudioStream);
-    this.voiceConnection.on('disconnect', async () => this.stopRecording());
+    this.voiceConnection.on('disconnect', this.stopRecording);
+    this.removeListeners.push(() => this.client.removeListener('disconnect', this.stopRecording));
   }
 
   async stopRecording() {
-    this.pcmMixer.close();
-    this.pcmMixer.removeAllListeners();
+    if (this.pcmMixer) {
+      this.pcmMixer.emit('end');
+      this.pcmMixer.close();
+      this.pcmMixer.removeAllListeners();
+      this.pcmMixer.destroy();
+    }
     this.removeListeners.forEach((removeFn) => removeFn());
     this.outputLogStream?.end();
     this.isRecording = false;
@@ -156,7 +151,5 @@ export class AudioRecorder {
     this.client.on(`${channel.id}memberLeft`, eventLeftHandler);
     this.removeListeners.push(() => (
       this.client.removeListener(eventLeftPath, eventLeftHandler)));
-
-    outputLogStream.on('end', () => this.logRename());
   }
 }
