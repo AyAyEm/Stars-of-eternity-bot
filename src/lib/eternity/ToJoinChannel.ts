@@ -14,7 +14,7 @@ export function toJoinChannel(channel: EternityVoiceChannel) {
       .first();
   const botChannel = botVoiceConnection ? botVoiceConnection.channel : null;
   const channelWithMostUsers = guild.channelWithMostMembers;
-  if (!channelWithMostUsers) {
+  if (channelWithMostUsers.members.size <= 0) {
     if (botChannel) botChannel.leave();
     executing = false;
     return;
