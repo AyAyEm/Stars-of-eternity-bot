@@ -17,6 +17,11 @@ export class EternityMessage extends SapphireMessage {
     return reply.delete({ timeout, reason });
   }
 
+  /**
+   * Reacts with a list of emojis sequentially.
+   * @param emojis A list of emojis.
+   * @return A thenable object with stopReactions method.
+   */
   public multiReact(emojis: IterableCollection<EmojiResolvable>) {
     let toStop = false;
     const stopReactions = () => { toStop = true; };
