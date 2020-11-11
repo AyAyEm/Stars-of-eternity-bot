@@ -1,12 +1,16 @@
-import type { EternityCommand } from '@lib';
+import { UserError, CommandErrorPayload } from '@sapphire/framework';
 
-export class CommandError extends Error {
+import type { EternityCommand, EternityMessage } from '@lib';
+
+export interface EternityCommandErrorPayload extends CommandErrorPayload {
+  piece: EternityCommand;
+  message: EternityMessage;
+}
+
+export class CommandError extends UserError {
   public readonly name = 'CommandError';
 
-  public readonly langPath: string;
+  public readonly command: EternityCommand;
 
-  constructor(public langKey: string, command: EternityCommand) {
-    super(`The command ${command.name} generated an error`);
-    this.langPath = `commands:${command.name}.errors.${langKey}`;
-  }
+  public readonly payload: CommandErrorPayload;
 }
