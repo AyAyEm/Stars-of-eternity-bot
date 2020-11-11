@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc -b src",
     "dev": "npm run build && node .",
-    "nodemon": "nodemon --watch src -e ts --exec \"yarn run dev\"",
+    "nodemon": "nodemon --watch src -e ts,json --exec \"yarn run dev\"",
     "clean": "tsc -b src --clean",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
