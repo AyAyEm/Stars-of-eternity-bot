@@ -1,4 +1,5 @@
 import '@lib/extenders';
+import '@scp/in17n/register';
 
 import { SapphireClient } from '@sapphire/framework';
 import { ClientOptions } from 'discord.js';
@@ -6,8 +7,6 @@ import { ClientOptions } from 'discord.js';
 import { Mongoose } from './providers';
 import { TaskStore } from './structures';
 import { Items } from './eternity/warframe';
-
-import '@scp/in17n/register';
 
 export class EternityClient extends SapphireClient {
   public tasks = new TaskStore(this);
@@ -24,16 +23,29 @@ export class EternityClient extends SapphireClient {
 
   public console = console;
 
-  public ready = new Promise<boolean>((resolve) => this.once('ready', () => resolve(true)));
+  /**
+   * Returns a promise that resolves when the client is ready.
+   */
+  public ready = new Promise<void>((resolve) => this.once('ready', () => resolve()));
 
   constructor(options?: ClientOptions) {
-    super(options);
+    super({
+      ...options,
+      i18n: {
+        i18next: {
+          fallbackNS: 'default',
+        },
+      },
+    });
 
     this.registerStore(this.tasks)
       .registerUserDirectories();
   }
 
+  /**
+   * Returns an invitation link for the bot.
+   */
   public get invite() {
-    return `https://discord.com/oauth2/authorize?client_id=${this.user!.id}&scope=bot`;
+    return `https://discord.com/oauth2/authorize?client_id=${this.id}&scope=bot`;
   }
 }
