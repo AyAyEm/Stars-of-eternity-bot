@@ -1,12 +1,12 @@
 import {
-  Command, PieceContext, CommandOptions, ArgumentError,
+  Command, PieceContext, CommandOptions,
 } from '@sapphire/framework';
-import { Message } from 'discord.js';
+import { CommandError } from '@lib';
+import * as async from 'async';
 
 import type { Args, ArgType } from '@sapphire/framework';
+import type { EternityMessage } from '@lib';
 import type { EternityClient } from './EternityClient';
-
-import { CommandError } from './errors';
 
 export interface EternityCommandOptions extends CommandOptions {
   requiredArgs?: Array<keyof ArgType>;
@@ -24,23 +24,24 @@ export abstract class EternityCommand extends Command {
     return super.client as EternityClient;
   }
 
-  public error = (langKey: string) => new CommandError(langKey, this);
+  public error = (type: string, message: string) => new CommandError(type, message);
 
-  public async verifyArgs(args: Args) {
-    await Promise.all(this.requiredArgs.map(async (arg) => {
-      const { success } = await args.pickResult(arg);
-      if (!success) {
-        const argument = this.client.arguments.get(arg);
-        throw new ArgumentError(argument, arg, 'missingRequiredArgument', `${arg} type was missing`);
-      }
-    }));
+  public async verifyArgs(args: Args, message: EternityMessage) {
+    const missingArguments = await async.filter(this.requiredArgs, async (arg) => !(
+      await args.pickResult(arg)).success);
+
+    if (missingArguments.length > 0) {
+      message.sendTranslated('missingArgument', [{ args: missingArguments.join(', ') }]);
+      throw this.error('missingArgument',
+        `The argument(s) ${missingArguments.join(', ')} was missing.`);
+    }
 
     return args.start();
   }
 
-  public async preParse(message: Message, parameters: string) {
+  public async preParse(message: EternityMessage, parameters: string) {
     const args = await super.preParse(message, parameters);
-    if (this.requiredArgs.length > 0) return this.verifyArgs(args);
+    if (this.requiredArgs.length > 0) return this.verifyArgs(args, message);
     return args;
   }
 }
