@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig",
   "compilerOptions": {
-    "lib": ["ES2020"],
+    "lib": [],
     "outDir": "../dist",
     "rootDir": ".",
     "baseUrl": "./"
