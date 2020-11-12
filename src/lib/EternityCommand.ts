@@ -2,6 +2,7 @@ import {
   Command, PieceContext, CommandOptions,
 } from '@sapphire/framework';
 import { CommandError } from '@lib';
+import { list } from '@root/lib/utils/LanguageFunctions';
 import * as async from 'async';
 
 import type { Args, ArgType } from '@sapphire/framework';
@@ -31,9 +32,9 @@ export abstract class EternityCommand extends Command {
       await args.pickResult(arg)).success);
 
     if (missingArguments.length > 0) {
-      message.sendTranslated('missingArgument', [{ args: missingArguments.join(', ') }]);
+      message.sendTranslated('missingArgument', [{ args: missingArguments }]);
       throw this.error('missingArgument',
-        `The argument(s) ${missingArguments.join(', ')} was missing.`);
+        `The argument(s) ${list(missingArguments, 'and')} was missing.`);
     }
 
     return args.start();

@@ -1,12 +1,15 @@
 import '@lib/extenders';
-import '@scp/in17n/register';
 
 import { SapphireClient } from '@sapphire/framework';
+import { mergeDefault } from '@sapphire/utilities';
 import { ClientOptions } from 'discord.js';
+import { clientOptions } from '@utils/Constants';
 
 import { Mongoose } from './providers';
 import { TaskStore } from './structures';
 import { Items } from './eternity/warframe';
+
+import '@scp/in17n/register';
 
 export class EternityClient extends SapphireClient {
   public tasks = new TaskStore(this);
@@ -29,14 +32,8 @@ export class EternityClient extends SapphireClient {
   public ready = new Promise<void>((resolve) => this.once('ready', () => resolve()));
 
   constructor(options?: ClientOptions) {
-    super({
-      ...options,
-      i18n: {
-        i18next: {
-          fallbackNS: 'default',
-        },
-      },
-    });
+    // @ts-expect-error Type instantiation is excessively deep and possibly infinite. ts(2589)
+    super(mergeDefault(clientOptions, options));
 
     this.registerStore(this.tasks)
       .registerUserDirectories();
