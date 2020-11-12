@@ -10,7 +10,7 @@ type PossibleErrors = Error | CommandError | unknown;
 export default class extends EternityEvent<Events.CommandError> {
   public run(error: PossibleErrors, { message, piece }: CommandErrorPayload) {
     if (error instanceof CommandError) {
-      message.sendTranslated(`commands:${piece.name}.${error.identifier}`);
+      message.sendTranslated(`commands/${piece.name}:${error.identifier}`);
     } else {
       this.client.console.error(error);
     }
