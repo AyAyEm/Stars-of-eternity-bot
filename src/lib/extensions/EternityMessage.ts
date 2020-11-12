@@ -36,9 +36,11 @@ export class EternityMessage extends SapphireMessage {
         return reaction;
       });
 
-    const then = async (callback: (reactions: MessageReaction[]) => unknown | Promise<unknown>) => (
-      callback(await reactions));
-
-    return { then, stopReactions };
+    return {
+      then: reactions.then.bind(reactions),
+      catch: reactions.catch.bind(reactions),
+      finally: reactions.finally.bind(reactions),
+      stopReactions,
+    };
   }
 }
