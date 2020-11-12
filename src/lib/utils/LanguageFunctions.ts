@@ -1,5 +1,5 @@
 export const list = (values: readonly string[], conjuction: 'or' | 'and') => {
-  switch (values.length) {
+  switch (values?.length) {
     case 0:
       return '';
     case 1:
