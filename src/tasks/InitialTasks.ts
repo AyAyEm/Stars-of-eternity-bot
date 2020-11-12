@@ -11,7 +11,7 @@ export default class extends Task {
     const clientId = this.client.id || '';
     await new Promise((resolve) => this.client.guilds.cache.each(async (guild: Guild) => {
       const voiceChannels = guild.channels.cache.filter(({ type }) => type === 'voice');
-      await voiceChannels.each(async (voiceChannel) => {
+      await Promise.all(voiceChannels.map(async (voiceChannel) => {
         const { members } = voiceChannel;
         if (!members.has(clientId)) return;
         const guildMember = await members.get(clientId)?.fetch();
@@ -24,7 +24,7 @@ export default class extends Task {
         }
         const snowflake = SnowflakeUtil.generate();
         this.client.voice?.connections.set(snowflake, clientVoiceConnection);
-      });
+      }));
       resolve();
     }));
     this.client.voice?.connections.each((voiceConnection) => voiceConnection.disconnect());
