@@ -76,6 +76,7 @@
     "@config": "./dist/config",
     "@lib": "./dist/lib",
     "@utils": "./dist/lib/utils",
+    "@embeds": "./dist/lib/embeds",
     "@providers": "./dist/lib/providers"
   }
 }
