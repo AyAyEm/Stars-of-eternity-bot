@@ -1,3 +1,4 @@
 {
-  "missingArgument": "Os seguintes argumentos estão faltando: `{{args, andList}}`"
+  "missingArgument": "Os seguintes argumentos estão faltando: `{{args, andList}}`",
+  "missingSubCommand": "Não foi passado nenhum subcomando dos: `{{args, orList}}`"
 }
