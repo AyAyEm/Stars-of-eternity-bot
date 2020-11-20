@@ -1,6 +1,6 @@
-import * as AudioMixer from 'audio-mixer';
-import * as ffmpeg from 'fluent-ffmpeg';
-import * as fse from 'fs-extra';
+import AudioMixer from 'audio-mixer';
+import ffmpeg from 'fluent-ffmpeg';
+import fse from 'fs-extra';
 
 import type { VoiceConnection, VoiceChannel, GuildMember } from 'discord.js';
 import type { WriteStream } from 'fs';
