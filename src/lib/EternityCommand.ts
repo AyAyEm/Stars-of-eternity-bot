@@ -3,7 +3,7 @@ import {
 } from '@sapphire/framework';
 import { CommandError } from '@lib';
 import { list } from '@root/lib/utils/LanguageFunctions';
-import * as async from 'async';
+import async from 'async';
 
 import type { Args, ArgType } from '@sapphire/framework';
 import type { EternityMessage } from '@lib';
