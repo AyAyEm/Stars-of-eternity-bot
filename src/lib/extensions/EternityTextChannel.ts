@@ -7,7 +7,8 @@ export interface EternityTextChannel {
 }
 
 export class EternityTextChannel extends Structures.get('TextChannel') {
-  public async sendAndDelete(content: string, { timeout = 10000, reason = '' }) {
+  public async sendAndDelete(content: string, options?: { timeout?: number, reason?: string }) {
+    const { timeout = 10000, reason = '' } = options;
     return (await this.send(content)).delete({ timeout, reason });
   }
 }
