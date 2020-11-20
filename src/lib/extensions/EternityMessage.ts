@@ -4,9 +4,11 @@ import * as async from 'async';
 import type { EmojiResolvable, MessageReaction } from 'discord.js';
 import type { IterableCollection } from 'async';
 import type { EternityGuild } from './EternityGuild';
+import type { EternityTextChannel } from './EternityTextChannel';
 
 export interface EternityMessage {
   guild: EternityGuild;
+  channel: EternityTextChannel;
 }
 
 export class EternityMessage extends SapphireMessage {
