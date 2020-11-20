@@ -9,7 +9,7 @@ type PossibleErrors = ArgumentError<unknown> | CommandError | Error;
 @ApplyOptions<EventOptions>({ event: Events.EventError })
 export default class extends EternityEvent<Events.EventError> {
   public async run(error: PossibleErrors) {
-    if (error instanceof CommandError && error.identifier === 'missingArgument') return;
+    if (error instanceof CommandError) return;
     if (error instanceof ArgumentError) {
       this.client.console.error(error);
     } else {
