@@ -28,21 +28,19 @@ export abstract class EternityCommand extends Command {
   public error = (type: string, message: string) => new CommandError(type, message);
 
   public async verifyArgs(args: Args, message: EternityMessage) {
-    const missingArguments = await async.filter(this.requiredArgs, async (arg) => !(
-      await args.pickResult(arg)).success);
+    const missingArguments = await async.filter(this.requiredArgs, async (arg) => (
+      !(await args.pickResult(arg)).success));
 
     if (missingArguments.length > 0) {
       message.sendTranslated('missingArgument', [{ args: missingArguments }]);
       throw this.error('missingArgument',
         `The argument(s) ${list(missingArguments, 'and')} was missing.`);
     }
-
-    return args.start();
   }
 
   public async preParse(message: EternityMessage, parameters: string) {
     const args = await super.preParse(message, parameters);
-    if (this.requiredArgs.length > 0) return this.verifyArgs(args, message);
-    return args;
+    if (this.requiredArgs.length > 0) await this.verifyArgs(args, message);
+    return args.start();
   }
 }
