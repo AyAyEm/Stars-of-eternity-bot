@@ -3,14 +3,13 @@ import { ApplyOptions } from '@sapphire/decorators';
 
 import { EternityCommand } from '@lib';
 
-import type { Message } from 'discord.js';
+import type { EternityMessage } from '@lib';
 
 @ApplyOptions<CommandOptions>({
   preconditions: ['OwnerOnly'],
 })
 export default class extends EternityCommand {
-  public async run(msg: Message) {
-    console.log('runned');
-    (await msg.channel.send(this.client.invite)).delete({ timeout: 10000 });
+  public async run(msg: EternityMessage) {
+    msg.channel.sendAndDelete(this.client.invite, { timeout: 10000 });
   }
 }
