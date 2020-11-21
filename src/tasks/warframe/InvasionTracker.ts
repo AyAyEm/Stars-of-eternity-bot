@@ -26,7 +26,7 @@ export default class InvasionTracker extends Task {
       const newInvasions = activeInvasions.filter(({ id }) => !invasionsIds.includes(id));
 
       if (newInvasions.length > 0) {
-        newInvasions.forEach((invasion) => { this.client.emit('warframeNewInvasion', invasion); });
+        this.client.emit('warframeNewInvasions', newInvasions);
 
         const updatedInvasionsIds = invasionsData.map(({ id }) => id);
         await this.document.set('data.cacheIds', updatedInvasionsIds);
