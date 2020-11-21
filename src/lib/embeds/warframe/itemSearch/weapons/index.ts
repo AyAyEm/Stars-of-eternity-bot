@@ -1,2 +1,2 @@
-export * from './primeWeapon';
-export * from './weapon';
+export * from './PrimeWeapon';
+export * from './Weapon';

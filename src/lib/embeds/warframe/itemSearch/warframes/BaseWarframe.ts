@@ -26,7 +26,7 @@ export class BaseWarframe {
     return blueprintSource(this.warframe);
   }
 
-  public mainInfoPage() {
+  public get mainInfoPage() {
     const { warframe, bpSource } = this;
     const {
       components = [], health, armor, shield, power, sprintSpeed,

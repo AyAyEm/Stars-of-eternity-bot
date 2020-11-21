@@ -1,2 +1,2 @@
-export * from './warframe';
-export * from './warframePrime';
+export * from './Warframe';
+export * from './WarframePrime';

@@ -1,8 +1,8 @@
 import type { Item } from 'warframe-items';
 
 import { EternityMessageEmbed } from '@lib';
-import { bestDrops, dropsString } from '../utils';
-import BaseWeapon from './baseWeapon';
+import { bestDrops, dropsString, filterForPrimeComponents } from '../utils';
+import BaseWeapon from './BaseWeapon';
 
 class WeaponEmbed extends BaseWeapon {
   constructor(public weapon: Item) {
@@ -12,8 +12,7 @@ class WeaponEmbed extends BaseWeapon {
   get mainInfoPage() {
     const { weapon, baseEmbed: embed } = this;
     const { components = [] } = weapon;
-    const primeComponentsString = components
-      .filter(({ drops = [] }) => drops[0]?.location?.toLowerCase().includes('relic'))
+    const primeComponentsString = filterForPrimeComponents(components)
       .sort(({ name }) => (name === 'Blueprint' ? -1 : 0))
       .reduce((strings, component) => `${strings}${component.name} **${component.itemCount}**\n`, '');
 

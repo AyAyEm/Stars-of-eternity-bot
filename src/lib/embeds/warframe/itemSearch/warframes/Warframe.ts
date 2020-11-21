@@ -3,7 +3,7 @@ import { biFilter } from '@utils';
 
 import type { Item } from 'warframe-items';
 
-import { BaseWarframe } from './baseWarframe';
+import { BaseWarframe } from './BaseWarframe';
 import { dropToNameAndChance } from '../utils';
 
 type Component = Extract<Item['components'], Object>[0];

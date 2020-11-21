@@ -10,4 +10,4 @@ export function dropToNameAndChance(enemy: Drop) {
   const actualChance = dropChance ? Number(dropChance) * chance : chance * 100;
 
   return { name, chance: actualChance };
-};
+}

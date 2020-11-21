@@ -3,9 +3,9 @@ import * as _ from 'lodash';
 
 import type { Item, Component } from 'warframe-items';
 
-import BaseWeapon from './baseWeapon';
+import BaseWeapon from './BaseWeapon';
 import { blueprintSource, dropToNameAndChance } from '../utils';
-import specialItems from '../specialItems';
+import specialItems from '../SpecialItems';
 
 class WeaponEmbed extends BaseWeapon {
   get bpSource() {
