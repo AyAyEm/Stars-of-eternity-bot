@@ -5,7 +5,7 @@ export class RelicTracker {
   @prop()
   enabled: boolean;
 
-  @prop({ type: String })
+  @prop({ _id: false })
   messages: Map<string, string>;
 }
 
