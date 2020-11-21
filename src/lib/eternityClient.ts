@@ -3,13 +3,11 @@ import '@lib/extenders';
 import { SapphireClient } from '@sapphire/framework';
 import { mergeDefault } from '@sapphire/utilities';
 import { ClientOptions } from 'discord.js';
-import { clientOptions } from '@utils/Constants';
+import { clientOptions } from '@utils/I18n';
 
 import { Mongoose } from './providers';
 import { TaskStore } from './structures';
 import { Items } from './eternity/warframe';
-
-import '@scp/in17n/register';
 
 export class EternityClient extends SapphireClient {
   public tasks = new TaskStore(this);
