@@ -1,8 +1,9 @@
 import type { Item } from 'warframe-items';
+import { MultiEntryMap } from '@utils';
 
 import { weapon, primeWeapon } from './weapons';
 import { warframe, warframePrime } from './warframes';
-import { mod } from './mod';
+import { mod } from './Mod';
 
 const isPrime = ({ name }: Item) => name.includes('Prime');
 const typeFunctions = new Map([
@@ -11,14 +12,14 @@ const typeFunctions = new Map([
   ['Mods', mod],
 ]);
 
-const typeDictionary = new Map([
+const typeDictionary = new MultiEntryMap([
   [['Arch-Gun', 'Arch-Melee', 'Melee', 'Primary', 'Secondary'], 'Weapons'],
   [['Archwing', 'Warframes'], 'Warframes'],
   [['Mods'], 'Mods'],
-].flatMap(([keys, value]) => (keys as string[]).map((key) => [key, value])));
+]);
 
 export default (item: Item) => {
   const type = typeDictionary.get(item.category);
-  const typeFunction = typeFunctions.get(type as string);
+  const typeFunction = typeFunctions.get(type);
   return typeFunction ? typeFunction(item) : null;
 };
