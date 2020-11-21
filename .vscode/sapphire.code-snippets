@@ -19,6 +19,30 @@
     ],
     "description": "Creates a sapphire Command"
   },
+  "EternityCommandWSC": {
+    "scope": "typescript",
+    "prefix": "commandWSC",
+    "body": [
+      "import { EternityCommandWSC } from '@lib';",
+      "import { ApplyOptions } from '@sapphire/decorators';",
+      "",
+      "import type { EternityCommandWSCOptions, EternityMessage } from '@lib';",
+      "import type { Args } from '@sapphire/framework';",
+      "",
+      "@ApplyOptions<EternityCommandWSCOptions>({",
+      "  preconditions: [],",
+      "})",
+      "export default class extends EternityCommandWSC {",
+      "  public subCommands = {",
+      "    default(msg: EternityMessage, args: Args) {",
+      "      $0",
+      "    },",
+      "  };",
+      "}",
+      ""
+    ],
+    "description": "Creates a sapphire Command with sub commands"
+  },
   "EternityEvent": {
     "scope": "typescript",
     "prefix": "event",
