@@ -12,13 +12,16 @@ export default class extends Task {
 
   public async run() {
     axios.get(this.fissuresUrl).then(async ({ data: fissuresData }: { data: Fissure[] }) => {
+      if (process.env.NODE_ENV !== 'production') await this.document.reload();
+
       const activeFissures = fissuresData.filter(({ active }) => active);
 
       const fissuresIds = await this.document.get('data.cacheIds', []);
 
       const newFissures = activeFissures.filter((fissure) => !fissuresIds.includes(fissure.id));
       if (newFissures.length > 0) {
-        activeFissures.forEach((fissure) => { this.client.emit('warframeNewFissure', fissure); });
+        // this.client.emit('warframeNewFissures', newFissures);
+        this.client.emit('warframeNewActiveFissures', activeFissures);
 
         const updatedFissureIds = fissuresData.map(({ id }) => id);
         await this.document.set('data.cacheIds', updatedFissureIds);
