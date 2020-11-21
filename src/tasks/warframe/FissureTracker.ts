@@ -14,7 +14,7 @@ export default class extends Task {
     axios.get(this.fissuresUrl).then(async ({ data: fissuresData }: { data: Fissure[] }) => {
       const activeFissures = fissuresData.filter(({ active }) => active);
 
-      const fissuresIds = this.document.get('data.cacheIds', []);
+      const fissuresIds = await this.document.get('data.cacheIds', []);
 
       const newFissures = activeFissures.filter((fissure) => !fissuresIds.includes(fissure.id));
       if (newFissures.length > 0) {
