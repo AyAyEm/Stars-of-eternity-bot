@@ -12,8 +12,12 @@ export function generateMongoDocument(model: Query['model']) {
 
     public load: Promise<MongoDocument>;
 
-    constructor(query: { id: Query['id'] }) {
-      this.query = { ...query, model };
+    constructor(query: { id: Query['id'] } | string) {
+      if (typeof query === 'object') {
+        this.query = { ...query, model };
+      } else if (typeof query === 'string') {
+        this.query = { id: query, model };
+      }
       this.load = this.reload();
     }
 
@@ -22,11 +26,13 @@ export function generateMongoDocument(model: Query['model']) {
       return this;
     }
 
-    public get<Result = any>(path: string, defaultType?: any): Result {
+    public async get<Result = any>(path: string, defaultType?: any): Promise<Result> {
+      await this.load;
       return this.document.get(path, defaultType);
     }
 
     public async set<Value = any>(path: string, value: Value) {
+      await this.load;
       await this.document.updateOne({ [path]: value }, { upsert: true });
       return this.reload();
     }
