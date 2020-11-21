@@ -22,7 +22,8 @@ export function generateMongoDocument(model: Query['model']) {
     }
 
     public async reload() {
-      this.document = await (models[model] as any).findOne(this.query.id);
+      const id = typeof this.query.id === 'string' ? { id: this.query.id } : this.query.id;
+      this.document = await (models[model] as any).findOne(id);
       return this;
     }
 
