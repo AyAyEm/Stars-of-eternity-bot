@@ -1,10 +1,11 @@
 import { MessageEmbed } from 'discord.js';
-import * as moment from 'moment-timezone';
-import * as _ from 'lodash';
+import { timezone } from '@root/config';
+import moment from 'moment-timezone';
+import _ from 'lodash';
 
-import type { Fissure } from '@lib/types/Warframe';
+import type { EternityMessageEmbed } from '@lib';
+import type { Fissure, RelicTiers } from '@lib/types/Warframe';
 
-const { timezone } = require('../../config').config;
 // Fissures: Lith, Meso, Neo, Axi and Requiem
 const fissureIcons = [
   'https://i.imgur.com/ZSxJCTI.png',
@@ -49,7 +50,7 @@ function getMissionsFields(missionFissures: Fissure[]) {
   }];
 }
 
-export default async function fissuresEmbed(fissures: Fissure[]) {
+export function fissuresEmbed(fissures: Fissure[]): Map<RelicTiers, EternityMessageEmbed> {
   const fissuresMap = new Map(
     [...Object.entries((_.groupBy(fissures, 'tier')))]
       .sort(([tierA], [tierB]) => {
@@ -82,3 +83,5 @@ export default async function fissuresEmbed(fissures: Fissure[]) {
   });
   return embedsMap;
 }
+
+export default fissuresEmbed;
