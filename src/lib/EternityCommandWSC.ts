@@ -6,6 +6,7 @@ import async from 'async';
 
 import type { Args, Awaited, PieceContext, ArgType } from '@sapphire/framework';
 import type { EternityMessage } from '@lib';
+import type { EternityClient } from './EternityClient';
 
 type CommandRun = (message: EternityMessage, args: Args) => Awaited<void>;
 
@@ -29,6 +30,10 @@ export abstract class EternityCommandWSC extends Command {
     super(context, options);
     this.requiredArgs = mergeDefault(new Map([['default', []]]), options.requiredArgs);
     this.enableDefault = options.enableDefault ?? false;
+  }
+
+  public get client(): EternityClient {
+    return super.client as EternityClient;
   }
 
   protected get subCommandsList() {
