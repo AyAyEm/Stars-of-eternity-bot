@@ -12,7 +12,11 @@ export interface EternityMessage {
 }
 
 export class EternityMessage extends SapphireMessage {
-  public async replyAndDelete(content: string, { timeout = 10000, reason = '', delSource = false }) {
+  public async replyAndDelete(
+    content: string,
+    options?: { timeout: number, reason: string, delSource: boolean },
+  ) {
+    const { timeout = 10000, reason = '', delSource = false } = options;
     const reply = await this.reply(content);
     if (delSource) this.delete({ timeout, reason });
 
