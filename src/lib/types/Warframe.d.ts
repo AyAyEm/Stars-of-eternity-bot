@@ -1,5 +1,11 @@
 import type { Item } from 'warframe-items';
 
+export type RelicTiers = 'Lith'
+| 'Meso'
+| 'Neo'
+| 'Axi'
+| 'Requiem';
+
 export interface Fissure {
   node: string;
   expired: boolean;
