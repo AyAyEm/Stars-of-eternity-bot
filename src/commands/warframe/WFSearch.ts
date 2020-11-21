@@ -39,7 +39,7 @@ export default class extends EternityCommand {
       },
     );
 
-    if ((matchedItems[0].score || 0) < 0.15) {
+    if ((matchedItems[0].score || 0) < 0.7) {
       const matchItemsString = matchedItems
         .map(({ item }, index: number) => `${numberEmojis[index + 1]} ${item.name} ${item.category}`);
 
@@ -81,6 +81,11 @@ export default class extends EternityCommand {
   ) {
     const { author } = msg;
     const embedsMap = itemToEmbed(item);
+    if (!embedsMap) {
+      msg.sendTranslated('commands/WFSearch:invalidQuery', [{ item }]);
+      return;
+    }
+
     const sentMessage = previousSentMessage
       ? await previousSentMessage.edit(
         undefined, [...(embedsMap?.values() || [])][0],
