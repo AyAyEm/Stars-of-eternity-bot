@@ -9,7 +9,7 @@ export default class extends Task {
   public async run() {
     // Cache active bot voice connections
     const clientId = this.client.id || '';
-    await new Promise((resolve) => this.client.guilds.cache.each(async (guild: Guild) => {
+    await new Promise<void>((resolve) => this.client.guilds.cache.each(async (guild: Guild) => {
       const voiceChannels = guild.channels.cache.filter(({ type }) => type === 'voice');
       await Promise.all(voiceChannels.map(async (voiceChannel) => {
         const { members } = voiceChannel;
