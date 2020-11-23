@@ -23,3 +23,4 @@ export const models = {
   Users: getModelForClass(Users),
   Utils: getModelForClass(Utils),
 };
+export type ModelsKeys = keyof typeof models;
