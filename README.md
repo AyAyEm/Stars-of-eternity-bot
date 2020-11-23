@@ -1,9 +1,14 @@
+<img src="https://res.cloudinary.com/eternity/image/upload/v1606102166/eternity-bot/logos/StarsOfEternityLogoRounded_c8yehx.png">
+
 # Stars-of-eternity-bot
+[![GitHub](https://img.shields.io/github/license/sapphire-project/framework)](https://github.com/WarNote/Stars-of-eternity-bot/LICENSE)
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/WarNote/Stars-of-eternity-bot.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/WarNote/Stars-of-eternity-bot/context:javascript)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/WarNote/Stars-of-eternity-bot.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/WarNote/Stars-of-eternity-bot/alerts/)
 
 ## Introduction
 
 This is a bot built for the Stars of eternity discord server. The main dependencies are:
-- [klasa](https://github.com/dirigeants/klasa/tree/master)
+- [sapphire](https://github.com/sapphire-project/framework)
 - [discord.js](https://github.com/discordjs/discord.js)
 
 ## Requirements
@@ -26,21 +31,3 @@ npm start or npx pm2 start
 MIT License
 
 Copyright (c) 2020 André
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
