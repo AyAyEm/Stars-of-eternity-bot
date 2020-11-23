@@ -1,11 +1,11 @@
 /* eslint-disable max-classes-per-file */
-import { prop, ModelOptions } from '@typegoose/typegoose';
+import { prop } from '@typegoose/typegoose';
 
 export class RelicTracker {
   @prop()
   enabled: boolean;
 
-  @prop({ _id: false })
+  @prop({ _id: false, type: String })
   messages: Map<string, string>;
 }
 
@@ -29,7 +29,7 @@ export class Message {
   @prop()
   public msgType: string;
 
-  @prop()
+  @prop({ _id: false })
   public rolesEmoji: RolesEmoji;
 }
 
@@ -49,7 +49,6 @@ export class Member {
   public toFollow: boolean;
 }
 
-@ModelOptions({ options: { customName: 'Guilds' } })
 export class Guilds {
   @prop()
   public id: string;
