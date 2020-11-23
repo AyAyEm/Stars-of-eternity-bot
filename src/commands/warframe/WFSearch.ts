@@ -19,7 +19,7 @@ function isAuthorFilter(author: User | GuildMember) {
 
 @ApplyOptions<CommandOptions>({
   aliases: ['wfs'],
-  preconditions: [],
+  preconditions: ['GuildOnly'],
 })
 export default class extends EternityCommand {
   public items = this.client.warframe.items;

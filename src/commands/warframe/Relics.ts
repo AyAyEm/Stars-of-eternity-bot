@@ -4,7 +4,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import type { EternityCommandWSCOptions, EternityMessage } from '@lib';
 
 @ApplyOptions<EternityCommandWSCOptions>({
-  preconditions: [],
+  preconditions: ['GuildOnly'],
 })
 export default class extends EternityCommandWSC {
   public subCommands = {
