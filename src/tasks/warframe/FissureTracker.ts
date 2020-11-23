@@ -16,7 +16,7 @@ export default class extends Task {
 
       const activeFissures = fissuresData.filter(({ active }) => active);
 
-      const fissuresIds = await this.document.get('data.cacheIds', []);
+      const fissuresIds = await this.document.get<string[]>('data.cacheIds', []);
 
       const newFissures = activeFissures.filter((fissure) => !fissuresIds.includes(fissure.id));
       if (newFissures.length > 0) {

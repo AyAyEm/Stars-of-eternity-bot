@@ -21,7 +21,7 @@ export default class InvasionTracker extends Task {
 
       const activeInvasions = invasionsData.filter(({ completed }) => !completed);
 
-      const invasionsIds = await this.document.get('data.cacheIds', []);
+      const invasionsIds = await this.document.get<string[]>('data.cacheIds', []);
 
       const newInvasions = activeInvasions.filter(({ id }) => !invasionsIds.includes(id));
 
