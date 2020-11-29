@@ -1,5 +1,6 @@
 import { BasePiece } from '@sapphire/framework';
-import { EternityClient } from '@lib';
+
+import type { EternityClient } from '@lib';
 
 export class EternityBasePiece extends BasePiece {
   get client(): EternityClient {
