@@ -53,20 +53,22 @@ export abstract class EternityCommandWSC extends Command {
   }
 
   public async run(message: EternityMessage, args: Args) {
-    const subCommand = this.subCommandsDictionary.get(await args.pickResult('string')
+    const subCommand = await args.pickResult('string')
       .then((result) => {
         if (result.success && this.subCommandsDictionary.has(result.value.toLowerCase())) {
           args.save();
+          if (this.caseInsensitive) {
+            return this.subCommandsDictionary.get(result.value.toLowerCase());
+          }
           return result.value;
         }
         args.start();
         return this.defaultCommand;
-      }));
+      });
 
     // eslint-disable-next-line no-useless-catch
     try {
-      if (this.caseInsensitive) this.subCommands[subCommand.toLowerCase()](message, args);
-      else this.subCommands[subCommand](message, args);
+      this.subCommands[subCommand](message, args);
     } catch (e: unknown) {
       throw e;
     }
@@ -84,10 +86,9 @@ export abstract class EternityCommandWSC extends Command {
     let subCommand = await args.pickResult('string')
       .then((result) => (result.success ? result.value : this.defaultCommand));
 
-    if (this.caseInsensitive) subCommand = subCommand.toLowerCase();
+    if (this.caseInsensitive) subCommand = this.subCommandsDictionary.get(subCommand.toLowerCase());
 
-    console.log('teste');
-    if (this.subCommandsDictionary.has(subCommand.toLowerCase()) || this.enableDefault) {
+    if (subCommand in this.subCommands || this.enableDefault) {
       const requiredArgs = this.requiredArgs.get(subCommand) ?? [];
 
       const missingArguments = await async.filterSeries(requiredArgs, async (arg) => (
