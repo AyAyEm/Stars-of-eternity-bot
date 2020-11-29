@@ -15,10 +15,14 @@
     "paths": {
       "@root/*": ["./*"],
       "@config": ["./config"],
-      "@lib*": ["./lib/*", "./lib"],
-      "@utils*": ["./lib/utils/*", "./lib/utils"],
-      "@embeds*": ["./lib/embeds/*", "./lib/embeds"],
-      "@providers*": ["./lib/providers/*", "./lib/providers"]
+      "@lib": ["./lib"],
+      "@lib/*": ["./lib/*"],
+      "@utils": ["./lib/utils"],
+      "@utils/*": ["./lib/utils/*"],
+      "@embeds": ["./lib/embeds"],
+      "@embeds/*": ["./lib/embeds/*"],
+      "@providers": ["./lib/providers"],
+      "@providers/*": ["./lib/providers/*"]
     }
   },
   "include": [
