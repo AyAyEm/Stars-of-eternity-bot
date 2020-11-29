@@ -1,7 +1,7 @@
 import { mergeDefault } from '@sapphire/utilities';
 import { Command, CommandOptions } from '@sapphire/framework';
 import { list } from '@utils/LanguageFunctions';
-import { CommandError } from '@lib';
+import { CommandError } from '@lib/errors';
 import async from 'async';
 
 import type { Args, Awaited, PieceContext, ArgType } from '@sapphire/framework';
@@ -48,20 +48,25 @@ export abstract class EternityCommandWSC extends Command {
       : commandsList.filter((commandName) => commandName !== 'default');
   }
 
+  public get subCommandsDictionary(): Map<string, string> {
+    return new Map(Object.keys(this.subCommands).map((key: string) => [key.toLowerCase(), key]));
+  }
+
   public async run(message: EternityMessage, args: Args) {
-    const subCommand = await args.pickResult('string')
+    const subCommand = this.subCommandsDictionary.get(await args.pickResult('string')
       .then((result) => {
-        if (result.success && result.value in this.subCommands) {
+        if (result.success && this.subCommandsDictionary.has(result.value.toLowerCase())) {
           args.save();
           return result.value;
         }
         args.start();
         return this.defaultCommand;
-      });
+      }));
 
     // eslint-disable-next-line no-useless-catch
     try {
-      this.subCommands[subCommand.toLowerCase()](message, args);
+      if (this.caseInsensitive) this.subCommands[subCommand.toLowerCase()](message, args);
+      else this.subCommands[subCommand](message, args);
     } catch (e: unknown) {
       throw e;
     }
@@ -81,7 +86,8 @@ export abstract class EternityCommandWSC extends Command {
 
     if (this.caseInsensitive) subCommand = subCommand.toLowerCase();
 
-    if (subCommand in this.subCommands || this.enableDefault) {
+    console.log('teste');
+    if (this.subCommandsDictionary.has(subCommand.toLowerCase()) || this.enableDefault) {
       const requiredArgs = this.requiredArgs.get(subCommand) ?? [];
 
       const missingArguments = await async.filterSeries(requiredArgs, async (arg) => (

@@ -1,7 +1,8 @@
 import { Structures } from 'discord.js';
-import { EternityVoiceChannel } from '@lib';
 
 import type { GuildMember, Collection } from 'discord.js';
+
+import { EternityVoiceChannel } from './EternityVoiceChannel';
 
 export class EternityGuild extends Structures.get('Guild') {
   get voiceChannels() {
