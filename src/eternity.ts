@@ -1,4 +1,4 @@
-import 'module-alias/register';
+import './registerPaths';
 
 import { EternityClient } from '@lib';
 import { config } from './config';
