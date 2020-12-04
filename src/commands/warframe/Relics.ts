@@ -15,6 +15,7 @@ export default class extends EternityCommandWSC {
       await document.set(path, true);
       msg.sendTranslated('commands/relics:succesfullEnabled');
     },
+
     disable: async (msg: EternityMessage) => {
       const { guild, channel } = msg;
       const path = `channels.${channel.id}.relicTracker.enabled`;
