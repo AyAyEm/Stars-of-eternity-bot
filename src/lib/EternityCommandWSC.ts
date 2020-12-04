@@ -1,7 +1,7 @@
-import { mergeDefault } from '@sapphire/utilities';
 import { Command, CommandOptions } from '@sapphire/framework';
 import { list } from '@utils/LanguageFunctions';
 import { CommandError } from '@lib/errors';
+import { CIMap } from '@utils';
 import async from 'async';
 
 import type { Args, Awaited, PieceContext, ArgType } from '@sapphire/framework';
@@ -11,14 +11,15 @@ import type { EternityClient } from './EternityClient';
 type CommandRun = (message: EternityMessage, args: Args) => Awaited<void>;
 
 export interface EternityCommandWSCOptions extends CommandOptions {
-  requiredArgs?: Map<string, Array<keyof ArgType>>;
+  requiredArgs?: [string, Array<keyof ArgType>][];
   defaultCommand?: string;
   enableDefault?: boolean;
   caseInsensitive?: boolean;
+  subAliases?: [string, string[]][];
 }
 
 export abstract class EternityCommandWSC extends Command {
-  public requiredArgs: EternityCommandWSCOptions['requiredArgs'];
+  public requiredArgs: Map<string, Array<keyof ArgType>>;
 
   public defaultCommand: EternityCommandWSCOptions['defaultCommand'];
 
@@ -26,16 +27,24 @@ export abstract class EternityCommandWSC extends Command {
 
   public caseInsensitive: EternityCommandWSCOptions['caseInsensitive'];
 
+  public subAliases: Map<string, string[]>;
+
   public abstract subCommands: { [key: string]: CommandRun } = {
     default() { },
   };
 
   protected constructor(context: PieceContext, options: EternityCommandWSCOptions) {
     super(context, options);
-    this.requiredArgs = mergeDefault(new Map([['default', []]]), options.requiredArgs);
+    this.requiredArgs = new Map(options.requiredArgs ?? []);
     this.enableDefault = options.enableDefault ?? false;
     this.defaultCommand = options.defaultCommand ?? 'default';
     this.caseInsensitive = options.caseInsensitive ?? true;
+
+    if (this.caseInsensitive) {
+      this.subAliases = new CIMap(options.subAliases ?? []);
+    } else {
+      this.subAliases = new Map(options.subAliases ?? []);
+    }
   }
 
   public get client(): EternityClient {
@@ -68,7 +77,7 @@ export abstract class EternityCommandWSC extends Command {
 
     // eslint-disable-next-line no-useless-catch
     try {
-      this.subCommands[subCommand](message, args);
+      await this.subCommands[subCommand](message, args);
     } catch (e: unknown) {
       throw e;
     }
