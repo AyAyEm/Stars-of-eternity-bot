@@ -31,7 +31,7 @@ export class EternityClient extends SapphireClient {
 
   constructor(options?: ClientOptions) {
     // @ts-expect-error Type instantiation is excessively deep and possibly infinite. ts(2589)
-    super(mergeDefault(clientOptions, options));
+    super(mergeDefault(clientOptions, { ...options, caseInsensitiveCommands: true }));
 
     this.registerStore(this.tasks)
       .registerUserDirectories();
