@@ -15,11 +15,13 @@ export interface EternityCommandWSCOptions extends CommandOptions {
   defaultCommand?: string;
   enableDefault?: boolean;
   caseInsensitive?: boolean;
-  subAliases?: [string, string[]][];
+  subAliases?: [string, Array<string>][];
 }
 
 export abstract class EternityCommandWSC extends Command {
   public requiredArgs: Map<string, Array<keyof ArgType>>;
+
+  public subAliases: Map<string, Array<string>>;
 
   public defaultCommand: EternityCommandWSCOptions['defaultCommand'];
 
@@ -27,7 +29,7 @@ export abstract class EternityCommandWSC extends Command {
 
   public caseInsensitive: EternityCommandWSCOptions['caseInsensitive'];
 
-  public subAliases: Map<string, string[]>;
+  #dictionary: Map<string, string>;
 
   public abstract subCommands: { [key: string]: CommandRun } = {
     default() { },
@@ -39,12 +41,12 @@ export abstract class EternityCommandWSC extends Command {
     this.enableDefault = options.enableDefault ?? false;
     this.defaultCommand = options.defaultCommand ?? 'default';
     this.caseInsensitive = options.caseInsensitive ?? true;
+    this.subAliases = new Map(options.subAliases ?? []);
+    this.#dictionary = this.caseInsensitive ? new CIMap() : new Map();
 
-    if (this.caseInsensitive) {
-      this.subAliases = new CIMap(options.subAliases ?? []);
-    } else {
-      this.subAliases = new Map(options.subAliases ?? []);
-    }
+    options.subAliases?.forEach(([commandName, aliases]) => {
+      aliases.forEach((alias) => this.#dictionary.set(alias, commandName));
+    });
   }
 
   public get client(): EternityClient {
@@ -57,19 +59,17 @@ export abstract class EternityCommandWSC extends Command {
       : commandsList.filter((commandName) => commandName !== 'default');
   }
 
-  public get subCommandsDictionary(): Map<string, string> {
-    return new Map(Object.keys(this.subCommands).map((key: string) => [key.toLowerCase(), key]));
+  public async onLoad() {
+    super.onLoad();
+    this.subCommandsList.forEach((command) => this.#dictionary.set(command, command));
   }
 
   public async run(message: EternityMessage, args: Args) {
     const subCommand = await args.pickResult('string')
       .then((result) => {
-        if (result.success && this.subCommandsDictionary.has(result.value.toLowerCase())) {
+        if (result.success && this.#dictionary.has(result.value)) {
           args.save();
-          if (this.caseInsensitive) {
-            return this.subCommandsDictionary.get(result.value.toLowerCase());
-          }
-          return result.value;
+          return this.#dictionary.get(result.value);
         }
         args.start();
         return this.defaultCommand;
@@ -92,12 +92,10 @@ export abstract class EternityCommandWSC extends Command {
   }
 
   public async verifyArgs(args: Args, message: EternityMessage) {
-    let subCommand = await args.pickResult('string')
+    const subCommand = await args.pickResult('string')
       .then((result) => (result.success ? result.value : this.defaultCommand));
 
-    if (this.caseInsensitive) subCommand = this.subCommandsDictionary.get(subCommand.toLowerCase());
-
-    if (subCommand in this.subCommands || this.enableDefault) {
+    if (this.#dictionary.has(subCommand) || this.enableDefault) {
       const requiredArgs = this.requiredArgs.get(subCommand) ?? [];
 
       const missingArguments = await async.filterSeries(requiredArgs, async (arg) => (
