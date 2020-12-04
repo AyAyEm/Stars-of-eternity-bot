@@ -1,0 +1,38 @@
+{
+  "items": {
+    "notFound": "Nenhum item de invasão encontrado para este canal!",
+    "found": "```Items encontrados: \n{{items, andList}}```"
+  },
+  "listItems": {
+    "commonResources": "Recursos comums",
+    "uncommonResources": "Recursos incomuns",
+    "rareResources": "Recursos raros",
+    "weapons": "Armas",
+    "bestItems": "Melhores items",
+    "factionItems": "Items de facção",
+    "others": "Outros",
+    "title": "Possíveis opções de items para a invasão:"
+  },
+  "disable": {
+    "alreadyDisabled": "Invasões já estão desabilitadas para este canal!",
+    "success": "Invasões desabilitadas com sucesso!"
+  },
+  "enable": {
+    "alreadyEnabled": "Invasões já estão habilitadas para este canal!",
+    "success": "Invasões habilitadas com sucesso!"
+  },
+  "add": {
+    "channelNotConfigured": "Este canal não está configurado para invasões!",
+    "success": "Items adicionados com sucesso! Items: `{{items, andList}}`"
+  },
+  "addAll": {
+    "success": "Todos os items foram adicionados com sucesso!"
+  },
+  "delete": {
+    "channelNotConfigured": "Este canal não está configurado para invasões!",
+    "success": "Items removidos com sucesso! Items: `{{items, andList}}`"
+  },
+  "deleteAll": {
+    "success": "Todos os items foram removidos com sucesso!"
+  }
+}
