@@ -1,13 +1,14 @@
 import {
   Command, PieceContext, CommandOptions,
 } from '@sapphire/framework';
-import { CommandError } from '@lib';
 import { list } from '@root/lib/utils/LanguageFunctions';
 import async from 'async';
 
 import type { Args, ArgType } from '@sapphire/framework';
 import type { EternityMessage } from '@lib';
 import type { EternityClient } from './EternityClient';
+
+import { CommandError } from './errors';
 
 export interface EternityCommandOptions extends CommandOptions {
   requiredArgs?: Array<keyof ArgType>;
