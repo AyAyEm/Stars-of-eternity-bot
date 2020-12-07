@@ -98,6 +98,25 @@
     ],
     "description": "Creates a saphire task"
   },
+  "EternityArgument": {
+    "scope": "typescript",
+    "prefix": "argument",
+    "body": [
+      "import { Argument, ArgumentContext, PieceContext } from '@sapphire/framework';",
+      "",
+      "export class ${1:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g}} extends Argument {",
+      "  public constructor(context: PieceContext) {",
+      "    super(context, { name: '${2:${TM_FILENAME_BASE/(.*)/${1:/downcase}/g}}' });",
+      "  }",
+      "",
+      "  public async run(argument: string, context: ArgumentContext) {",
+      "    $0",
+      "  }",
+      "}",
+      ""
+    ],
+    "description": ""
+  },
   "Import lib": {
     "scope": "typescript",
     "prefix": "@lib",
