@@ -15,7 +15,7 @@ export interface EternityCommandWSCOptions extends CommandOptions {
   defaultCommand?: string;
   enableDefault?: boolean;
   caseInsensitive?: boolean;
-  subAliases?: [string, Array<string>][];
+  subAliases?: [string, string[]][];
 }
 
 export abstract class EternityCommandWSC extends Command {
