@@ -10,12 +10,12 @@ export class Item extends Argument {
   public readonly possibleItems = new Set([
     'vauban', 'vandal', 'wraith', 'skin', 'helmet',
     'nitain', 'mutalist', 'weapon', 'fieldron', 'detonite',
-    'mutagen', 'aura', 'neuralSensors', 'orokinCell', 'alloyPlate',
-    'circuits', 'controlModule', 'ferrite', 'gallium', 'morphics',
-    'nanoSpores', 'oxium', 'rubedo', 'salvage', 'plastids', 'polymerBundle',
+    'mutagen', 'aura', 'neuralsensors', 'orokincell', 'alloyplate',
+    'circuits', 'controlmodule', 'ferrite', 'gallium', 'morphics',
+    'nanospores', 'oxium', 'rubedo', 'salvage', 'plastids', 'polymerbundle',
     'argonCrystal', 'cryotic', 'tellurium', 'neurodes', 'nightmare', 'endo',
     'reactor', 'catalyst', 'forma', 'synthula', 'exilus', 'riven', 'kavatGene',
-    'kubrowEgg', 'traces', 'other', 'credits',
+    'kubrowegg', 'traces', 'other', 'credits',
   ]);
 
   public async run(argument: string) {
