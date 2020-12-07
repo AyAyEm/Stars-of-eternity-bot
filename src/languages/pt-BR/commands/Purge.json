@@ -1,0 +1,4 @@
+{
+  "exceededLimit": "Não se pode excluir mais de 100 mensagens de uma vez!",
+  "error": "Não foi possível deletar as mensagens, devido ao erro:\n```{{err}}```"
+}
