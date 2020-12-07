@@ -1,4 +1,4 @@
-import type { Emoji } from '@root/arguments/discord/Emoji';
+import type { Emoji } from 'discord.js';
 
 declare module '@sapphire/framework' {
   interface ArgType {
