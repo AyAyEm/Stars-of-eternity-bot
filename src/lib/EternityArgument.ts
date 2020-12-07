@@ -1,6 +1,7 @@
 import { Argument, ArgumentContext } from '@sapphire/framework';
-import { EternityCommand } from './EternityCommand';
 import { EternityClient } from './EternityClient';
+
+import type { EternityCommand } from './EternityCommand';
 
 export interface EternityArgumentContext extends ArgumentContext {
   command: EternityCommand;
