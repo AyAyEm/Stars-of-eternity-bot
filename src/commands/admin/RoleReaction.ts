@@ -63,6 +63,7 @@ export default class extends EternityCommandWSC {
 
       const messageContent: Message = {
         emojiRoleMap: new Map(),
+        msgType: 'roleReaction',
       };
 
       await args.pickResult('string')
@@ -138,7 +139,7 @@ export default class extends EternityCommandWSC {
 
       const newEmojiRoleMessage = await msg.channel.send(messageContent);
       messages.delete(emojiRoleMessage.id);
-      messages.set(newEmojiRoleMessage.id, { emojiRoleMap });
+      messages.set(newEmojiRoleMessage.id, { emojiRoleMap, msgType: 'roleReaction' });
 
       await document.set(messagesPath, messages);
 
