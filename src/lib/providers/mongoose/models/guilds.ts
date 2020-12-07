@@ -17,20 +17,20 @@ export class InvasionItems {
   items: string[];
 }
 
-export class RolesEmoji {
-  @prop()
-  public description: string;
-
+export class EmojiRole {
   @prop()
   public roleId: string;
 }
 
 export class Message {
   @prop()
-  public msgType: string;
+  public msgType?: string;
 
-  @prop({ _id: false })
-  public rolesEmoji: RolesEmoji;
+  @prop()
+  public title?: string;
+
+  @prop({ _id: false, type: String })
+  public emojiRoleMap?: Map<string, string>;
 }
 
 export class Channel {
