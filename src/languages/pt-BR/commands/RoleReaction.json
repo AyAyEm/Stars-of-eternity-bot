@@ -1,0 +1,13 @@
+{
+  "firstEmbed": "Adicione seus cargos com o comando /roleReaction add",
+  "delete": {
+    "invalidRoleReactionMessage": "A mensagem passada não é uma roleReaction",
+    "success": "RoleReaction deletada com sucesso!"
+  },
+  "add": {
+    "success": "RoleReaction adicionado com sucesso!"
+  },
+  "renew": {
+    "success": "RoleReaction renovada com sucesso!"
+  }
+}
